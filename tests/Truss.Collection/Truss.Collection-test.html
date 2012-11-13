@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Truss : Collection</title>
+  <link rel="shortcut icon" type="image/png" href="../../../jasmine/jasmine_favicon.png" />
+  <link rel="stylesheet" type="text/css" href="../../../jasmine/jasmine.css" />
+  <script src="../../../jasmine/jasmine.js"></script>
+  <script src="../../../jasmine/jasmine-html.js"></script>
+
+  <!-- Unmocked dependencies -->
+  <script src="../../Truss.Events.js"></script>
+  <script src="../../Truss.js"></script>
+  <script type="text/javascript" src="../../../Truss/Truss.Model.js"></script>
+  
+  <!-- Source -->
+  <script src="../../Truss.Collection.js"></script>
+</head>
+<body>	
+  <h1>Truss : Collection</h1>  
+	<script src="Truss.Collection-test.js"></script>
+	<script>
+		jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+		jasmine.getEnv().execute();
+	</script>
+</body>
+</html>
