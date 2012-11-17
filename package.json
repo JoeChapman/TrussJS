@@ -10,8 +10,15 @@
             "web": "http://josephchapman.com" 
         } 
     ],
-    "licenses": [ { "type": "MIT", "url": "http://keithamus.mit-license.org/" } ],
-    "repositories": [ { "type": "git", "url": "https://github.com/JoeChapman/TrussJS" } ],
+    "author": "Joseph Chapman",
+    "license": "BSD",
+    "repositories": [ { 
+        "type": "git", 
+        "url": "https://github.com/JoeChapman/TrussJS" 
+    } ],
+    "directories": {
+        "test": "tests"
+    },
     "devDependencies": { 
         "jasmine": "1.2.x"
     },
