@@ -1,0 +1,22 @@
+{
+    "name": "Truss",
+    "version": "0.1.0",
+    "description": "Welterweight JavaScript Framework",
+    "keywords": [ "mvc", "framework", "node" ],
+    "maintainers": [
+        {
+            "name": "Joseph Chapman",
+            "email": "info@josephchapman.com",
+            "web": "http://josephchapman.com" 
+        } 
+    ],
+    "licenses": [ { "type": "MIT", "url": "http://keithamus.mit-license.org/" } ],
+    "repositories": [ { "type": "git", "url": "https://github.com/JoeChapman/TrussJS" } ],
+    "devDependencies": { 
+        "jasmine": "1.2.x"
+    },
+    "scripts": {
+        "test": "jasmine"
+    },
+    "main": "./Truss.js"
+}
