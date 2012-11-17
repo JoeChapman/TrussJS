@@ -22,8 +22,5 @@
     "devDependencies": { 
         "jasmine-node": ">= 1.0.26"
     },
-    "scripts": {
-        "test": "jasmine"
-    },
     "main": "./Truss.js"
 }
