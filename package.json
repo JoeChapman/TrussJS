@@ -20,7 +20,7 @@
         "test": "tests"
     },
     "devDependencies": { 
-        "jasmine": "1.2.x"
+        "jasmine-node": "1.2.x"
     },
     "scripts": {
         "test": "jasmine"
