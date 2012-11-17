@@ -11,7 +11,7 @@
         } 
     ],
     "author": "Joseph Chapman",
-    "license": "BSD",
+    "licenses": ["MIT"],
     "repositories": [ { 
         "type": "git", 
         "url": "https://github.com/JoeChapman/TrussJS" 
