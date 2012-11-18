@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notes.View.Count</title>
+  <link rel="shortcut icon" type="image/png" href="../../../../jasmine/jasmine_favicon.png" />
+  <link rel="stylesheet" type="text/css" href="../../../../jasmine/jasmine.css" />
+  <script src="../../../../jasmine/jasmine.js"></script>
+  <script src="../../../../jasmine/jasmine-html.js"></script>
+  
+  <script src="../../../../Truss.js"></script>
+  <script src="../../../../Truss.View.js"></script>
+
+  <!-- Source -->
+  <script src="../../js/views/Notes.View.Count.js"></script>
+  
+</head>
+
+<body>    
+  <h1>Notes.View.Count</h1>
+  <div id="rootNode"></div>
+
+  <!-- Test -->
+  <script src="Notes.View.Count-test.js"></script>
+  <script>
+    jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+    jasmine.getEnv().execute();
+  </script>
+</body>
+</html>
