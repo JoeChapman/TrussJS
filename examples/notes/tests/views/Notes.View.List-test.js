@@ -31,7 +31,7 @@ describe("Notes.View.List", function () {
 	describe("When a List is created with a rootNode and a collection", function () {
 		beforeEach(function () {
 			viewList = new Notes.View.List({
-				rootNode: rootNode, 
+				rootNode: '', 
 				collection: mockCollection
 			});	
 		});
