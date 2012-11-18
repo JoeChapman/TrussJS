@@ -4,8 +4,7 @@
 	// Exports Truss to global namespace
 	global.Truss = global.Truss || {};
 
-	// Define events 
-
+	// A typical observer pattern
 	var events = {
 		
 		events: {},
@@ -14,7 +13,6 @@
 			if (typeof fn === 'undefined') {
 				return;
 			}
-			
 			if (!this.events[event]) {
 				this.events[event] = [];
 			}
@@ -71,6 +69,7 @@
 		return typeof o !== "undefined";
 	}
 
+	// Redefine hasOwnProperty locally because we use it a lot.
 	function hasOwn(o, p) {
 		return o.hasOwnProperty(p);
 	}
@@ -93,7 +92,7 @@
 			num = sources.length;
 
 			while (num--) {
-				
+				// If truss is a function, it should be a constructor, so new it up
 				source = typeof sources[num] == "function" ? new sources[num] : sources[num];
 
 				for (i in source) {
@@ -120,7 +119,7 @@
 		}
 	};
 
-	// Extend Truss with the Events 
+	// Extend Truss with the events 
 	Truss.extend(Truss, events);
 
 }(this));

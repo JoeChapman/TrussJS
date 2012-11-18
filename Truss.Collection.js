@@ -53,11 +53,10 @@
 	Truss.Collection.prototype = Truss.extend({
 
 		add: function (data) {
-			var model,
-				attrs = [].concat(data),
+			var attrs = [].concat(data),
 				len = attrs.length;
 
-			while (0 < len--) {
+			while (len--) {
 				this.currentModel = new this.model(attrs[len]);
 				this.getModels().push(this.currentModel);
 				this.fire("add", this.currentModel);
