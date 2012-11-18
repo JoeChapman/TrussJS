@@ -1,8 +1,68 @@
 
 (function (global) {
 
-	global.Truss = {};
+	// Exports Truss to global namespace
+	global.Truss = global.Truss || {};
 
+	// Define events 
+
+	var events = {
+		
+		events: {},
+
+		on: function(event, fn, context) {
+			if (typeof fn === 'undefined') {
+				return;
+			}
+			
+			if (!this.events[event]) {
+				this.events[event] = [];
+			}
+			this.events[event].push({fn: fn, context: context});
+		},
+
+		off: function(event, fn) {
+			if (!this.events[event]) {
+				return;
+			}
+			var i, ev = this.events[event];
+			for (i = 0, len = ev.length; i < len; i++) {
+				if (typeof fn === 'function') {
+					if (ev[i].fn === fn) {
+						ev[i].fn = null;
+						delete ev[i].fn;
+					}
+				} else {
+				 	ev.splice(i, 1);
+				}
+			} 
+		},
+		
+		fire: function(event, data, context) {
+			if (!this.events[event]) {
+				return;
+			}
+			var i, ev = this.events[event];
+			for (i = 0, len = ev.length; i < len; i++) {
+				try {
+					if ('PAUSE' === ev[i].fn.call((context || ev[i].context || this), data)) {
+						break;
+					}
+				} catch (e) {
+					console.log(e);
+					throw {
+						name: "CallBackError",
+						message: "Cannot call null callBack"
+					}
+				}
+				
+			}
+		}
+	};
+
+	/**
+     * Private helpers
+    */
 	function isObject (o) {
 		return Object.prototype.toString.call(o) === "[object Object]";
 	}
@@ -14,9 +74,10 @@
 	function hasOwn(o, p) {
 		return o.hasOwnProperty(p);
 	}
-
+	
 	Truss = {
 
+		// Define extend on Truss
 		extend: function (destination, source) {
 
 			var i, 
@@ -60,7 +121,7 @@
 	};
 
 	// Extend Truss with the Events 
-	Truss.extend(Truss, Events);
+	Truss.extend(Truss, events);
 
 }(this));
 
