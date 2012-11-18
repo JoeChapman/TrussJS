@@ -25,7 +25,7 @@ describe("Truss.Collection", function () {
 				collection.add(obj);
 			});
 			it("Should fire an 'add' event with the new model", function () {
-				expect(spyFire).toHaveBeenCalledWith("Hello");
+				expect(spyFire).toHaveBeenCalledWith("add", collection.getById("mid_1"));
 			});
 		});
 	});
