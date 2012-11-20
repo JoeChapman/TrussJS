@@ -16,11 +16,11 @@
         "type": "git", 
         "url": "https://github.com/JoeChapman/TrussJS" 
     } ],
-    "directories": {
-        "test": "tests"
-    },
     "devDependencies": { 
         "jasmine-node": ">= 1.0.26"
+    },
+    "scripts": {
+        "test": "jasmine-node" 
     },
     "main": "./Truss.js"
 }
