@@ -1,11 +1,10 @@
 
 (function (global) {
 
-	// Exports Truss to global namespace
-	global.Truss = global.Truss || {};
+	// Truss namespace
+	var Truss = {};
 
-	// A typical observer pattern
-	var events = {
+	var events = Truss.events = {
 		
 		events: {},
 
@@ -122,7 +121,13 @@
 	// Extend Truss with the events 
 	Truss.extend(Truss, events);
 
-}(this));
+	if (typeof module != 'undefined' && module.exports) {
+        module.exports = Truss;
+    } else {
+        global.Truss = Truss;
+    }
+
+})(this);
 
 	
 
