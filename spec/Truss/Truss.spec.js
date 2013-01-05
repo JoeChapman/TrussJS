@@ -1,3 +1,5 @@
+var Truss = require("../../Truss.js");
+
 describe("Truss", function () {
 
 	describe("Before Truss is created", function () {
