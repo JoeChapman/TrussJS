@@ -246,7 +246,7 @@
 	}
 
 	// Constructor
-	Truss.View = function () {
+	/*Truss.View = function () {
 		this.tagName = "div";
 		this.rootNode = document.createElement("div");
 	};
@@ -294,7 +294,7 @@
 			}
 			return tag;
 		}
-	});
+	});*/
 
 	// Export Truss for Node or browser
 	if (typeof module != 'undefined' && module.exports) {

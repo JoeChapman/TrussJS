@@ -1,3 +1,4 @@
+var Truss = require("../../Truss");
 
 describe("Truss", function () {
 
@@ -397,7 +398,7 @@ describe("Truss.Collection", function () {
 	
 });
 
-describe("Truss.View", function () {
+/*xdescribe("Truss.View", function () {
 	var view = null;
 
 	describe("When a view is created without options", function () {
@@ -660,4 +661,4 @@ describe("Truss.View", function () {
 			});
 		});
 	});
-});
+});*/
