@@ -1,3 +1,4 @@
+
 describe("Truss.Collection", function () {
 	var collection = null;
 

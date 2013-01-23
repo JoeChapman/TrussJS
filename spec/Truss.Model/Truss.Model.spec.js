@@ -1,3 +1,4 @@
+
 describe("Truss.Model", function () {
 	var model = null;
 

@@ -1,6 +1,13 @@
-(function (window) {
 
-	window.Truss = window.Truss || {};
+(function (global) {
+	
+	var Truss = {};
+
+	if (typeof exports != 'undefined') {
+        Truss = exports.Truss;
+    } else {
+        Truss = global.Truss || {};
+    }
 
 	function getCount () {
 		return this.getModels().length;
@@ -89,4 +96,10 @@
 
 	});
 
-}(window));
+	/*if (typeof module != 'undefined' && module.exports) {
+        module.exports.Collection = Truss.Collection;
+    } else {
+        global.Truss.Collection = Truss.Collection;
+    }*/
+
+}(this));
