@@ -18,9 +18,9 @@
     } ],
     "main": "./Truss.js",
     "devDependencies": {
-        "phantom-jasmine": "1.0.x"
+        "jasmine-node": "1.0.x"
     },
     "scripts": {
-        "test": "phantom-jasmine spec/Truss.spec.html?noglobals=true" 
+        "test": "jasmine-node spec/Truss/Truss.spec.js" 
     }
 }
