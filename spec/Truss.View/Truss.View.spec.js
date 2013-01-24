@@ -1,3 +1,8 @@
+/*if (typeof require == "function") {
+	Truss = require("../../Truss");
+	Truss.View = require("../../Truss.View");
+}
+
 describe("Truss.View", function () {
 	var view = null;
 
@@ -262,4 +267,4 @@ describe("Truss.View", function () {
 			});
 		});
 	});
-});
+});*/

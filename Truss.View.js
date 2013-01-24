@@ -1,20 +1,18 @@
 
-(function (window) {
-
-	window.Truss = window.Truss || {};
+(function (global) {
 
 	// Private functions
 	function realTypeOf (o) {
 		return Object.prototype.toString.call(o).match(/\w+/g)[1].toLowerCase();
 	}
 
-	// Constructor
-	Truss.View = function () {
-		this.tagName = "div";
-		this.rootNode = window.document.body;
-	};
+	// Build the constructor
+	Truss.View = Truss.construct({
 
-	Truss.View.prototype = Truss.extend({
+		start: function () {
+			this.tagName = "div";
+			this.rootNode = window.document.body;
+		},
 
 		make: function () {
 			var args = [].slice.call(arguments),
@@ -59,6 +57,12 @@
 		}
 	});
 
-}(window));
+	if (typeof module != 'undefined' && module.exports) {
+        module.exports = Truss.View;
+    } else {
+        global.Truss.View = Truss.View;
+    }
+
+}(this));
 
 	

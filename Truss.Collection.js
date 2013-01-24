@@ -1,14 +1,6 @@
 
 (function (global) {
 	
-	var Truss = {};
-
-	if (typeof exports != 'undefined') {
-        Truss = exports.Truss;
-    } else {
-        Truss = global.Truss || {};
-    }
-
 	function getCount () {
 		return this.getModels().length;
 	}
@@ -51,22 +43,28 @@
 		}
 	};
 
-	Truss.Collection = function (options) {
-		this.options = options || {};
-		this.models = [];
-		this.model = this.options.model || Truss.Model;
-	};
+	// Builds the constructor
+	Truss.Collection = Truss.construct({
 
-	Truss.Collection.prototype = Truss.extend({
+		start: function ( options ) {
+
+			this.model = this.options && this.options.model || Truss.Model
+
+		},
+
+		models: [],
 
 		add: function (data) {
+
 			var attrs = [].concat(data),
 				len = attrs.length;
 
 			while (len--) {
+
 				this.currentModel = new this.model(attrs[len]);
 				this.getModels().push(this.currentModel);
 				this.fire("add", this.currentModel);
+
 			}
 		},
 
@@ -96,10 +94,10 @@
 
 	});
 
-	/*if (typeof module != 'undefined' && module.exports) {
-        module.exports.Collection = Truss.Collection;
+	if (typeof module != 'undefined' && module.exports) {
+        module.exports = Truss.Collection;
     } else {
         global.Truss.Collection = Truss.Collection;
-    }*/
+    }
 
 }(this));

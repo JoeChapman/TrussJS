@@ -21,6 +21,6 @@
         "jasmine-node": "1.0.x"
     },
     "scripts": {
-        "test": "jasmine-node spec/Truss/Truss.spec.js" 
+        "test": "jasmine-node spec/" 
     }
 }

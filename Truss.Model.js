@@ -1,14 +1,6 @@
 
 (function (global) {
 
-	var Truss;
-
-	if (typeof exports != 'undefined') {
-        Truss = exports.Truss;
-    } else {
-        Truss = global.Truss || {};
-    }
-
 	var constants = {
 			ID: 1,
 			ORIGID: 1,
@@ -23,25 +15,25 @@
 		constants.ID = constants.ORIGID;
 	}
 
-	Truss.Model = function (attributes) {
-		this.id = getNewId();
-		this.attributes = attributes;
-		this.resetId = resetId;
-	};
 
-    Truss.Model.prototype = Truss.extend({
+    Truss.Model = Truss.construct({
+
+    	start: function () {
+    		this.id = getNewId();
+			this.resetId = resetId;
+		},
 
 		get: function (name) {
-			return this[name] || this.attributes[name];
+			return this[name] || this.options[name];
 		}	
 
 	});
 
-	/*if (typeof module != 'undefined' && module.exports) {
-        module.exports.Truss.Model = Truss.Model;
+	if (typeof module != 'undefined' && module.exports) {
+        module.exports = Truss.Model;
     } else {
         global.Truss.Model = Truss.Model;
-    }*/
+    }
 
 
 }(this));

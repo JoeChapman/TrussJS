@@ -1,3 +1,8 @@
+if (typeof require == "function") {
+	Truss = require("../../Truss");
+	Truss.Model = require("../../Truss.Model");
+	Truss.Collection = require("../../Truss.Collection");
+}
 
 describe("Truss.Collection", function () {
 	var collection = null;
@@ -25,7 +30,7 @@ describe("Truss.Collection", function () {
 				spyFire = spyOn(collection, "fire");
 				collection.add(obj);
 			});
-			it("Should fire an 'add' event with the new model", function () {
+			it("Should fire an 'add' event with a new model", function () {
 				expect(spyFire).toHaveBeenCalledWith("add", collection.getById("mid_1"));
 			});
 		});
@@ -45,6 +50,7 @@ describe("Truss.Collection", function () {
 				obj = {text: "I like Mangoes"};
 
 			beforeEach(function () {
+				collection.reset();
 				spyFire = spyOn(collection, "fire");
 				collection.add(obj);
 			});
@@ -58,6 +64,7 @@ describe("Truss.Collection", function () {
 				obj2 = {text: "I like Bananas"};
 
 			beforeEach(function () {
+				collection.reset();
 				spyFire = spyOn(collection, "fire");
 				collection.add([obj1, obj2]);
 			});
@@ -77,9 +84,9 @@ describe("Truss.Collection", function () {
 				spyFire;
 
 			beforeEach(function () {
+				collection.reset();
 				spyFire = spyOn(collection, "fire");
 				collection.add([obj1, obj2]);
-				
 			});
 			describe("When a removedById is called with by the id of the first model", function () {
 				beforeEach(function () {
@@ -107,6 +114,7 @@ describe("Truss.Collection", function () {
 					spyFire;
 
 				beforeEach(function () {
+					collection.reset();
 					spyFire = spyOn(collection, "fire");
 					collection.add([obj1, obj2, obj3]);
 				});

@@ -1,3 +1,7 @@
+if (typeof require == "function") {
+	Truss = require("../../Truss");
+	Truss.Model = require("../../Truss.Model");
+}
 
 describe("Truss.Model", function () {
 	var model = null;
