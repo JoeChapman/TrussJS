@@ -1,36 +1,30 @@
 describe("Notes.View.Count", function () {
 	var viewCount = null,
-		mockCollection = {
-			models: [],
-			_getCount: function () {},
-			getModels: function () {
-				return this.models;
-			}
-		},
+		collection = null,
 		rootNode = document.getElementById("rootNode");
 
 	beforeEach(function () {
-		mockCollection = Truss.extend(mockCollection);
+		collection = new (Truss.Collection.construct());
 	});
 
 	describe("When a Count is created without a rootNode", function () {
 		it("Should throw 'View requires a rootNode of type HTMLElement'", function () {
 			expect(function () {
-				viewList = new Notes.View.Count({collection: mockCollection});
+				viewCount = new Notes.View.Count({collection: collection});
 			}).toThrow("View requires a rootNode of type HTMLElement");
 		});
 	});
 	describe("When a Count view is created without a collection", function () {
 		it("Should throw 'View requires a collection'", function () {
 			expect(function () {
-				viewList = new Notes.View.Count({rootNode: rootNode});
+				viewCount = new Notes.View.Count({rootNode: rootNode});
 			}).toThrow("View requires a collection");
 		});
 	});
 	describe("When a Count view is created without options", function () {
 		it("Should throw View requires options rootNode and collection", function () {
 			expect(function () {
-				viewList = new Notes.View.Count();
+				viewCount = new Notes.View.Count();
 			}).toThrow("View requires options rootNode and collection");
 		});
 	});
@@ -39,10 +33,7 @@ describe("Notes.View.Count", function () {
 		beforeEach(function () {
 			viewCount = new Notes.View.Count({
 				rootNode: rootNode, 
-				collection: mockCollection
-			});
-			spyGetCount = spyOn(viewCount.collection, "_getCount").andCallFake(function () {
-				return mockCollection.models.length;
+				collection: collection
 			});
 		});
 		afterEach(function () {

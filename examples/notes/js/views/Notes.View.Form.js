@@ -1,13 +1,14 @@
 var Notes = Notes || {};
 Notes.View =  Notes.View || {};
 
-Notes.View.Form = function (options) {
-	this.rootNode = options.rootNode;
-	this.collection = options.collection;
-	this._makeElements();
-};
 
-Notes.View.Form.prototype = Truss.extend({
+Notes.View.Form = Truss.View.construct({
+
+	start: function (options) {
+		this.rootNode = options.rootNode;
+		this.collection = options.collection;
+		this._makeElements();
+	},
 
 	_add: function (e) {
 		e.preventDefault();
@@ -53,5 +54,5 @@ Notes.View.Form.prototype = Truss.extend({
 		this.submit.addEventListener("click", this._add.bind(this), false);
 	}
 
-}, Truss.View.prototype);
+});
 

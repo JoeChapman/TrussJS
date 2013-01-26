@@ -1,20 +1,18 @@
 var Notes = Notes || {};
 Notes.View =  Notes.View || {};
 
-Notes.View.Note = function (options) {
-	Truss.extend(this, Truss.View.prototype);
+Notes.View.Note = Truss.View.construct({
 
-	this.parentEl = options.parentEl;
-	this.id = options.model.id;
+	start: function (options) {
 
-	this.render(options.model);
-	
-	this.collection = options.collection;
-	this.button.addEventListener("click", this.delete.bind(this), false);
-};
+		this.parentEl = options.parentEl;
+		this.id = options.model.id;
 
-Notes.View.Note.prototype = Truss.extend({
-
+		this.render(options.model);
+		
+		this.collection = options.collection;
+		this.button.addEventListener("click", this.delete.bind(this), false);
+	},
 	render: function (model) {
 		var button = this.make("button"),
 			element = this.make("li", 
@@ -35,4 +33,4 @@ Notes.View.Note.prototype = Truss.extend({
 		delete this.element;
 	}
 
-}, Truss.View.prototype);
+});

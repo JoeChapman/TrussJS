@@ -1,16 +1,16 @@
 describe("Notes.View.List", function () {
 	var viewList = null,
 		rootNode = document.getElementById("rootNode"),
-		mockCollection = {};
+		collection = {};
 
 	beforeEach(function () {
-		mockCollection = Truss.extend(mockCollection, Truss)
+		collection = new (Truss.Collection.construct());
 	});
 
 	describe("When a List is created without a rootNode", function () {
 		it("Should throw 'View requires a rootNode of type HTMLElement'", function () {
 			expect(function () {
-				viewList = new Notes.View.List({collection: mockCollection});
+				viewList = new Notes.View.List({collection: collection});
 			}).toThrow("View requires a rootNode of type HTMLElement");
 		});
 	});
@@ -32,12 +32,12 @@ describe("Notes.View.List", function () {
 		beforeEach(function () {
 			viewList = new Notes.View.List({
 				rootNode: rootNode, 
-				collection: mockCollection
+				collection: collection
 			});	
 		});
 
 		afterEach(function () {
-			mockCollection = {};
+			collection = {};
 			viewList = null;
 		});
 
@@ -52,7 +52,7 @@ describe("Notes.View.List", function () {
 				spyViewNote,
 				spyGetCollection,
 				params = {
-					collection: mockCollection,
+					collection: collection,
 					parentEl: null,
 					model: note
 				};

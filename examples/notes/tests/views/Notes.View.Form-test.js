@@ -1,4 +1,4 @@
-describe("StickyNote.View.Form", function () {
+describe("Notes.View.Form", function () {
 	var view = null,
 		mockCollection = {
 			add: function () {}

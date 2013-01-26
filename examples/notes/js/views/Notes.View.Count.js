@@ -1,41 +1,41 @@
 var Notes = Notes || {};
 Notes.View =  Notes.View || {};
 
-Notes.View.Count = function (options) {
+Notes.View.Count = Truss.View.construct({
 
-	if (!options) {
-		throw {
-			name: "ArgumentError",
-			message: "View requires options rootNode and collection"
-		};
-	}
-	
-	if (!options.rootNode) {
-		throw {
-			name: "ArgumentError",
-			message: "View requires a rootNode of type HTMLElement"
-		};
-	}
+	start: function (options) {
 
-	if (!options.collection) {
-		throw {
-			name: "ArgumentError",
-			message: "View requires a collection"
-		};
-	}
+		if (!options) {
+			throw {
+				name: "ArgumentError",
+				message: "View requires options rootNode and collection"
+			};
+		}
+		
+		if (!options.rootNode) {
+			throw {
+				name: "ArgumentError",
+				message: "View requires a rootNode of type HTMLElement"
+			};
+		}
 
-	this.tagName = "output";
-	this.counter = 0;
+		if (!options.collection) {
+			throw {
+				name: "ArgumentError",
+				message: "View requires a collection"
+			};
+		}
 
-	this.rootNode = options.rootNode;
-	this.collection = options.collection;
+		this.tagName = "output";
+		this.counter = 0;
 
-	this._render();
-	this.collection.on("add", this._increment.bind(this));
-	this.collection.on("removed", this._decrement.bind(this));
-};
+		this.rootNode = options.rootNode;
+		this.collection = options.collection;
 
-Notes.View.Count.prototype = Truss.extend({
+		this._render();
+		this.collection.on("add", this._increment.bind(this));
+		this.collection.on("removed", this._decrement.bind(this));
+	},
 
 	_increment: function (model) {
 		this.output.innerHTML = this.collection.getModels().length;
@@ -52,4 +52,4 @@ Notes.View.Count.prototype = Truss.extend({
 		this.rootNode.appendChild(element);
 	}
 
-}, Truss.View.prototype);
+});

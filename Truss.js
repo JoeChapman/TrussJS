@@ -22,12 +22,13 @@
 	// Truss is a constructor
 	function Truss (options) {
 
+		// Add any arguments to this.options
 		if (typeof options != "undefined") {
 			this.options = options;
 		}
 		
+		// Call the start function to do any setup
 		if ( typeof this.start === "function") {
-
 			this.start( options );
 
 		}
@@ -90,23 +91,32 @@
 	// Construct is the static inheritance function
 	Truss.construct = function (proto) {
 	
-	    var i, parent = this;
+	    var i, parent = this, other = {};
 	    
-	    for (i in parent.prototype) {
-	    	proto[i] = parent.prototype[i];
+	    // Add all proto properties to the parent prototype
+	    for (j in parent.prototype) {
+	    	other[j] = parent.prototype[j];
 	    }
-	    
+
+	    for (i in proto) {
+	   		other[i] = proto[i];
+	    }
+
+	    // Make the new constructor call the parent with its arguments
 	    function F () { 
 	    	return parent.call(this, [].slice.call(arguments)[0]);
 	    }
 	    
+	    // Add any static properties from the parent to the new constructor
 	    for (j in parent) {
 	        F[j] = parent[j];
 	    }
 	    
-	    F.prototype = proto;
+	    // Make the constructor prototype
+	    F.prototype = other;
 	    F.prototype.constructor = F;
 
+	    // Blamo!!
 	    return F;
 	};
 
