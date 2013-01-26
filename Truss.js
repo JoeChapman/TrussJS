@@ -30,62 +30,97 @@
 		// Call the start function to do any setup
 		if ( typeof this.start === "function") {
 			this.start( options );
-
 		}
 	};
 
-	// Truss prototype is the events
 	Truss.prototype = {
 
 		events: {},
 
-		on: function(event, fn, context) {
-			if (typeof fn === 'undefined') {
-				return;
+		on: function (event, callback, context) {
+			
+			if ( typeof callback != "function" ) {
+
+				throw new Error("on() needs a callback function");
+
 			}
-			if (!this.events[event]) {
+
+			if ( !this.events[event] ) {
 				this.events[event] = [];
 			}
-			this.events[event].push({fn: fn, context: context});
+
+			this.events[event].push({ 
+				callback: callback, 
+				context: context 
+			});
+
 		},
 
-		off: function(event, fn) {
-			if (!this.events[event]) {
-				return;
+		reset: function () {
+			this.events = {};
+		},
+
+		off: function (event, callback) {
+
+			if (typeof event != "string") {
+				throw new Error("off() needs an event");
 			}
-			var i, ev = this.events[event];
-			for (i = 0, len = ev.length; i < len; i++) {
-				if (typeof fn === 'function') {
-					if (ev[i].fn === fn) {
-						ev[i].fn = null;
-						delete ev[i].fn;
+
+			if ( this.events[event] ) {
+
+				var ev = this.events[event], len = ev.length;
+
+				while (len--) {
+
+					if (typeof callback !== 'function') {
+						// If no callback was given, remove the event
+						// and all its callbacks
+						ev.splice(len, 1);
+
+					} else {
+						// If a callback was passed, 
+						// remove the callback from the event
+						if ( ev[len].callback === callback ) {
+							
+							ev[len].callback = null;
+							
+							delete ev[len].callback;
+						}
+
 					}
-				} else {
-				 	ev.splice(i, 1);
-				}
-			} 
+
+				} 
+
+			}
+
 		},
 		
-		fire: function(event, data, context) {
-			if (!this.events[event]) {
-				return;
+		fire: function (event, data, context) {
+			
+			if (!event) {
+				throw new Error("fire() needs an event");
 			}
-			var i, ev = this.events[event];
-			for (i = 0, len = ev.length; i < len; i++) {
-				try {
-					if ('PAUSE' === ev[i].fn.call((context || ev[i].context || this), data)) {
-						break;
+
+			if ( this.events[event] ) {
+
+				var ev, events = this.events[event], len = events.length;
+
+				while ( len-- ) {
+
+					ev = events[len];
+
+					if ("function" == typeof ev.callback) {
+						// Invoke the callback in either context provided with data
+						ev.callback.call( ( context || ev.context || this ), data );
+
 					}
-				} catch (e) {
-					console.log(e);
-					throw {
-						name: "CallBackError",
-						message: "Cannot call null callBack"
-					}
+
 				}
-				
+
 			}
+
 		}
+
 	};
 
 	// Construct is the static inheritance function

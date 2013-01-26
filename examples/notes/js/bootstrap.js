@@ -2,11 +2,9 @@
 (function (Notes) {
 	var rootNode = document.getElementById("rootNode"),
 	
-		collection = new Notes.Collection.Notes();
-
 		options = {
 			rootNode: rootNode, 
-			collection: collection
+			collection: new (Truss.Collection.construct())
 		},
 
 		form = new Notes.View.Form(options),
