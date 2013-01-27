@@ -1,7 +1,6 @@
 var Notes = Notes || {};
 Notes.View =  Notes.View || {};
 
-
 Notes.View.List = Truss.View.construct({
 
 	start:  function (options) {

@@ -23,6 +23,8 @@ sloppy: true, browser: true, node: true, indent: 2 */
   // Truss is a constructor
   function Truss (options) {
 
+    this.events = {};
+
     // Add any arguments to this.options
     if ( "undefined" != typeof options ) {
       this.options = options;
@@ -36,8 +38,6 @@ sloppy: true, browser: true, node: true, indent: 2 */
   }
 
   Truss.prototype = {
-
-    events: {},
 
     on: function (event, callback, context) {
 
