@@ -2,8 +2,6 @@
 
     Truss.Mediator = Truss.construct({
 
-        _binds: {},
-
         _passes: {},
 
         _currentEvent: null,
@@ -15,10 +13,10 @@
          * @param eventName {String}
          * @private
          */
-        _add: function (type, target, eventName) {
+        _add: function (type, obj, eventName) {
 
             this._passes[ this._currentEvent ][type].push({
-                target: target,
+                obj: obj,
                 eventName: eventName
             });
 
@@ -55,9 +53,9 @@
             if ( this.removing ) {
 
                 // Has to object been marked for removal??
-                _.each( this._passes, function ( pass, j ) {
+                this._each( this._passes, function ( pass, j ) {
 
-                    _.each( pass.to, function ( to, i) {
+                    this._each( pass.to, function ( to, i) {
 
                         if (pass.to[i].remove && pass.to[i].remove === true) {
 
@@ -110,9 +108,7 @@
          * @param eventName {String}
          * @return {this}
          */
-        remove: function (target, eventName) {
-
-            var event;
+        remove: function (obj, eventName) {
 
             if (!arguments.length) {
                 throw {
@@ -121,18 +117,28 @@
                 };
             }
 
-             event = eventName;
-
             this.removing = true;
 
-            _.each(this._passes, function ( pass ) {
+            this._each(this._passes, function ( pass ) {
+                
+                this._each( pass.to, function ( to, i ) {
+                
+                    if (typeof obj == "string") {
 
-                _.each( pass.to, function ( to ) {
+                        eventName = obj;
 
-                    if ( (_.isEqual(to.target, target) || _.isNull(target)) && ( to.eventName === eventName || _.isUndefined( eventName )) ) {
+                        if ( to.eventName === eventName ) {
+                            
+                            [].splice.call(pass.to, i, 1)
+                        }
 
-                        to.remove = true;
+                    } else {
 
+                        if ( ( this._isEqual(to.obj, obj) || obj == null ) && ( to.eventName === eventName || typeof eventName == "undefined" ) ) {
+
+                            to.remove = true;
+
+                        } 
                     }
 
                 });
@@ -140,6 +146,21 @@
             });
 
             return this;
+        },
+
+        _isEqual: function (a, b) {
+
+            if (a === b) {
+                return a !== 0 || 1 / a == 1 / b;
+            }
+
+            if (a == null || b == null) {
+                return a === b;
+            }
+
+            if (toString.call(a) != toString.call(b)) {
+                return false;
+            }
         },
 
         /**
@@ -154,7 +175,7 @@
 
                 if ( config.source ) {
 
-                    _.each(config.source, function ( from ) {
+                    this._each(config.source, function ( from ) {
 
                         this.from( from.subscriber, from.event );
 
@@ -170,7 +191,7 @@
 
                 if ( config.target ) {
 
-                    _.each( config.target, function (to) {
+                    this._each( config.target, function (to) {
 
                         this.to( to.subscriber, to.event );
 
@@ -184,35 +205,7 @@
                     };
                 }
 
-            } else {
-
-                // reset binds every single time
-                this._binds = {};
-
-
-                for ( pass in this._passes ) {
-                    
-                    for ( from in this._passes[pass] ) {
-
-                        for (item in this._passes[pass][from]) {
-
-                            if ( !this._binds[ this._passes[pass][from][item].eventName ] ) {
-
-                                this._binds[ this._passes[pass][from][item].eventName ] = [];
-
-                            }
-
-                            this._binds[ this._passes[pass][from][item].eventName ].push( this._passes[pass][from][item].target );
-
-                        }
-                    }
-
-                }
-
-
-                this._bind();
-
-            }
+            } else { this._bind(); }
 
         },
 
@@ -235,7 +228,7 @@
 
                 if ( config.target ) {
 
-                    _.each( config.target, function ( to ) {
+                    this._each( config.target, function ( to ) {
 
                         this.remove( to.subscriber, to.event );
 
@@ -250,7 +243,7 @@
 
                 if ( config.source ) {
 
-                    _.each(config.source, function (from) {
+                    this._each(config.source, function (from) {
 
                         this.from(from.subscriber, from.eventName);
 
@@ -273,12 +266,14 @@
 
             var i;
 
+            // Native forEach
             if (typeof Array.prototype.forEach == "function" && list.length) {
 
                 list.forEach( callback, context || this);
 
             } else if ( list.length ) {
 
+                // Polyfill
                 Array.prototype.forEach = function( callback, context ) {
 
                     for(var i = 0, len = list.length; i < len; ++i) {
@@ -290,6 +285,8 @@
                 }
 
             } else {
+
+                // If the list is an [object Object] (i.e. Not an Array)
                 for ( i in list ) {
                     if ( list.hasOwnProperty( i )) {
                         callback.call(context || this, list[i], i, list);
@@ -305,15 +302,28 @@
          */
         _bind: function () {
 
-            this._each( this._binds[this._currentEvent], function (source) {
+            this._each( this._passes[ this._currentEvent ], function (sources, type, passes) {
+            
+                this._each( passes, function ( sources, type, pass ) {
+                
+                    this._each( pass.from, function ( from ) {
 
-                source.on( this._currentEvent, function( args ) {
-                    
-                    this._each( this._passes[ this._currentEvent ].to, function ( to ) {
+                        // Remove any previous binding
+                        from.obj.off( from.eventName );
 
-                        to.target.fire( to.eventName, args);
- 
-                     }, this);
+                        // Bind the event to a callback
+                        from.obj.on( from.eventName, function( args ) {
+                        
+                            this._each( pass.to, function ( to ) {
+
+                                // The callback binds the |to| event
+                                to.obj.fire( to.eventName, args);
+     
+                            }, this);
+
+                        }, this);
+
+                    }, this);
 
                 }, this);
 
