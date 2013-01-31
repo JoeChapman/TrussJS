@@ -1,12 +1,12 @@
+define( function ( require, exports, module ) {
 
-(function (global) {
-
-	var constants = {
+	var Truss = require( 'src/Truss' ).Truss,
+		constants = {
 			ID: 1,
 			ORIGID: 1,
 			IDPREFIX: "mid_"
 		};
-	
+
 	function getNewId () {
 		return constants.IDPREFIX + constants.ID++;
 	}
@@ -29,14 +29,6 @@
 
 	});
 
-	if (typeof module != 'undefined' && module.exports) {
-        module.exports = Truss.Model;
-    } else {
-        global.Truss.Model = Truss.Model;
-    }
+  exports.Model = Truss.Model;
 
-
-}(this));
-
-	
-
+} );

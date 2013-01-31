@@ -1,5 +1,6 @@
+define ( function ( require, exports, module ) {
 
-(function (global) {
+	var Truss = require ( 'src/Truss' ).Truss;
 	
 	function getCount () {
 		return this.getModels().length;
@@ -94,10 +95,6 @@
 
 	});
 
-	if (typeof module != 'undefined' && module.exports) {
-        module.exports = Truss.Collection;
-    } else {
-        global.Truss.Collection = Truss.Collection;
-    }
+	exports.Collection = Truss.Collection;
 
-}(this));
+} );

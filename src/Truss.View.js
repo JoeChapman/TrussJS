@@ -1,5 +1,6 @@
+define ( function ( require, exports, module ) {
 
-(function (global) {
+	var Truss = require ( 'src/Truss' ).Truss;
 
 	// Private functions
 	function realTypeOf (o) {
@@ -57,12 +58,8 @@
 		}
 	});
 
-	if (typeof module != 'undefined' && module.exports) {
-        module.exports = Truss.View;
-    } else {
-        global.Truss.View = Truss.View;
-    }
+	exports.View = Truss.View;
 
-}(this));
+} );
 
 	
