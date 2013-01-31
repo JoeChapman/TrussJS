@@ -1,4 +1,6 @@
-(function (global) {
+define ( function ( require, exports, module ) {
+
+    var Truss = require ( 'src/Truss' ).Truss;
 
     Truss.Mediator = Truss.construct({
 
@@ -294,7 +296,7 @@
                 }
             }
 
-         },
+        },
 
         /**
          * Bind one or more target events to one or more source events
@@ -333,11 +335,6 @@
 
     });
 
-    // Export Truss for Node or browser
-    if ("undefined" != typeof module && module.exports) {
-        module.exports = Truss.Mediator;
-    } else {
-        global.Truss.Mediator = Truss.Mediator;
-    }
+    exports.Mediator = Truss.Mediator;
 
-}(this));
+} );
