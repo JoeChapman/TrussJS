@@ -368,8 +368,7 @@ require( ['src/Truss'], function ( TrussExport ) {
 
 						truss.fire()
 
-					}).toThr
-					ow("fire() needs an event");
+					}).toThrow("fire() needs an event");
 
 				});
 			});
