@@ -1,6 +1,3 @@
-/*jslint bitwise: true, continue: true, eqeq: true, 
-es5: true, forin: true, nomen: true, plusplus: true, 
-sloppy: true, browser: true, node: true, indent: 2 */
 
 define( function ( require, exports, module ) {
 

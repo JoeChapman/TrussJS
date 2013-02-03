@@ -3,7 +3,7 @@ define ( function ( require, exports, module ) {
 	var Truss = require ( 'src/Truss' ).Truss;
 
 	// Private functions
-	function realTypeOf (o) {
+	function realTypeOf ( o ) {
 		return Object.prototype.toString.call(o).match(/\w+/g)[1].toLowerCase();
 	}
 
@@ -43,19 +43,32 @@ define ( function ( require, exports, module ) {
 			}
 
 			// Add the attributes
-			if (attrs) {
+			if ( attrs ) {
+
 				for (var a in attrs) {
+
 					if (attrs.hasOwnProperty(a)) {
+
 						tag[a] = attrs[a];
-						if (!(a in tag.attributes)) {
-							tag.setAttribute(a, attrs[a]);
+						
+						if ( !( a in tag.attributes ) ) {
+							
+							tag.setAttribute( a, attrs[a] );
+
 						}
+
 					}
+
 				}
+
 				return tag;
+
 			}
+
 			return tag;
+
 		}
+
 	});
 
 	exports.View = Truss.View;
