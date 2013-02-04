@@ -1,6 +1,19 @@
-define ( function ( require, exports, module ) {
 
-	var Truss = require ( 'src/Truss' ).Truss;
+( function ( global ) {
+
+	var Truss;
+
+	if ( "undefined" != typeof module && module.exports ) {
+		// NodeJS
+		Truss = modules.exports.Truss;
+	} else if ( "function" == typeof require && require.amd ) {
+		// AMD
+		Truss = require ( 'src/Truss' ).Truss;
+	} else {
+		// Browser
+		Truss = global.Truss;
+	}
+	
 	
 	function getCount () {
 		return this.getModels().length;
@@ -95,6 +108,15 @@ define ( function ( require, exports, module ) {
 
 	});
 
-	exports.Collection = Truss.Collection;
+  // -- Node Js --
+  if (typeof module != 'undefined' && module.exports) {
+      module.exports = Truss;
+  // -- AMD --
+  } else if (typeof define == "function" && define.amd) {
+      define('Truss', [], function () { return Truss; });
+  // -- Browser --
+  } else {
+      global.Truss = Truss;
+  }
 
-} );
+}( this ));

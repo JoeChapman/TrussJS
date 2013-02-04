@@ -1,6 +1,17 @@
-define ( function ( require, exports, module ) {
+( function ( global ) {
 
-	var Truss = require ( 'src/Truss' ).Truss,
+	var Truss;
+
+	if ( "undefined" != typeof module && module.exports ) {
+		// NodeJS
+		Truss = modules.exports.Truss;
+	} else if ( "function" == typeof require && require.amd ) {
+		// AMD
+		Truss = require ( 'src/Truss' ).Truss;
+	} else {
+		// Browser
+		Truss = global.Truss;
+	}
 
 		passes = {},
 
@@ -66,9 +77,9 @@ define ( function ( require, exports, module ) {
 			// If the list is an [object Object] (i.e. Not an Array)
 			for ( i in list ) {
 
-				if ( list.hasOwnProperty( i )) {
+				if ( list.hasOwnProperty( i ) ) {
 				
-					callback.call(context || this, list[i], i, list);
+					callback.call( context || this, list[i], i, list );
 				
 				}
 			
@@ -360,8 +371,16 @@ define ( function ( require, exports, module ) {
 		}
 
 	});
-	
-	// Export it for Node
-	exports.Mediator = Truss.Mediator;
 
-});
+	if (typeof module != 'undefined' && module.exports) {
+	// NodeJS
+      module.exports.Mediator = Truss.Mediator;
+  } else if (typeof define == "function" && define.amd) {
+  // AMD
+      define('Truss.Mediator', [], function () { return Truss.Mediator; });
+  } else {
+  // Browser
+      global.Truss.Mediator = Truss.Mediator;
+  }
+
+}( this ));

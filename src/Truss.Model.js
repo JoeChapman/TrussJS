@@ -1,6 +1,17 @@
-define( function ( require, exports, module ) {
+( function ( global ) {
 
-	var Truss = require( 'src/Truss' ).Truss,
+	var Truss;
+
+	if ( "undefined" != typeof module && module.exports ) {
+		// NodeJS
+		Truss = modules.exports.Truss;
+	} else if ( "function" == typeof require && require.amd ) {
+		// AMD
+		Truss = require ( 'src/Truss' ).Truss;
+	} else {
+		// Browser
+		Truss = global.Truss;
+	}
 
 		constants = {
 			ID: 1,
@@ -32,6 +43,8 @@ define( function ( require, exports, module ) {
 		} 
 
 	});
+
+	
 
   exports.Model = Truss.Model;
 

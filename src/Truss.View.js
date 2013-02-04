@@ -1,18 +1,34 @@
-define ( function ( require, exports, module ) {
 
-	var Truss = require ( 'src/Truss' ).Truss;
+( function ( global ) {
 
-	// Private functions
+	var Truss;
+
+	if ( "undefined" != typeof module && module.exports ) {
+		// NodeJS
+		Truss = modules.exports.Truss;
+	} else if ( "function" == typeof require && require.amd ) {
+		// AMD
+		Truss = require ( 'src/Truss' ).Truss;
+	} else {
+		// Browser
+		Truss = global.Truss;
+	}
+
+	// Utility function
 	function realTypeOf ( o ) {
-		return Object.prototype.toString.call(o).match(/\w+/g)[1].toLowerCase();
+		// Use toString to cast 'o' to its class definition,
+		// e.g. [ object Object ] and return the 2nd part
+		return Object.prototype.toString.call( o ).match( /\w+/g )[ 1 ].toLowerCase();
 	}
 
 	// Build the constructor
 	Truss.View = Truss.construct({
 
+		// Start is optional, it's called if present,
+		// like a constructor
 		start: function () {
-			this.tagName = "div";
-			this.rootNode = window.document.body;
+			this.tagName = this.options.tagName || "div";
+			this.rootNode = this.options.rootNode || window.document.body;
 		},
 
 		make: function () {
@@ -71,8 +87,17 @@ define ( function ( require, exports, module ) {
 
 	});
 
-	exports.View = Truss.View;
+  if (typeof module != 'undefined' && module.exports) {
+	// NodeJS
+      module.exports.View = Truss.View;
+  } else if (typeof define == "function" && define.amd) {
+  // AMD
+      define('Truss.View', [], function () { return Truss.View; });
+  } else {
+  // Browser
+      global.Truss.View = Truss.View;
+  }
 
-} );
+}( this ));
 
 	
