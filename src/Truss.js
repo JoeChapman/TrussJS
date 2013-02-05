@@ -38,11 +38,17 @@
 
     on: function (event, callback, context) {
 
-      if ( "function" !== typeof callback ) {
+      var ctx;
 
-        throw new Error("on() needs a callback function");
-
+      if ( "string" != typeof event ) {
+        throw new Error("on() needs an event name string");
       }
+
+      if ( "function" != typeof callback ) {
+        throw new Error("on() needs a callback function");
+      }
+
+      ctx = [].slice.call( arguments, 2)[0];
 
       if ( !this.events[event] ) {
         this.events[event] = [];
@@ -50,7 +56,7 @@
 
       this.events[event].push({ 
         callback: callback, 
-        context: context 
+        context: ctx 
       });
 
     },
@@ -59,19 +65,27 @@
       this.events = {};
     },
 
-    off: function (event, callback) {
+    off: function (event) {
 
+      var ev, len, cb;
+
+      // Event must be a string
       if ( "string" != typeof event ) {
-        throw new Error("off() needs an event");
+        throw new Error( "off() needs an event" );
       }
 
+      cb = [].slice.call( arguments, 1)[0];
+
+      // If the event has been registered
       if ( this.events[event] ) {
 
-        var ev = this.events[event], len = ev.length;
+        ev = this.events[event];
+        len = ev.length;
 
-        while (len--) {
+        // Loop over each event object that matches ours.
+        while ( len-- ) {
 
-          if ( "function" != typeof callback ) {
+          if ( "function" != typeof cb ) {
             // If no callback was given, remove the event
             // and all its callbacks
             ev.splice(len, 1);
@@ -79,7 +93,7 @@
           } else {
             // If a callback was passed, 
             // remove the callback from the event
-            if ( ev[len].callback === callback ) {
+            if ( ev[len].callback === cb ) {
 
               ev[len].callback = null;
 
@@ -95,23 +109,32 @@
 
     },
 
-    fire: function (event, data, context) {
+    fire: function ( event ) {
 
-      if (!event) {
+      var ev, len, opt, data, ctx;
+
+      // event argument is mandatory
+      if ( "string" != typeof event ) {
         throw new Error("fire() needs an event");
       }
 
-      if ( this.events[event] ) {
+      // Optional arguments
+      opt = [].slice.call( arguments, 1 );
+      data = opt[0];
+      ctx = opt[1];
 
-        var ev, events = this.events[event], len = events.length;
+      // If this event has been registered
+      if ( this.events[ event ] ) {
 
-        while ( len-- ) {
+        len = this.events[ event ].length; 
 
-          ev = events[len];
+        // Invoke the callback on each event object
+        while ( ev = this.events[event][--len] ) {
 
           if ("function" == typeof ev.callback) {
-            // Invoke the callback in either context provided with data
-            ev.callback.call( ( context || ev.context || this ), data );
+
+            // Invoke in either context with data if present
+            ev.callback.call( ( ctx || ev.context || this ), data );
 
           }
 

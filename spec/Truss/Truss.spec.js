@@ -96,6 +96,18 @@ require( ['src/Truss'], function ( TrussExport ) {
 				expect(typeof truss.fire).toEqual("function");
 			});
 
+			describe("Given on is invoked with NO arguments", function () {
+
+				it("Should throw 'on() needs an event name string'", function () {
+					expect(function () {
+						
+						truss.on();
+
+					}).toThrow("on() needs an event name string");
+				});
+
+			});
+
 			describe("Given on is invoked with ONLY an 'eventName'", function () {
 
 				it("Should throw 'on() needs a callback function'", function () {
