@@ -44,8 +44,15 @@
 
 	});
 
-	
+	if (typeof module != 'undefined' && module.exports) {
+	// NodeJS
+      module.exports.Model = Truss.Model;
+  } else if (typeof define == "function" && define.amd) {
+  // AMD
+      define('Truss.Model', [], function () { return Truss.Model; });
+  } else {
+  // Browser
+      global.Truss.Model = Truss.Model;
+  }
 
-  exports.Model = Truss.Model;
-
-} );
+}( this ));
