@@ -6,6 +6,7 @@
 
 <ol>
 	<li><del>Mediator</del></li>
+	<li>Integrate Mediator into core events API</li>
 	<li>Controller</li>
 	<li>Cross-browser Utils</li>
 	<li>Support for offline</li>
@@ -15,3 +16,4 @@
 
 <p>If you want to play around, fork Truss to your account, and clone the new repo to your machine. When finished, cd into the Truss root directory and run <code>npm install</code> to install all the dependencies, if it gives you the ok, you're ready to start coding.</p>
 <p>All our tests are written in Jasmine and run headlessly with PhantomJS from Grunt. To run the tests, so long as you've followed the previous steps, type <code>grunt jasmine</code>, and you should see all green. If you don't, check the issues and raise a new issue if none exists.</p>
+
