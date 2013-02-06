@@ -1,9 +1,10 @@
 {
   "name": "Truss",
   "version": "0.1.0",
-  "description": "Welterweight JavaScript Framework",
+  "description": "JavaScript Application Framework",
   "keywords": [
     "mvc",
+    "javascript",
     "framework",
     "node"
   ],
@@ -11,7 +12,14 @@
     {
       "name": "Joseph Chapman",
       "email": "info@josephchapman.com",
-      "web": "http://josephchapman.com"
+      "blog": "josephchapman.com",
+      "web": "https://github.com/JoeChapman/"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Lucian Lature",
+      "web": "https://github.com/lucianlature"
     }
   ],
   "author": "Joseph Chapman",
