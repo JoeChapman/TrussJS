@@ -1,17 +1,6 @@
-( function ( global ) {
+define( function ( require, exports, module ) {
 
-	var Truss;
-
-	if ( "undefined" != typeof module && module.exports ) {
-		// NodeJS
-		Truss = modules.exports.Truss;
-	} else if ( "function" == typeof require && require.amd ) {
-		// AMD
-		Truss = require ( 'src/Truss' ).Truss;
-	} else {
-		// Browser
-		Truss = global.Truss;
-	}
+	var Truss = require ( 'src/Truss' ).Truss,
 
 		constants = {
 			ID: 1,
@@ -44,15 +33,6 @@
 
 	});
 
-	if (typeof module != 'undefined' && module.exports) {
-	// NodeJS
-      module.exports.Model = Truss.Model;
-  } else if (typeof define == "function" && define.amd) {
-  // AMD
-      define('Truss.Model', [], function () { return Truss.Model; });
-  } else {
-  // Browser
-      global.Truss.Model = Truss.Model;
-  }
+  module.exports.Model = Truss.Model;
 
-}( this ));
+});

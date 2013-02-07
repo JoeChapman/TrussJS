@@ -1,17 +1,6 @@
-( function ( global ) {
+define( function ( require, exports, module ) {
 
-	var Truss;
-
-	if ( "undefined" != typeof module && module.exports ) {
-		// NodeJS
-		Truss = modules.exports.Truss;
-	} else if ( "function" == typeof require && require.amd ) {
-		// AMD
-		Truss = require ( 'src/Truss' ).Truss;
-	} else {
-		// Browser
-		Truss = global.Truss;
-	}
+	var Truss = require ( 'src/Truss' ).Truss,
 
 		passes = {},
 
@@ -19,14 +8,14 @@
 
 	/**
 		* A little helper to remove duplication
-		* @param type {String}
-		* @param target {Object}
+		* @param type {String} to|from
+		* @param obj {Object}
 		* @param eventName {String}
 		* @private
 		*/
 	function add (type, obj, eventName) {
 
-		passes[ currentEvent ][type].push({
+		passes[ currentEvent ][ type ].push({
 			obj: obj,
 			eventName: eventName
 		});
@@ -372,15 +361,6 @@
 
 	});
 
-	if (typeof module != 'undefined' && module.exports) {
-	// NodeJS
-      module.exports.Mediator = Truss.Mediator;
-  } else if (typeof define == "function" && define.amd) {
-  // AMD
-      define('Truss.Mediator', [], function () { return Truss.Mediator; });
-  } else {
-  // Browser
-      global.Truss.Mediator = Truss.Mediator;
-  }
+  module.exports.Mediator = Truss.Mediator;
 
-}( this ));
+});

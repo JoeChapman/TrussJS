@@ -12,6 +12,7 @@ Notes.View.Note = Truss.View.construct({
 		this.render();
 		
 		this.button.addEventListener("click", this.delete.bind(this), false);
+
 		this.text.addEventListener("click", this.edit.bind(this), false);
 
 	},
@@ -24,6 +25,7 @@ Notes.View.Note = Truss.View.construct({
 	},
 
 	render: function () {
+
 		var button = this.make("button"),
 			em = this.make("em", this.model.get("text") ),
 			element = this.make("li", 

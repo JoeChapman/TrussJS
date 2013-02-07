@@ -1,5 +1,4 @@
-
-(function ( global ) {
+define( function ( require, exports, module ) {
 
   function isObject (o) {
     return Object.prototype.toString.call(o) === "[object Object]";
@@ -183,15 +182,7 @@
 
   Truss.construct = construct;
 
-  // -- Node Js --
-  if (typeof module != 'undefined' && module.exports) {
-      module.exports = Truss;
-  // -- AMD --
-  } else if (typeof define == "function" && define.amd) {
-      define('Truss', [], function () { return Truss; });
-  // -- Browser --
-  } else {
-      global.Truss = Truss;
-  }
+  exports.Truss = Truss;
 
-}( this ));
+
+});

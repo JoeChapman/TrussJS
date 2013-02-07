@@ -1,18 +1,7 @@
 
-( function ( global ) {
-
-	var Truss;
-
-	if ( "undefined" != typeof module && module.exports ) {
-		// NodeJS
-		Truss = modules.exports.Truss;
-	} else if ( "function" == typeof require && require.amd ) {
-		// AMD
-		Truss = require ( 'src/Truss' ).Truss;
-	} else {
-		// Browser
-		Truss = global.Truss;
-	}
+define ( function ( require, exports, module ) {
+ 
+	var Truss = require ( 'src/Truss' ).Truss;
 
 	// Utility function
 	function realTypeOf ( o ) {
@@ -109,17 +98,9 @@
 
 	});
 
-  if (typeof module != 'undefined' && module.exports) {
-	// NodeJS
-      module.exports.View = Truss.View;
-  } else if (typeof define == "function" && define.amd) {
-  // AMD
-      define('Truss.View', [], function () { return Truss.View; });
-  } else {
-  // Browser
-      global.Truss.View = Truss.View;
-  }
+  module.exports.View = Truss.View;
 
-}( this ));
+
+});
 
 	
