@@ -1,7 +1,7 @@
 define ( function ( require, exports, module ) {
 
 	var Truss = require ( 'src/Truss' ).Truss;
-	
+
 	function getCount () {
 		return this.getModels().length;
 	}
@@ -94,7 +94,10 @@ define ( function ( require, exports, module ) {
 		}
 
 	});
+for ( i in Truss.Collection.prototype ) {
 
+	//console.log( Truss.Collection.prototype[i] )
+}
   module.exports.Collection = Truss.Collection;
 
 });
