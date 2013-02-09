@@ -2,30 +2,10 @@ define( function ( require, exports, module ) {
 
   var EventEmitter = require ( 'src/Truss.EventEmitter' ),
 
-  isObject = function (o) {
-    // Concat with string invokes object toString.
-    return "[object Object]" === ''+o;
-  },
-
-  isDefined = function (o) {
-    return "undefined" != typeof o;
-  },
-
-  hasOwn = function (o, p) {
-    return o.hasOwnProperty(p);
-  },
-
-  realTypeOf = function (o) {
-    // Only concat with real objects invokes toString, 
-    // so we use the long-winded approach for generic matches.
-    return Object.prototype.toString.call(o).match(/\w+/g)[1].toLowerCase();
-  },
-
   /**
    * @constructor
    * @description
-   * Constructor function for the object
-   * from which all else inherits.
+   * -> Core of Truss framework
    * @param {Object} options
    * @return {this}
    */
@@ -46,8 +26,7 @@ define( function ( require, exports, module ) {
   /**
    * @static
    * @description
-   * Takes two objects and applies all proprties from
-   * one to the other.
+   * -> Takes two objects and applies all proprties from one to the other.
    * @param {Object} dest
    * @param {Object} source
    * @return {Object} augmented dest
