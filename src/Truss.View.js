@@ -19,7 +19,7 @@ define ( function ( require, exports, module ) {
 	}
 
 	// Build the constructor
-	Truss.View = Truss.construct({
+	var View = Truss.construct({
 
 		// Start is optional, it's called if present,
 		// like a constructor
@@ -98,8 +98,8 @@ define ( function ( require, exports, module ) {
 
 	});
 
-  module.exports.View = Truss.View;
-
+  // Export View
+  exports.View = View;
 
 });
 

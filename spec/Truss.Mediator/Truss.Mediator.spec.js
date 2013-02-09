@@ -1,6 +1,8 @@
-require( ['src/Truss'], function ( TrussExport ) {
+require( ['src/Truss', 'src/Truss.Mediator'], 
+    function ( TrussExport, MediatorExport ) {
 
     var Truss = TrussExport.Truss;
+    var Mediator = MediatorExport.Mediator;
 
     describe("Mediator", function () {
 
@@ -26,7 +28,7 @@ require( ['src/Truss'], function ( TrussExport ) {
                     }));
 
                     // Create a mediator instance.
-                    mediator = new (Truss.Mediator.construct());
+                    mediator = new (Mediator.construct());
 
                     // The registration 'API-style'
                     mediator.from( source , "event:source" ).to( target, "event:target" );
@@ -69,7 +71,7 @@ require( ['src/Truss'], function ( TrussExport ) {
                     }));
 
                     // Create a mediator instance.
-                    mediator = new (Truss.Mediator.construct());
+                    mediator = new (Mediator.construct());
 
                     // The registration 'API-style'
                     mediator.from( source , "event:source" )
@@ -127,7 +129,7 @@ require( ['src/Truss'], function ( TrussExport ) {
                     }));
 
                     // Create a mediator instance.
-                    mediator = new (Truss.Mediator.construct());
+                    mediator = new (Mediator.construct());
 
                     // The registration 'API-style'
                     mediator.from( source , "event:source" )
@@ -188,7 +190,7 @@ require( ['src/Truss'], function ( TrussExport ) {
                     }));
 
                     // Create a mediator instance.
-                    mediator = new (Truss.Mediator.construct());
+                    mediator = new (Mediator.construct());
 
                     // The registration 'API-style'
                     mediator.from( source , "event:source" )
@@ -243,7 +245,7 @@ require( ['src/Truss'], function ( TrussExport ) {
                     }));
 
                     // Create a mediator instance.
-                    mediator = new (Truss.Mediator.construct());
+                    mediator = new (Mediator.construct());
 
                     // The registration 'API-style'
                     mediator.from( source , "event:source" )

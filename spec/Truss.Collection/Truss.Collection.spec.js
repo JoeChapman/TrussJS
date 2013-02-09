@@ -1,6 +1,11 @@
-require( ['src/Truss'], function ( TrussExport ) {
+require( ['src/Truss', 'src/Truss.Collection', 'src/Truss.Model'], 
+	function ( TrussExport, CollectionExport, ModelExport ) {
 
 	var Truss = TrussExport.Truss;
+	var Collection = CollectionExport.Collection;
+
+	// TODO - stub Model
+	var Model = ModelExport.Model;
 
 	describe("Truss.Collection", function () {
 		var collection = null;
@@ -8,13 +13,13 @@ require( ['src/Truss'], function ( TrussExport ) {
 		describe("When a collection is created without options", function () {
 			it("Should not throw an error", function () {
 				expect(function () {
-					collection = new Truss.Collection();
+					collection = new Collection();
 				}).not.toThrow();
 			});
 		});
 		describe("When a collection is created without a model", function () {
 			beforeEach(function () {
-				collection = new Truss.Collection();
+				collection = new Collection();
 			});
 			afterEach(function () {
 				collection.currentModel.resetId();
@@ -35,8 +40,8 @@ require( ['src/Truss'], function ( TrussExport ) {
 		});
 		describe("When a collection is created with a model", function () {
 			beforeEach(function () {
-				collection = new Truss.Collection({
-					model: Truss.Model
+				collection = new Collection({
+					model: Model
 				});
 			});
 			afterEach(function () {

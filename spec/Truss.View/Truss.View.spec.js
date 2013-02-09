@@ -1,6 +1,8 @@
-require( ['src/Truss'], function ( TrussExport ) {
+require( ['src/Truss', 'src/Truss.View'], 
+	function ( TrussExport, ViewExport ) {
 
 	var Truss = TrussExport.Truss;
+	var View = ViewExport.View;
 
 	describe("Truss.View", function () {
 		var view = null;
@@ -8,13 +10,13 @@ require( ['src/Truss'], function ( TrussExport ) {
 		describe("When a view is created without options", function () {
 			it("Should not throw an error", function () {
 				expect(function () {
-					view = new Truss.View();
+					view = new View();
 				}).not.toThrow();
 			});
 		});
 		describe("When a view is created without options", function () {
 			beforeEach(function () {
-				view = new Truss.View();
+				view = new View();
 			});
 			afterEach(function () {
 				view = null;

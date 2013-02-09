@@ -1,6 +1,10 @@
 define ( function ( require, exports, module ) {
 
+	// Require Truss
 	var Truss = require ( 'src/Truss' ).Truss;
+
+	// TODO - remove this dependency
+	var Model = require ( 'src/Truss.Model' ).Model;
 
 	function getCount () {
 		return this.getModels().length;
@@ -44,12 +48,12 @@ define ( function ( require, exports, module ) {
 		}
 	};
 
-	// Builds the constructor
-	Truss.Collection = Truss.construct({
+	// Use Truss.construct to build a constructor for a Collection
+	var Collection = Truss.construct({
 
 		start: function ( options ) {
 
-			this.model = this.options && this.options.model || Truss.Model
+			this.model = this.options && this.options.model || Model
 
 		},
 
@@ -94,10 +98,8 @@ define ( function ( require, exports, module ) {
 		}
 
 	});
-for ( i in Truss.Collection.prototype ) {
 
-	//console.log( Truss.Collection.prototype[i] )
-}
-  module.exports.Collection = Truss.Collection;
+	// Export Collection
+  exports.Collection = Collection;
 
 });

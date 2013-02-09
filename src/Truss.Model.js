@@ -16,7 +16,7 @@ define( function ( require, exports, module ) {
 		constants.ID = constants.ORIGID;
 	}
 
-	Truss.Model = Truss.construct({
+	var Model = Truss.construct({
 
     start: function () {
     	this.id = getNewId();
@@ -33,6 +33,7 @@ define( function ( require, exports, module ) {
 
 	});
 
-  module.exports.Model = Truss.Model;
+	// Export Model
+  exports.Model = Model;
 
 });

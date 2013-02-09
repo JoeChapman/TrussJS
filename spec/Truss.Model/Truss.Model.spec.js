@@ -1,6 +1,8 @@
-require( ['src/Truss'], function ( TrussExport ) {
+require( ['src/Truss', 'src/Truss.Model'], 
+	function ( TrussExport, ModelExport ) {
 
 	var Truss = TrussExport.Truss;
+	var Model = ModelExport.Model;
 
 	describe("Truss.Model", function () {
 
@@ -15,7 +17,7 @@ require( ['src/Truss'], function ( TrussExport ) {
 			count = 3;
 			beforeEach(function () {
 				while (0 < count--) {
-					model = new Truss.Model(attributes);
+					model = new Model(attributes);
 					models.push(model);
 				}
 				count = models.length;
@@ -44,7 +46,7 @@ require( ['src/Truss'], function ( TrussExport ) {
 			count = 3;
 			beforeEach(function () {
 				while (0 < count--) {
-					model = new Truss.Model(attributes);
+					model = new Model(attributes);
 					models.push(model);
 				}
 				count = models.length;

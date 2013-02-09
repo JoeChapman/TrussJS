@@ -113,7 +113,7 @@ define( function ( require, exports, module ) {
 
 	}
 
-	Truss.Mediator = Truss.construct({
+	var Mediator = Truss.construct({
 
 		/**
 		* Registers the source subject subscriber and its event(s)
@@ -361,6 +361,7 @@ define( function ( require, exports, module ) {
 
 	});
 
-  module.exports.Mediator = Truss.Mediator;
+  // Export Mediator
+  exports.Mediator = Mediator;
 
 });
