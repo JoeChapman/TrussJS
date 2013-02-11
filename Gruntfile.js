@@ -19,13 +19,30 @@ module.exports = function( grunt ) {
       src : '<%= meta.src %>',
       options : {
         specs : '<%= meta.specs %>',
-        // host : 'http://127.0.0.1:8000/',
+        // host : 'http://127.0.0.1:8000',
         template: require('grunt-template-jasmine-requirejs'),
 	    	templateOptions: {
 	        requireConfig: {
 	            baseUrl: './'
 	        }
 	    	}
+      }
+    },
+
+    requirejs: {
+      compile: {
+        options: {
+          baseUrl: "./",
+          include: [
+            'src/Truss.EventEmitter',
+            'src/Truss.Utils',
+            'src/Truss.js',
+            'src/Truss.Collection',
+            'src/Truss.Model',
+            'src/Truss.View'
+          ],
+          out: "compiled.js"
+        }
       }
     },
 
@@ -45,11 +62,10 @@ module.exports = function( grunt ) {
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  // grunt.loadNpmTasks('grunt-jasmine-runner');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
 
   grunt.registerTask('test', ['jshint', 'jasmine']);
-
-  // Default task.
+  grunt.registerTask('optimize', ['requirejs']);
   grunt.registerTask('default', ['test']);
 
 };
