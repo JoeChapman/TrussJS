@@ -31,10 +31,15 @@
 	protoMethod: function () {}
 });</code>
 </pre>
-<p>the new func also has a construct function</p>
+<p><code>func</code> also has a construct function and</p>
+<pre>
 <code>var cool = func.construct({
 	anotherProtoMethod: function () {}
 });</code>
+</pre>
+<p> and <code>cool</code> has a link to the prototype of <code>func</code></p>
+<pre>
+<code>typeof cool.prototype.protoMethod === 'function' // true</code>
 </pre>
 
 
