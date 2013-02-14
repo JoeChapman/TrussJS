@@ -27,9 +27,9 @@
 <h4>Inheritance</h4>
 <p>Use the construct function to create a new constructor and prototype that inherits from its parent</p>
 <pre>
-	var c = Truss.construct({
+	<code>var c = Truss.construct({
 		newMethod: function () {}
-	});
+	});</code>
 </pre>
 
 
