@@ -42,8 +42,24 @@
 <pre>
 <code>typeof cool.prototype.protoMethod === 'function' // true</code>
 </pre>
+<p>If you want something to happen when the new constructor function is instantiated, add it to a start function</p>
+<pre>
+<code>var cool = func.construct({
+	start: function () {
+		// do something on instantiation
+  },
+	anotherProtoMethod: function () {}
+});</code>
+</pre>
+<p>And pass in options</p>
+<pre><code>new cool({name: "Fonzy"});<code></pre>
 
-
+<h3>Mixin</h3>
+<p>If you'd prefer to just augment your object with more properties</p>
+<pre>
+<code>var mixed = Truss.mixin(Truss.Mediator, Truss.EventEmitter, false);</code>
+</pre>
+<p>Change the third paramter to true to make deep mixins</p>
 
 
 
