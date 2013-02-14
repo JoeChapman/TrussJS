@@ -31,7 +31,7 @@
 	protoMethod: function () {}
 });</code>
 </pre>
-<p><code>func</code> also has a construct function and</p>
+<p><code>func</code> also has a construct function</p>
 <pre>
 <code>var cool = func.construct({
 	anotherProtoMethod: function () {}
