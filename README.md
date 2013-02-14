@@ -25,10 +25,15 @@
 <p>I think the best way to start is with an example, so...</p>
 
 <h4>Inheritance</h4>
-<p>Use the construct function to create a new constructor and prototype that inherits from its parent</p>
+<p>Use the construct function to create a new constructor function and prototype that inherits from its parent</p>
 <pre>
-<code>var c = Truss.construct({
-	newMethod: function () {}
+<code>var func = Truss.construct({
+	protoMethod: function () {}
+});</code>
+</pre>
+<p>the new func also has a construct function</p>
+<code>var cool = func.construct({
+	anotherProtoMethod: function () {}
 });</code>
 </pre>
 
