@@ -1,4 +1,4 @@
-require ( ['src/Truss.EventEmitter'] , function ( EventEmitter ) {
+require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 
 	describe("Truss.EventEmitter", function () {
 

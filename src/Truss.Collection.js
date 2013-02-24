@@ -1,10 +1,10 @@
 define ( function ( require, exports, module ) {
 
 	// Require Truss
-	var Truss = require ( 'src/Truss' ).Truss;
+	var Truss = require ( 'Truss' );
 
 	// TODO - remove this dependency
-	var Model = require ( 'src/Truss.Model' ).Model;
+	var Model = require ( 'Truss.Model' );
 
 	function getCount () {
 		return this.getModels().length;
@@ -99,7 +99,6 @@ define ( function ( require, exports, module ) {
 
 	});
 
-	// Export Collection
-  exports.Collection = Collection;
+	return Collection;
 
 });

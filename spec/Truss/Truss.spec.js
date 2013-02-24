@@ -1,6 +1,6 @@
-require( ['src/Truss'], function ( TrussExport ) {
+require( ['Truss'], function ( TrussExport ) {
 
-	var Truss = TrussExport.Truss;
+	var Truss = TrussExport;
 
 	describe("Truss", function () {
 

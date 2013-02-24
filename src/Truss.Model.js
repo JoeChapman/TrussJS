@@ -1,6 +1,6 @@
 define( function ( require, exports, module ) {
 
-	var Truss = require ( 'src/Truss' ).Truss,
+	var Truss = require ( 'Truss' ),
 
 		constants = {
 			ID: 1,
@@ -33,7 +33,6 @@ define( function ( require, exports, module ) {
 
 	});
 
-	// Export Model
-  exports.Model = Model;
+	return Model;
 
 });

@@ -1,8 +1,8 @@
-require( ['src/Truss', 'src/Truss.Model'], 
+require( ['Truss', 'Truss.Model'], 
 	function ( TrussExport, ModelExport ) {
 
-	var Truss = TrussExport.Truss;
-	var Model = ModelExport.Model;
+	var Truss = TrussExport;
+	var Model = ModelExport;
 
 	describe("Truss.Model", function () {
 

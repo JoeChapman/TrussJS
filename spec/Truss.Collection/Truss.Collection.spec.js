@@ -1,11 +1,11 @@
-require( ['src/Truss', 'src/Truss.Collection', 'src/Truss.Model'], 
+require( ['Truss', 'Truss.Collection', 'Truss.Model'], 
 	function ( TrussExport, CollectionExport, ModelExport ) {
 
-	var Truss = TrussExport.Truss;
-	var Collection = CollectionExport.Collection;
+	var Truss = TrussExport;
+	var Collection = CollectionExport;
 
 	// TODO - stub Model
-	var Model = ModelExport.Model;
+	var Model = ModelExport;
 
 	describe("Truss.Collection", function () {
 		var collection = null;

@@ -1,8 +1,6 @@
 define ( function ( require, exports, module ) {
 
-	var Truss = {};
-
-	Truss.EventEmitter = {
+	var EventEmitter = {
 
 		events: {},
 
@@ -115,7 +113,7 @@ define ( function ( require, exports, module ) {
     }
 
 	};
-
-  module.exports = Truss.EventEmitter;
+ 
+  return EventEmitter;
 
 });

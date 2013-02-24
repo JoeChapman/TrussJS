@@ -1,6 +1,6 @@
 define( function ( require, exports, module ) {
 
-  var EventEmitter = require ( 'src/Truss.EventEmitter' ),
+  var EventEmitter = require ( 'Truss.EventEmitter' ),
 
   /**
    * @constructor
@@ -77,6 +77,6 @@ define( function ( require, exports, module ) {
   Truss.mixin(Truss.prototype, EventEmitter);
 
   // Export Truss Node AMD style
-  exports.Truss = Truss;
+  return Truss;
 
 });

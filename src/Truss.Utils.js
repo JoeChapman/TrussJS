@@ -18,7 +18,6 @@ define( function ( require, exports, module ) {
 
   }
 
-  // Export Truss Node AMD style
-  exports.Utils = Utils;
+  return Utils;
 
 });

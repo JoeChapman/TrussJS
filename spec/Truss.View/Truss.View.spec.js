@@ -1,8 +1,8 @@
-require( ['src/Truss', 'src/Truss.View'], 
+require( ['Truss', 'Truss.View'], 
 	function ( TrussExport, ViewExport ) {
 
-	var Truss = TrussExport.Truss;
-	var View = ViewExport.View;
+	var Truss = TrussExport;
+	var View = ViewExport;
 
 	describe("Truss.View", function () {
 		var view = null;

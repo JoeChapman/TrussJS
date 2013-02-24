@@ -1,7 +1,7 @@
 
 define ( function ( require, exports, module ) {
  
-	var Truss = require ( 'src/Truss' ).Truss;
+	var Truss = require ( 'Truss' );
 
 	// Utility function
 	function realTypeOf ( o ) {
@@ -98,8 +98,7 @@ define ( function ( require, exports, module ) {
 
 	});
 
-  // Export View
-  exports.View = View;
+  return View;
 
 });
 

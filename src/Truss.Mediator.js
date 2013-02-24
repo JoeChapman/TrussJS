@@ -1,6 +1,6 @@
 define( function ( require, exports, module ) {
 
-	var Truss = require ( 'src/Truss' ).Truss,
+	var Truss = require ( 'Truss' ),
 
 		passes = {},
 
@@ -361,7 +361,6 @@ define( function ( require, exports, module ) {
 
 	});
 
-  // Export Mediator
-  exports.Mediator = Mediator;
+  return Mediator;
 
 });

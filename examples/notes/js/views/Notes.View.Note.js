@@ -1,50 +1,52 @@
-var Notes = Notes || {};
-Notes.View =  Notes.View || {};
 
-Notes.View.Note = Truss.View.construct({
 
-	start: function (options) {
+	var Notes = Notes || {};
+	Notes.View =  Notes.View || {};
 
-		this.parentEl = options.parentEl;
-		this.model = options.model;
-		this.collection = options.collection;
-		
-		this.render();
-		
-		this.button.addEventListener("click", this.delete.bind(this), false);
+	Notes.View.Note = Truss.View.construct({
 
-		this.text.addEventListener("click", this.edit.bind(this), false);
+		start: function (options) {
 
-	},
+			this.parentEl = options.parentEl;
+			this.model = options.model;
+			this.collection = options.collection;
+			
+			this.render();
+			
+			this.button.addEventListener("click", this.delete.bind(this), false);
 
-	edit: function () {
-		var edit = new Notes.View.Edit_Note({
-			parentEl: this.element, 
-			model: this.model
-		});
-	},
+			this.text.addEventListener("click", this.edit.bind(this), false);
 
-	render: function () {
+		},
 
-		var button = this.make("button"),
-			em = this.make("em", this.model.get("text") ),
-			element = this.make("li", 
-				[em, button], {
-				id: this.model.get("id"),
-				draggable: true
+		edit: function () {
+			var edit = new Notes.View.Edit_Note({
+				parentEl: this.element, 
+				model: this.model
 			});
+		},
 
-		this.text = em;
-		this.button = button;
-		this.element = element;
+		render: function () {
 
-		this.parentEl.appendChild(element);
-	},
+			var button = this.make("button"),
+				em = this.make("em", this.model.get("text") ),
+				element = this.make("li", 
+					[em, button], {
+					id: this.model.get("id"),
+					draggable: true
+				});
 
-	delete: function () {
-		this.collection.removeById(this.model.get("id"));
-		this.parentEl.removeChild(this.element);
-		delete this.element;
-	}
+			this.text = em;
+			this.button = button;
+			this.element = element;
 
-});
+			this.parentEl.appendChild(element);
+		},
+
+		delete: function () {
+			this.collection.removeById(this.model.get("id"));
+			this.parentEl.removeChild(this.element);
+			delete this.element;
+		}
+
+	});

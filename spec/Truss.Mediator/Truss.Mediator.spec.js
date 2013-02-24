@@ -1,8 +1,8 @@
-require( ['src/Truss', 'src/Truss.Mediator'], 
+require( ['Truss', 'Truss.Mediator'], 
     function ( TrussExport, MediatorExport ) {
 
-    var Truss = TrussExport.Truss;
-    var Mediator = MediatorExport.Mediator;
+    var Truss = TrussExport;
+    var Mediator = MediatorExport;
 
     describe("Mediator", function () {
 
