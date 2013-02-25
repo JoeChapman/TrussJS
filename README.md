@@ -5,7 +5,6 @@
 <h2>Currently on the roadmap</h2>
 
 <ol>
-	<li><del>Mediator</del></li>
 	<li>Controller</li>
 	<li>Cross-browser Utils</li>
 	<li>Support for offline</li>
