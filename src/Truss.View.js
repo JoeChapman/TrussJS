@@ -11,7 +11,7 @@ define ( function ( require, exports, module ) {
 	}
 
 	function getRootNode () {
-		return 	document.getElementsByTagName("body")[0];
+		return document.getElementsByTagName("body")[0];
 	}
 
 	function getTagName () {
@@ -66,7 +66,7 @@ define ( function ( require, exports, module ) {
 
 				} else {
 
-					tag.appendChild(contents)
+					tag.appendChild(contents);
 				}
 			}
 

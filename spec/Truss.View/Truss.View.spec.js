@@ -1,8 +1,4 @@
-require( ['Truss', 'Truss.View'], 
-	function ( TrussExport, ViewExport ) {
-
-	var Truss = TrussExport;
-	var View = ViewExport;
+require( ['Truss', 'Truss.View'], function ( Truss, View ) {
 
 	describe("Truss.View", function () {
 		var view = null;
@@ -27,7 +23,7 @@ require( ['Truss', 'Truss.View'],
 					html = view.make();
 				});
 				it("Should make a div element", function () {
-					expect(html.nodeName.toLowerCase()).toEqual("div")
+					expect(html.nodeName.toLowerCase()).toEqual("div");
 				});
 			});
 			describe("When make is called with the tag name argument 'p'", function () {
@@ -37,21 +33,21 @@ require( ['Truss', 'Truss.View'],
 					html = view.make(name);
 				});
 				it("Should make a p element", function () {
-					expect(html.nodeName.toLowerCase()).toEqual(name)
+					expect(html.nodeName.toLowerCase()).toEqual(name);
 				});
 			});
 			describe("When make is called with the tag name argument 'p'", function () {
 				describe("When make is called with the contents argument 'span' element", function () {
 					var html,
-					name = "p";
+						name = "p";
 					beforeEach(function () {
 						html = view.make(name, document.createElement("span"));
 					});
 					it("Should make a p element", function () {
-						expect(html.nodeName.toLowerCase()).toEqual(name)
+						expect(html.nodeName.toLowerCase()).toEqual(name);
 					});
 					it("Should make a p element with a nested span element", function () {
-						expect(html.firstChild.nodeName.toLowerCase()).toEqual("span")
+						expect(html.firstChild.nodeName.toLowerCase()).toEqual("span");
 					});
 				});
 				
@@ -65,16 +61,16 @@ require( ['Truss', 'Truss.View'],
 								contents = "span",
 								attrs = {
 									id: "el1",
-									class: "element attr"
+									"class": "element attr"
 								};
 							beforeEach(function () {
 								html = view.make(name, document.createElement(contents), attrs);
 							});
 							it("Should make a p element", function () {
-								expect(html.nodeName.toLowerCase()).toEqual(name)
+								expect(html.nodeName.toLowerCase()).toEqual(name);
 							});
 							it("Should make a p element with a nested span element", function () {
-								expect(html.firstChild.nodeName.toLowerCase()).toEqual("span")
+								expect(html.firstChild.nodeName.toLowerCase()).toEqual("span");
 							});
 							it("Should add id='el1'to the p element", function () {
 								expect(html.id).toEqual("el1");
@@ -92,17 +88,16 @@ require( ['Truss', 'Truss.View'],
 								name = "p",
 								attrs = {
 									id: "el1",
-									class: "element attr",
+									"class" : "element attr"
 								};
 							beforeEach(function () {
 								html = view.make(name, view.make(), attrs);
 							});
-							it("Should make a p element", function () {
-								
-								expect(html.nodeName.toLowerCase()).toEqual(name)
+							it("Should make a p element", function () {								
+								expect(html.nodeName.toLowerCase()).toEqual(name);
 							});
 							it("Should make a p element with a nested div element", function () {
-								expect(html.firstChild.nodeName.toLowerCase()).toEqual("div")
+								expect(html.firstChild.nodeName.toLowerCase()).toEqual("div");
 							});
 							it("Should add id='el1'to the p element", function () {
 								expect(html.id).toEqual("el1");
@@ -121,16 +116,16 @@ require( ['Truss', 'Truss.View'],
 								contents = "Hello World",
 								attrs = {
 									id: "el1",
-									class: "element attr",
+									"class": "element attr"
 								};
 							beforeEach(function () {
 								html = view.make(name, contents, attrs);
 							});
 							it("Should make a p element", function () {
-								expect(html.nodeName.toLowerCase()).toEqual(name)
+								expect(html.nodeName.toLowerCase()).toEqual(name);
 							});
 							it("Should make a p element with the text 'Hello World'", function () {
-								expect(html.innerText).toEqual("Hello World")
+								expect(html.innerText).toEqual("Hello World");
 							});
 							it("Should add id='el1'to the p element", function () {
 								expect(html.id).toEqual("el1");
@@ -149,16 +144,16 @@ require( ['Truss', 'Truss.View'],
 								contents = 137,
 								attrs = {
 									id: "el1",
-									class: "element attr",
+									"class": "element attr"
 								};
 							beforeEach(function () {
 								html = view.make(name, contents, attrs);
 							});
 							it("Should make a p element", function () {
-								expect(html.nodeName.toLowerCase()).toEqual(name)
+								expect(html.nodeName.toLowerCase()).toEqual(name);
 							});
 							it("Should make a p element with the text '137'", function () {
-								expect(html.innerText).toEqual("137")
+								expect(html.innerText).toEqual("137");
 							});
 							it("Should add id='el1'to the p element", function () {
 								expect(html.id).toEqual("el1");
@@ -177,16 +172,16 @@ require( ['Truss', 'Truss.View'],
 								contents = 0,
 								attrs = {
 									id: "el1",
-									class: "element attr",
+									"class": "element attr"
 								};
 							beforeEach(function () {
 								html = view.make(name, contents, attrs);
 							});
 							it("Should make a p element", function () {
-								expect(html.nodeName.toLowerCase()).toEqual(name)
+								expect(html.nodeName.toLowerCase()).toEqual(name);
 							});
 							it("Should make a p element with the text '0'", function () {
-								expect(html.innerText).toEqual("0")
+								expect(html.innerText).toEqual("0");
 							});
 							it("Should add id='el1'to the p element", function () {
 								expect(html.id).toEqual("el1");
@@ -204,19 +199,19 @@ require( ['Truss', 'Truss.View'],
 								name = "p",
 								attrs = {
 									id: "el1",
-									class: "element attr",
+									"class": "element attr"
 								};
 							beforeEach(function () {
 								html = view.make(name, [view.make("em"), view.make("span")], attrs);
 							});
 							it("Should make a p element", function () {
-								expect(html.nodeName.toLowerCase()).toEqual(name)
+								expect(html.nodeName.toLowerCase()).toEqual(name);
 							});
 							it("Should make a p element with a first child em element", function () {
-								expect(html.firstChild.nodeName.toLowerCase()).toEqual("em")
+								expect(html.firstChild.nodeName.toLowerCase()).toEqual("em");
 							});
 							it("Should make a p element with a second child span element", function () {
-								expect(html.children[1].nodeName.toLowerCase()).toEqual("span")
+								expect(html.children[1].nodeName.toLowerCase()).toEqual("span");
 							});
 							it("Should add id='el1'to the p element", function () {
 								expect(html.id).toEqual("el1");
@@ -235,13 +230,13 @@ require( ['Truss', 'Truss.View'],
 							name = "p",
 							attrs = {
 								id: "el1",
-								class: "element attr",
+								"class": "element attr"
 							};
 						beforeEach(function () {
 							html = view.make(name, attrs);
 						});
 						it("Should make a p element", function () {
-							expect(html.nodeName.toLowerCase()).toEqual(name)
+							expect(html.nodeName.toLowerCase()).toEqual(name);
 						});
 						it("Should add id='el1'to the p element", function () {
 							expect(html.id).toEqual("el1");

@@ -1,6 +1,4 @@
-require( ['Truss.Utils'], function ( UtilsExport ) {
-
-	var Utils = UtilsExport;
+require( ['Truss.Utils'], function ( Utils ) {
 
 	describe("Truss.Utils", function () {
 

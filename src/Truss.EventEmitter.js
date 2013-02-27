@@ -42,7 +42,7 @@ define ( function ( require, exports, module ) {
         throw new Error( "off() needs an event" );
       }
 
-      cb = [].slice.call( arguments, 1)[0];
+      cb = [].slice.call( arguments, 1 )[0];
 
       // If the event has been registered
       if ( this.events[event] ) {
@@ -92,9 +92,9 @@ define ( function ( require, exports, module ) {
       ctx = opt[1];
 
       // If this event has been registered
-      if ( this.events[ event ] ) {
+      if ( this.events[event] ) {
 
-        len = this.events[ event ].length; 
+        len = this.events[event].length; 
 
         // Invoke the callback on each event object
         while ( ev = this.events[event][--len] ) {

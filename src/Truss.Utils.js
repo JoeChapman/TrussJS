@@ -16,7 +16,7 @@ define( function ( require, exports, module ) {
       return ({}).toString.call(value).match( /\w+/g )[1].toLowerCase();
     }
 
-  }
+  };
 
   return Utils;
 

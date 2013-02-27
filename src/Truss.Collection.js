@@ -46,14 +46,14 @@ define ( function ( require, exports, module ) {
 				}
 			}	
 		}
-	};
+	}
 
 	// Use Truss.construct to build a constructor for a Collection
 	var Collection = Truss.construct({
 
 		start: function ( options ) {
 
-			this.model = this.options && this.options.model || Model
+			this.model = this.options && this.options.model || Model;
 
 		},
 
@@ -71,6 +71,7 @@ define ( function ( require, exports, module ) {
 				this.fire("add", this.currentModel);
 
 			}
+			
 		},
 
 		reset: function () {
@@ -85,6 +86,7 @@ define ( function ( require, exports, module ) {
 		getByText: function (text) {
 			return getBy.call(this, "text", text);
 		},
+
 		removeByText: function (text) {
 			removeBy.call(this, "text", text);
 		},

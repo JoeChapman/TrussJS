@@ -1,6 +1,4 @@
-require( ['Truss'], function ( TrussExport ) {
-
-	var Truss = TrussExport;
+require( ['Truss'], function ( Truss ) {
 
 	describe("Truss", function () {
 
@@ -26,7 +24,7 @@ require( ['Truss'], function ( TrussExport ) {
 
 			it("Should return a function with a static contruct function", function () {
 				expect(typeof retVal.construct).toEqual("function");
-			})
+			});
 
 		});
 

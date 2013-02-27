@@ -19,7 +19,7 @@ define( function ( require, exports, module ) {
 	var Model = Truss.construct({
 
     start: function () {
-    	this.id = getNewId();
+			this.id = getNewId();
 			this.resetId = resetId;
 		},
 

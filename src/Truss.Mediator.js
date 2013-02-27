@@ -25,14 +25,14 @@ define( function ( require, exports, module ) {
 	function isEqual (a, b) {
 
 		if (a === b) {
-			return a !== 0 || 1 / a == 1 / b;
+			return a !== 0 || 1 / a === 1 / b;
 		}
 
-		if (a == null || b == null) {
+		if (a === null || b === null) {
 			return a === b;
 		}
 
-		if (toString.call(a) != toString.call(b)) {
+		if (Object.prototype.toString.call(a) !== Object.prototype.toString.call(b)) {
 			return false;
 		}
 
@@ -53,13 +53,13 @@ define( function ( require, exports, module ) {
 			// Polyfill
 			Array.prototype.forEach = function( callback, context ) {
 
-				for(var i = 0, len = list.length; i < len; ++i) {
+				for (var i = 0, len = list.length; i < len; ++i) {
 
 					callback.call(context, list[i], i, list);
 
 				}
 
-			}
+			};
 
 		} else {
 

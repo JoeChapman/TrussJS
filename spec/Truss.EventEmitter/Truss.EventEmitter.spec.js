@@ -5,11 +5,13 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 		describe("Given on is invoked with NO arguments", function () {
 
 			it("Should throw 'on() needs an event name string'", function () {
+				
 				expect(function () {
 					
 					EventEmitter.on();
 
 				}).toThrow("on() needs an event name string");
+
 			});
 
 		});
@@ -210,7 +212,7 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 
 			afterEach(function () {
 				EventEmitter.reset();				
-			})
+			});
 
 			describe("And off is invoked with ONLY 'eventName'", function () {
 
@@ -224,7 +226,7 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 					it("Should NOT invoke the first callback", function () {
 
 						waitsFor(function () {
-							return EventEmitter.events["eventName"].length == 0;
+							return EventEmitter.events["eventName"].length === 0;
 						}, 1000);
 
 						runs(function () {
@@ -237,13 +239,13 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 					it("Should NOT invoke the second callback", function () {
 
 						waitsFor(function () {
-							return EventEmitter.events["eventName"].length == 0;
+							return EventEmitter.events["eventName"].length === 0;
 						}, 1000);
 
 						runs(function () {
 							EventEmitter.fire("eventName");
 							expect(spyFunction2).not.toHaveBeenCalled();
-						})
+						});
 					});
 
 				});
@@ -284,11 +286,12 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 
 				expect(function () {
 
-					EventEmitter.fire()
+					EventEmitter.fire();
 
 				}).toThrow("fire() needs an event");
 
 			});
+
 		});
 
 	});
