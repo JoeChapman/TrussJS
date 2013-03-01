@@ -40,8 +40,8 @@ module.exports = function( grunt ) {
 				specs : '<%= meta.spec %>',
 				// host : 'http://127.0.0.1:8000',
 				template: require('grunt-template-jasmine-requirejs'),
-					templateOptions: {
-						requireConfig: {
+				templateOptions: {
+					requireConfig: {
 						baseUrl: './src'
 					}
 				}
@@ -60,21 +60,13 @@ module.exports = function( grunt ) {
 					},
 					baseUrl: "./src",
 					name: 'vendor/almond',
-					include: [
-						'Truss',
-						'Truss.EventEmitter',
-						'Truss.Mediator',
-						'Truss.Utils',
-						'Truss.Collection',
-						'Truss.Model',
-						'Truss.View'
-					],
+					include: ['<%= pkg.main %>'],
 					wrap: {
 						start: "(function(global, define) {\n"+
 						// check for amd loader on global namespace
 						"  var globalDefine = global.define;\n",
 
-						end:   "  var library = require('Truss');\n"+
+						end:   "  var library = require('<%= pkg.main %>');\n"+
 						"  if(typeof module !== 'undefined' && module.exports) {\n"+
 						// export library for node
 						"    module.exports = library;\n"+
@@ -89,7 +81,7 @@ module.exports = function( grunt ) {
 						"  }\n"+
 						"}(this));\n"
 					},
-					out: '<%= pkg.name %>.<%= pkg.version %>-min.js'
+					out: '<%= pkg.name %>-min.js'
 				}
 			}
 		},

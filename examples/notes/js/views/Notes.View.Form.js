@@ -3,7 +3,6 @@
 	var Notes = Notes || {};
 	Notes.View =  Notes.View || {};
 
-
 	Notes.View.Form = Truss.View.construct({
 
 		start: function (options) {
