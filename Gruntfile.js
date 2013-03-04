@@ -83,6 +83,35 @@ module.exports = function( grunt ) {
 					},
 					out: '<%= pkg.name %>-min.js'
 				}
+			},
+			unoptimized: {
+				options: {
+					optimize: "none",
+					baseUrl: "./src",
+					name: 'vendor/almond',
+					include: ['<%= pkg.main %>'],
+					wrap: {
+						start: "(function(global, define) {\n"+
+						// check for amd loader on global namespace
+						"  var globalDefine = global.define;\n",
+
+						end:   "  var library = require('<%= pkg.main %>');\n"+
+						"  if(typeof module !== 'undefined' && module.exports) {\n"+
+						// export library for node
+						"    module.exports = library;\n"+
+						"  } else if(globalDefine) {\n"+
+						// define library for global amd loader that is already present
+						"    (function (define) {\n"+
+						"      define(function () { return library; });\n"+
+						"    }(globalDefine));\n"+
+						"  } else {\n"+
+						// define library on global namespace for inline script loading
+						"    global['Truss'] = library;\n"+
+						"  }\n"+
+						"}(this));\n"
+					},
+					out: '<%= pkg.name %>.js'
+				}
 			}
 		},
 

@@ -72,11 +72,11 @@ define( function ( require, exports, module ) {
     return F;
   };
 
-  // Augment the Truss constructor prototype with the 
+  // Augment the Truss prototype with the 
   // properties of EventEmitter;
   Truss.mixin(Truss.prototype, EventEmitter);
 
-  // Export Truss Node AMD style
+  // Return Truss as the module definition
   return Truss;
 
 });
