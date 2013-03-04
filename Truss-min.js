@@ -44,6 +44,56 @@ e&&(this.options=e),"function"==typeof this.start&&this.start(e)};return i.mixin
 var r in t)n&&"object"==typeof t[r]?(e[r]=e[r]||{},i.mixin(e[r],t[r])):e[r]=t[r];return e},i.construct=
 function(e){function n(){return t.call(this,[].slice.call(arguments)[0])}var t=this;return n.prototype=
 i.mixin(i.mixin({},t.prototype),e),n.prototype.constructor=i.mixin(n,t),n},i.mixin(i.prototype,r),i})
-,t("main",["require","exports","module","Truss"],function(e,t,n){var r=e("Truss");return r});var s=i("main"
+,t("Truss.Mediator",["require","exports","module","Truss"],function(e,t,n){function o(e,t,n){i[s][e].
+push({obj:t,eventName:n})}function u(e,t){if(e===t)return e!==0||1/e===1/t;if(e===null||t===null)return e===
+t;if(Object.prototype.toString.call(e)!==Object.prototype.toString.call(t))return!1}function a(e,t,n)
+{var r;if(typeof Array.prototype.forEach=="function"&&e.length)e.forEach(t,n||this);else if(e.length)
+Array.prototype.forEach=function(t,n){for(var r=0,i=e.length;r<i;++r)t.call(n,e[r],r,e)};else for(r in 
+e)e.hasOwnProperty(r)&&t.call(n||this,e[r],r,e)}function f(){a(i[s],function(e,t,n){a(n,function(e,t,
+n){a(n.from,function(e){e.obj.off(e.eventName),e.obj.on(e.eventName,function(e){a(n.to,function(t){t.
+obj.fire(t.eventName,e)},this)},this)},this)},this)},this)}var r=e("Truss"),i={},s=null,l=r.construct
+({from:function(e,t){if(!arguments.length)throw{name:"NoArgumentsException",message:"From cannot be called with no arguments"
+};return s=t||"all",i[s]||(i[s]={}),i[s].from||(i[s].from=[]),o("from",e,t),this.removing&&(a(i,function(
+e,t){a(e.to,function(n,r){e.to[r].remove&&e.to[r].remove===!0&&(delete i[t].to[r],s=null)},this)},this
+),this.removing=!1),this},to:function(e,t){if(!s)throw{name:"ToFunctionBadUsage",message:"Cannot call to before from."
+};return i[s].to||(i[s].to=[]),o("to",e,t),this.register(),this},remove:function(e,t){if(!arguments.length
+)throw{name:"NoArgumentException",message:"Remove cannot be called without arguments"};return this.removing=!0
+,a(i,function(n){a(n.to,function(r,i){typeof e=="string"?(t=e,r.eventName===t&&[].splice.call(n.to,i,1
+)):(u(r.obj,e)||e==null)&&(r.eventName===t||typeof t=="undefined")&&(r.remove=!0)})}),this},register:
+function(){var e=arguments[0];if(e){if(!e.source)throw{name:"ConfigSourceNotDefined",message:"Config object needs a source defined."
+};a(e.source,function(e){this.from(e.subscriber,e.event)},this);if(!e.target)throw{name:"ConfigTargetNotDefined"
+,message:"Config object needs a target defined."};a(e.target,function(e){this.to(e.subscriber,e.event
+)},this)}else f()},unregister:function(e){if(!e)throw{name:"NoArgumentException",message:"Unregister cannot be called without arguments"
+};if(e){this.removing=!0;if(!e.target)throw{name:"ConfigTargetNotDefined",message:"Config object needs a target defined."
+};a(e.target,function(e){this.remove(e.subscriber,e.event)},this);if(!e.source)throw{name:"ConfigSourceNotDefined"
+,message:"Config object needs a source defined."};a(e.source,function(e){this.from(e.subscriber,e.eventName
+)},this)}}});return l}),t("Truss.Utils",["require","exports","module"],function(e,t,n){var r={isObject
+:function(e){return"[object Object]"==""+e},realTypeOf:function(e){return{}.toString.call(e).match(/\w+/g
+)[1].toLowerCase()}};return r}),t("Truss.Model",["require","exports","module","Truss"],function(e,t,n
+){function s(){return i.IDPREFIX+i.ID++}function o(){i.ID=i.ORIGID}var r=e("Truss"),i={ID:1,ORIGID:1,
+IDPREFIX:"mid_"},u=r.construct({start:function(){this.id=s(),this.resetId=o},get:function(e){return this
+[e]||this.options[e]},set:function(e,t){this[e]=t}});return u}),t("Truss.Collection",["require","exports"
+,"module","Truss","Truss.Model"],function(e,t,n){function s(){return this.getModels().length}function o
+(e,t){var n=this.getModels(),r=n.length,i=[],s=0;while(0<r--)typeof n[r][e]!="undefined"?n[r][e]===t&&
+i.push(n[r]):n[r].get(e)===t&&i.push(n[r]);return i=i.length<2?i[0]:i}function u(e,t){var n=[].concat
+(o.call(this,e,t)),r=n.length,i=this.getModels(),s=i.length,u=-1;while(0<s--)while(0<r--)u=i.indexOf(
+n[r]),u!==-1&&(i.splice(u,1),this.fire("removed",this.getModels()))}var r=e("Truss"),i=e("Truss.Model"
+),a=r.construct({start:function(e){this.model=this.options&&this.options.model||i},models:[],add:function(
+e){var t=[].concat(e),n=t.length;while(n--)this.currentModel=new this.model(t[n]),this.getModels().push
+(this.currentModel),this.fire("add",this.currentModel)},reset:function(){this.models=[],this.fire("reset"
+)},getById:function(e){return o.call(this,"id",e)},getByText:function(e){return o.call(this,"text",e)
+},removeByText:function(e){u.call(this,"text",e)},removeById:function(e){u.call(this,"id",e)},getModels
+:function(){return this.models}});return a}),t("Truss.View",["require","exports","module","Truss"],function(
+e,t,n){function i(e){return Object.prototype.toString.call(e).match(/\w+/g)[1].toLowerCase()}function s
+(){return document.getElementsByTagName("body")[0]}function o(){return"div"}var r=e("Truss"),u=r.construct
+({start:function(){this.tagName=this.options?this.options.tagName:o(),this.rootNode=this.options?this
+.options.rootNode:s()},make:function(){var e=[].slice.call(arguments),t=e[0]||this.tagName,n=e[1],r=e
+[2],s,o,u=document.createElement(t);e.length===2&&i(n)=="object"&&(n=undefined,r=e[1]);if(typeof n!="undefined"
+){if(i(n)=="number"||typeof n=="string")n=document.createTextNode(n);if(i(n)=="array")while(s=n.shift
+())u.appendChild(s);else u.appendChild(n)}if(r)for(o in r)r.hasOwnProperty(o)&&(u[o]=r[o],o in u.attributes||
+u.setAttribute(o,r[o]));return u}});return u}),t("main",["require","exports","module","Truss","Truss.EventEmitter"
+,"Truss.Mediator","Truss.Utils","Truss.Collection","Truss.Model","Truss.View"],function(e,t,n){var r=
+e("Truss");return r.EventEmitter=e("Truss.EventEmitter"),r.Mediator=e("Truss.Mediator"),r.Utils=e("Truss.Utils"
+),r.Collection=e("Truss.Collection"),r.Model=e("Truss.Model"),r.View=e("Truss.View"),r});var s=i("main"
 );typeof module!="undefined"&&module.exports?module.exports=s:n?function(e){e(function(){return s})}(
 n):e.Truss=s})(this);

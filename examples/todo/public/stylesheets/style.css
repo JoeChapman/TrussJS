@@ -1,0 +1,97 @@
+html, body, div, ul, li {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font: 1em/100% arial, helvetica, sans-serif;
+	padding: 20px;
+}
+
+
+#rootNode {
+	background-color: rgb(118, 162, 218);
+	padding: 10px;
+	width: 30%;
+}
+
+fieldset {
+	border: none;
+	padding: 15px;
+}
+
+input[type=text] {
+	box-shadow: 1px 1px 4px black;
+	border: 1px solid white;
+	padding: 1px 2px;
+	width: 50%;
+}
+
+input[type=submit] {
+	border: 1px solid #999;
+	border-radius: 3px;
+	cursor: pointer;
+	padding: 2px 8px;
+}
+
+fieldset input {
+	font-size: 20px;
+}
+
+fieldset input[type=text] {
+	box-shadow: 1px 1px 4px black;
+	border: 1px solid white;
+	padding: 1px 5px;
+	width: 80%;
+}
+
+fieldset input[type=submit] {
+	background: -webkit-gradient(linear, 0% 0%, 0% 49%, from(#BCC1C7), to(#4C505C));
+	border: 1px solid #999;
+	border-radius: 3px;
+	color: #eee;
+	cursor: pointer;
+	padding: 2px 8px;
+	text-shadow: 1px 1px 1px #ccc;
+}
+
+ul {
+	list-style: none;
+}
+
+li {
+	background-color: #fff;
+	border: 1px solid #ddd;
+	overflow: hidden;
+	margin-bottom: 6px;
+	padding: 5px;
+}
+
+li em {
+	display: inline-block;
+	font-style: normal;
+	line-height: 1.2em;
+	width: 90%;
+}
+
+li em:hover {
+	color: blue;
+}
+
+li button {
+	background: transparent url(/images/close-icon.png) no-repeat 0 0;
+	border: none;
+	cursor: pointer;
+	float: right;
+	height: 29px;
+	width: 29px;
+}
+
+output {
+	font-weight: bold;
+	font-family: arial;
+}
+
+output::after {
+	content: " todos";
+}

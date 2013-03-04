@@ -30,7 +30,7 @@
 							});
 				
 			this.input = this.make("input", {
-							type: 'input',
+							type: 'text',
 							autofocus: 'true',
 							required: 'true',
 							placeholder: 'Add a note...'
