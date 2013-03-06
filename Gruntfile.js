@@ -15,7 +15,7 @@ module.exports = function( grunt ) {
 
 		meta : {
 			src   : '<%= dirs.src %>/*.js',
-			spec : '<%= dirs.spec %>/**/*.spec.js'
+			spec : '<%= dirs.spec %>/*.spec.js'
 		},
 
 		watch: {
@@ -28,13 +28,13 @@ module.exports = function( grunt ) {
 		jasmine : {
 			baseUrl: "./src",
 			src : [
-				'Truss',
-				'Truss.EventEmitter',
-				'Truss.Mediator',
-				'Truss.Utils',
-				'Truss.Collection',
-				'Truss.Model',
-				'Truss.View'
+				'Base',
+				'events',
+				'mediator',
+				'utils',
+				'Collection',
+				'Model',
+				'View'
 			],
 			options : {
 				specs : '<%= meta.spec %>',

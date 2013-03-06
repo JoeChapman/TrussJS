@@ -1,6 +1,6 @@
-require( ['Truss.Utils'], function ( Utils ) {
+require( ['utils'], function ( Utils ) {
 
-	describe("Truss.Utils", function () {
+	describe("utils", function () {
 
 		describe("Utils.isObject", function () {
 

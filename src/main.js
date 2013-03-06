@@ -1,14 +1,13 @@
 define( function ( require, exports, module ) {
 
-	var Truss = require('Truss');
-	
-	Truss.EventEmitter = require('Truss.EventEmitter');
-	Truss.Mediator = require('Truss.Mediator');
-	Truss.Utils = require('Truss.Utils');
-	Truss.Collection = require('Truss.Collection');
-	Truss.Model = require('Truss.Model');
-	Truss.View = require('Truss.View');
+	var Base = require('Base'),
+		events = require('events'),
+		mediator = require('mediator'),
+		utils = require('utils'),
+		Collection = require('Collection'),
+		Model = require('Model'),
+		View = require('View');
 
-	return Truss;
+	return Base;
 
 });

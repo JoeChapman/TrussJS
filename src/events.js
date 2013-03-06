@@ -1,6 +1,6 @@
 define ( function ( require, exports, module ) {
 
-	var EventEmitter = {
+	var events = {
 
 		events: {},
 
@@ -114,6 +114,6 @@ define ( function ( require, exports, module ) {
 
 	};
  
-  return EventEmitter;
+  return events;
 
 });

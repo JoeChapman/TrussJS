@@ -1,6 +1,6 @@
 define( function ( require, exports, module ) {
 
-	var Truss = require ( 'Truss' ),
+	var Base = require ( 'Base' ),
 
 		passes = {},
 
@@ -67,11 +67,11 @@ define( function ( require, exports, module ) {
 			for ( i in list ) {
 
 				if ( list.hasOwnProperty( i ) ) {
-				
+
 					callback.call( context || this, list[i], i, list );
-				
+
 				}
-			
+
 			}
 
 		}
@@ -113,7 +113,7 @@ define( function ( require, exports, module ) {
 
 	}
 
-	var Mediator = Truss.construct({
+	var mediator = {
 
 		/**
 		* Registers the source subject subscriber and its event(s)
@@ -125,7 +125,7 @@ define( function ( require, exports, module ) {
 		from: function (subscribee, eventName) {
 
 			if (!arguments.length) {
-			
+
 				throw {
 					name: "NoArgumentsException",
 					message: "From cannot be called with no arguments"
@@ -181,7 +181,7 @@ define( function ( require, exports, module ) {
 		to: function ( subscriber, eventName ) {
 
 			if ( !currentEvent ) {
-			
+
 				throw {
 					name: "ToFunctionBadUsage",
 					message: "Cannot call to before from."
@@ -330,7 +330,7 @@ define( function ( require, exports, module ) {
 					}, this );
 
 				} else {
-					
+
 					throw {
 						name: "ConfigTargetNotDefined",
 						message: "Config object needs a target defined."
@@ -359,8 +359,8 @@ define( function ( require, exports, module ) {
 
 		}
 
-	});
+	};
 
-  return Mediator;
+  return mediator;
 
 });

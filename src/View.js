@@ -1,7 +1,7 @@
 
 define ( function ( require, exports, module ) {
- 
-	var Truss = require ( 'Truss' );
+
+	var Base = require ( 'Base' );
 
 	// Utility function
 	function realTypeOf ( o ) {
@@ -19,7 +19,7 @@ define ( function ( require, exports, module ) {
 	}
 
 	// Build the constructor
-	var View = Truss.construct({
+	var View = Base.construct({
 
 		// Start is optional, it's called if present,
 		// like a constructor
@@ -58,7 +58,7 @@ define ( function ( require, exports, module ) {
 				}
 
 				if (realTypeOf(contents) == "array") {
-					// If our contents is an array, 
+					// If our contents is an array,
 					// append each one to the tag
 					while ( i = contents.shift() ) {
 						tag.appendChild(i);
@@ -78,9 +78,9 @@ define ( function ( require, exports, module ) {
 					if (attrs.hasOwnProperty( attr )) {
 						// Add each attribute to the tag
 						tag[ attr ] = attrs[ attr ];
-						
+
 						if ( !( attr in tag.attributes ) ) {
-							// If the attribute wasnt't successfully added, 
+							// If the attribute wasnt't successfully added,
 							// try again with setAttribute
 							tag.setAttribute( attr, attrs[ attr ] );
 
@@ -101,5 +101,3 @@ define ( function ( require, exports, module ) {
   return View;
 
 });
-
-	

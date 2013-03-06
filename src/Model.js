@@ -1,6 +1,6 @@
 define( function ( require, exports, module ) {
 
-	var Truss = require ( 'Truss' ),
+	var Base = require( 'Base' ),
 
 		constants = {
 			ID: 1,
@@ -16,9 +16,9 @@ define( function ( require, exports, module ) {
 		constants.ID = constants.ORIGID;
 	}
 
-	var Model = Truss.construct({
+	var Model = Base.construct({
 
-    start: function () {
+		start: function () {
 			this.id = getNewId();
 			this.resetId = resetId;
 		},
@@ -29,7 +29,7 @@ define( function ( require, exports, module ) {
 
 		set: function ( name, value ) {
 			this[ name ] = value;
-		} 
+		}
 
 	});
 
