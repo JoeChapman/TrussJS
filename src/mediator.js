@@ -1,7 +1,4 @@
-define( function ( require, exports, module ) {
-
-	var passes = {},
-		currentEvent = null;
+define( function ( ) {
 
 	/**
 		* A little helper to remove duplication
@@ -110,7 +107,12 @@ define( function ( require, exports, module ) {
 
 	}
 
-	var mediator = {
+	var passes = {},
+		currentEvent = null;
+
+
+	// Return medaitor api as module definition
+	return {
 
 		/**
 		* Registers the source subject subscriber and its event(s)
@@ -357,7 +359,5 @@ define( function ( require, exports, module ) {
 		}
 
 	};
-
-  return mediator;
 
 });

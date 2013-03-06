@@ -1,10 +1,4 @@
-define ( function ( require, exports, module ) {
-
-	// Require Base
-	var Base = require ( 'Base' );
-
-	// TODO - remove this dependency
-	var Model = require ( 'Model' );
+define ( ['Base'], function ( Base ) {
 
 	function getCount () {
 		return this.getModels().length;
@@ -49,11 +43,11 @@ define ( function ( require, exports, module ) {
 	}
 
 	// Use Base.construct to build a constructor for a Collection
-	var Collection = Base.construct({
+	return Base.construct({
 
 		start: function ( options ) {
 
-			this.model = this.options && this.options.model || Model;
+			this.model = this.options && this.options.model;
 
 		},
 
@@ -100,7 +94,5 @@ define ( function ( require, exports, module ) {
 		}
 
 	});
-
-	return Collection;
 
 });
