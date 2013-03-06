@@ -1,9 +1,6 @@
 define( function ( require, exports, module ) {
 
-	var Base = require ( 'Base' ),
-
-		passes = {},
-
+	var passes = {},
 		currentEvent = null;
 
 	/**

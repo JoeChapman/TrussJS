@@ -22,9 +22,9 @@ define ( function ( require, exports, module ) {
         this.events[event] = [];
       }
 
-      this.events[event].push({ 
-        callback: callback, 
-        context: context 
+      this.events[event].push({
+        callback: callback,
+        context: context
       });
 
     },

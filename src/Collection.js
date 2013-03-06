@@ -44,7 +44,7 @@ define ( function ( require, exports, module ) {
 					models.splice(index, 1);
 					this.fire("removed", this.getModels());
 				}
-			}	
+			}
 		}
 	}
 
@@ -71,7 +71,7 @@ define ( function ( require, exports, module ) {
 				this.fire("add", this.currentModel);
 
 			}
-			
+
 		},
 
 		reset: function () {

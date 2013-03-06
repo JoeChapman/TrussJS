@@ -1,6 +1,6 @@
 define( function ( require, exports, module ) {
 
-  var Utils = {
+  var utils = {
 
     isObject: function ( o ) {
       // Concat Object with string to
@@ -18,6 +18,6 @@ define( function ( require, exports, module ) {
 
   };
 
-  return Utils;
+  return utils;
 
 });

@@ -1,7 +1,4 @@
-
 define ( function ( require, exports, module ) {
-
-	var Base = require ( 'Base' );
 
 	// Utility function
 	function realTypeOf ( o ) {
@@ -18,8 +15,10 @@ define ( function ( require, exports, module ) {
 		return "div";
 	}
 
+	var Base = require ( 'Base' ),
+
 	// Build the constructor
-	var View = Base.construct({
+	View = Base.construct({
 
 		// Start is optional, it's called if present,
 		// like a constructor
