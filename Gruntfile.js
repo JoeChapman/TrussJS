@@ -27,15 +27,6 @@ module.exports = function( grunt ) {
 
 		jasmine : {
 			baseUrl: "./src",
-			src : [
-				'Base',
-				'events',
-				'mediator',
-				'utils',
-				'Collection',
-				'Model',
-				'View'
-			],
 			options : {
 				specs : '<%= meta.spec %>',
 				// host : 'http://127.0.0.1:8000',
