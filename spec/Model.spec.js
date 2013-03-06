@@ -1,6 +1,6 @@
-require( ['Truss', 'Truss.Model'], function ( Truss, Model ) {
+require( ['Base', 'Model'], function ( Base, Model ) {
 
-	describe("Truss.Model", function () {
+	describe("Model", function () {
 
 		var model = null;
 

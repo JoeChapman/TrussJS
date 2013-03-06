@@ -1,6 +1,6 @@
-require( ['Truss', 'Truss.View'], function ( Truss, View ) {
+require( ['Base', 'View'], function ( Base, View ) {
 
-	describe("Truss.View", function () {
+	describe("View", function () {
 		var view = null;
 
 		describe("When a view is created without options", function () {

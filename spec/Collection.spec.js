@@ -1,8 +1,8 @@
-require( ['Truss', 'Truss.Collection', 'Truss.Model'], function ( Truss, Collection, Model ) {
+require( ['Base', 'Collection', 'Model'], function ( Base, Collection, Model ) {
 
 	// TODO - stub Model
 
-	describe("Truss.Collection", function () {
+	describe("Collection", function () {
 		var collection = null;
 
 		describe("When a collection is created without options", function () {

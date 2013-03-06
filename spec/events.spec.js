@@ -1,14 +1,14 @@
-require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
+require ( ['events'] , function ( events ) {
 
-	describe("Truss.EventEmitter", function () {
+	describe("events", function () {
 
 		describe("Given on is invoked with NO arguments", function () {
 
 			it("Should throw 'on() needs an event name string'", function () {
-				
+
 				expect(function () {
-					
-					EventEmitter.on();
+
+					events.on();
 
 				}).toThrow("on() needs an event name string");
 
@@ -21,7 +21,7 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 			it("Should throw 'on() needs a callback function'", function () {
 				expect(function () {
 					
-					EventEmitter.on("eventName");
+					events.on("eventName");
 
 				}).toThrow("on() needs a callback function");
 			});
@@ -34,17 +34,17 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 
 			beforeEach(function () {
 				spyFunction = jasmine.createSpy("function");
-				EventEmitter.on("eventName", spyFunction);
+				events.on("eventName", spyFunction);
 			});
 
 			afterEach(function () {
-				EventEmitter.reset();
+				events.reset();
 			});
 
 			describe("When fire is invoked with 'eventName", function () {
 
 				beforeEach(function () {
-					EventEmitter.fire("eventName");
+					events.fire("eventName");
 				});
 
 				it("Should call the function", function () {
@@ -56,7 +56,7 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 			describe("When fire is invoked with 'eventName' and 'hello'", function () {
 
 				beforeEach(function () {
-					EventEmitter.fire("eventName", "hello");
+					events.fire("eventName", "hello");
 				});
 
 				it("Should call the function with 'hello'", function () {
@@ -68,13 +68,13 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 			describe("And off is invoked with 'eventName", function () {
 
 				beforeEach(function () {
-					EventEmitter.off("eventName");
+					events.off("eventName");
 				});
 
 				describe("When fire is invoked with 'eventName'", function () {
 
 					beforeEach(function () {
-						EventEmitter.fire("eventName");
+						events.fire("eventName");
 					});
 
 					it("Should NOT call the function", function () {
@@ -88,13 +88,13 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 			describe("And reset is invoked", function () {
 
 				beforeEach(function () {
-					EventEmitter.reset();
+					events.reset();
 				});
 
 				describe("When fire is invoked with 'eventName'", function () {
 
 					beforeEach(function () {
-						EventEmitter.fire("eventName");
+						events.fire("eventName");
 					});
 
 					it("Should NOT call the function", function () {
@@ -117,17 +117,17 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 				context = {	name: "new"	};
 
 			beforeEach(function () {
-				EventEmitter.on("eventName", callback, context);
+				events.on("eventName", callback, context);
 			});
 
 			afterEach(function () {
-				EventEmitter.reset();
+				events.reset();
 			});
 
 			describe("When fire is invoked with 'eventName", function () {
 
 				beforeEach(function () {
-					EventEmitter.fire("eventName");
+					events.fire("eventName");
 				});
 
 				it("Should invoke the function as a method of the context", function () {
@@ -142,7 +142,7 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 					context = { name: "radical" };
 
 				beforeEach(function () {
-					EventEmitter.fire("eventName", data, context);
+					events.fire("eventName", data, context);
 				});
 
 				it("Should invoke the function as a method of the context", function () {
@@ -160,18 +160,18 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 			beforeEach(function () {
 				spyFunction1 = jasmine.createSpy("spyFunction1");
 				spyFunction2 = jasmine.createSpy("spyFunction2");
-				EventEmitter.on("eventName", spyFunction1);
-				EventEmitter.on("eventName", spyFunction2);
+				events.on("eventName", spyFunction1);
+				events.on("eventName", spyFunction2);
 			});
 
 			afterEach(function () {
-				EventEmitter.reset();
+				events.reset();
 			});
 
 			describe("When fire is invoked with 'eventName", function () {
 
 				beforeEach(function () {
-					EventEmitter.fire("eventName");
+					events.fire("eventName");
 				});
 
 				it("Should invoke the first function", function () {
@@ -190,7 +190,7 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 			it("Should throw 'off() needs an event", function () {
 
 				expect(function () {
-					EventEmitter.off();
+					events.off();
 				}).toThrow("off() needs an event");
 
 			});
@@ -205,20 +205,20 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 
 				spyFunction1 = jasmine.createSpy("spyFunction1");
 				spyFunction2 = jasmine.createSpy("spyFunction2");
-				EventEmitter.on("eventName", spyFunction1);
-				EventEmitter.on("eventName", spyFunction2);
+				events.on("eventName", spyFunction1);
+				events.on("eventName", spyFunction2);
 
 			});
 
 			afterEach(function () {
-				EventEmitter.reset();				
+				events.reset();				
 			});
 
 			describe("And off is invoked with ONLY 'eventName'", function () {
 
 				beforeEach(function () {
-					EventEmitter.off("eventName");
-					EventEmitter.off("eventName");
+					events.off("eventName");
+					events.off("eventName");
 				});
 
 				describe("When fire is invoked with 'eventName'", function () {
@@ -226,11 +226,11 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 					it("Should NOT invoke the first callback", function () {
 
 						waitsFor(function () {
-							return EventEmitter.events["eventName"].length === 0;
+							return events.events["eventName"].length === 0;
 						}, 1000);
 
 						runs(function () {
-							EventEmitter.fire("eventName");
+							events.fire("eventName");
 							expect(spyFunction1).not.toHaveBeenCalled();
 						});
 
@@ -239,11 +239,11 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 					it("Should NOT invoke the second callback", function () {
 
 						waitsFor(function () {
-							return EventEmitter.events["eventName"].length === 0;
+							return events.events["eventName"].length === 0;
 						}, 1000);
 
 						runs(function () {
-							EventEmitter.fire("eventName");
+							events.fire("eventName");
 							expect(spyFunction2).not.toHaveBeenCalled();
 						});
 					});
@@ -255,21 +255,21 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 			describe("And off is invoked with 'eventName' and the second callback", function () {
 
 				beforeEach(function () {
-					EventEmitter.off("eventName", spyFunction2);
+					events.off("eventName", spyFunction2);
 				});
 
 				describe("When fire is invoked with 'eventName'", function () {
 
 					it("Should invoke the first callback", function () {
 
-						EventEmitter.fire("eventName");
+						events.fire("eventName");
 						expect(spyFunction1).toHaveBeenCalled();
 
 					});
 
 					it("Should NOT invoke the second callback", function () {
 
-						EventEmitter.fire("eventName");
+						events.fire("eventName");
 						expect(spyFunction2).not.toHaveBeenCalled();
 
 					});
@@ -286,7 +286,7 @@ require ( ['Truss.EventEmitter'] , function ( EventEmitter ) {
 
 				expect(function () {
 
-					EventEmitter.fire();
+					events.fire();
 
 				}).toThrow("fire() needs an event");
 
