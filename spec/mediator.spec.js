@@ -6,10 +6,6 @@ require( ['Base', 'mediator'], function ( Base, mediator ) {
 
 			var data = { page: 1, totalResults: 1000 };
 
-			afterEach(function () {
-				//mediator = null;
-			});
-
 			describe("Given a 'event:target' is registered on a target object to 'event:source' on a source object", function () {
 
 				var source, target;
@@ -38,7 +34,7 @@ require( ['Base', 'mediator'], function ( Base, mediator ) {
 					});
 
 					it("Should fired 'event:target' event on the target object", function() {
-					 expect(spyTargetFire).toHaveBeenCalledWith("event:target", data);
+						expect(spyTargetFire).toHaveBeenCalledWith("event:target", data);
 					});
 
 					it("Should ONLY fire the event once", function () {

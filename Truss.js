@@ -408,9 +408,9 @@ var requirejs, require, define;
 }());
 define("vendor/almond", function(){});
 
-define ('Truss.EventEmitter',['require','exports','module'], function ( require, exports, module ) {
+define ('events',['require','exports','module'], function ( require, exports, module ) {
 
-	var EventEmitter = {
+	var events = {
 
 		events: {},
 
@@ -524,22 +524,22 @@ define ('Truss.EventEmitter',['require','exports','module'], function ( require,
 
 	};
  
-  return EventEmitter;
+  return events;
 
 });
 
-define('Truss',['require','exports','module','Truss.EventEmitter'], function ( require, exports, module ) {
+define('Base',['require','exports','module','events'], function ( require, exports, module ) {
 
-  var EventEmitter = require ( 'Truss.EventEmitter' ),
+  var events = require ( 'events' );
 
   /**
    * @constructor
    * @description
-   * -> Core of Truss framework
+   * -> Core of Base framework
    * @param {Object} options
    * @return {this}
    */
-  Truss = function ( options ) {
+  var Base = function ( options ) {
 
     // Add any arguments to this.options
     if ( "undefined" != typeof options ) {
@@ -561,14 +561,14 @@ define('Truss',['require','exports','module','Truss.EventEmitter'], function ( r
    * @param {Object} source
    * @return {Object} augmented dest
    */
-  Truss.mixin = function( dest, source, deep ) {
+  Base.mixin = function ( dest, source, deep ) {
     for (var property in source) {
       // Iterate over all source properties
       if ( deep && "object" == typeof source[property] ) {
         dest[property] = dest[property] || {};
         // If the value is an object itself, then we need to recurse
         // to to perform a deep copy; Objects copy by refernce
-        Truss.mixin( dest[property], source[property] );
+        Base.mixin( dest[property], source[property] );
       } else {
         // Assign the value form the source to the destination
         dest[property] = source[property];
@@ -583,7 +583,7 @@ define('Truss',['require','exports','module','Truss.EventEmitter'], function ( r
    * -> Construct is a static inheritance function
    * @return {Function} constructor function
    */
-  Truss.construct = function (props) {
+  Base.construct = function (props) {
 
     var parent = this;
 
@@ -594,25 +594,25 @@ define('Truss',['require','exports','module','Truss.EventEmitter'], function ( r
     }
 
     // Build the prototype from parent.prototype and the props arg.
-    F.prototype = Truss.mixin( Truss.mixin( {}, parent.prototype ), props );
+    F.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
     // Augment the constructor with the parent.
-    F.prototype.constructor = Truss.mixin( F, parent );
+    F.prototype.constructor = Base.mixin( F, parent );
 
     // Retun the constructor
     return F;
   };
 
-  // Augment the Truss prototype with the 
-  // properties of EventEmitter;
-  Truss.mixin(Truss.prototype, EventEmitter);
+  // Augment the Base prototype with the 
+  // properties of events;
+  Base.mixin(Base.prototype, events);
 
-  // Return Truss as the module definition
-  return Truss;
+  // Return Base as the module definition
+  return Base;
 
 });
-define('Truss.Mediator',['require','exports','module','Truss'], function ( require, exports, module ) {
+define('mediator',['require','exports','module','Base'], function ( require, exports, module ) {
 
-	var Truss = require ( 'Truss' ),
+	var Base = require ( 'Base' ),
 
 		passes = {},
 
@@ -679,11 +679,11 @@ define('Truss.Mediator',['require','exports','module','Truss'], function ( requi
 			for ( i in list ) {
 
 				if ( list.hasOwnProperty( i ) ) {
-				
+
 					callback.call( context || this, list[i], i, list );
-				
+
 				}
-			
+
 			}
 
 		}
@@ -725,7 +725,7 @@ define('Truss.Mediator',['require','exports','module','Truss'], function ( requi
 
 	}
 
-	var Mediator = Truss.construct({
+	var mediator = {
 
 		/**
 		* Registers the source subject subscriber and its event(s)
@@ -737,7 +737,7 @@ define('Truss.Mediator',['require','exports','module','Truss'], function ( requi
 		from: function (subscribee, eventName) {
 
 			if (!arguments.length) {
-			
+
 				throw {
 					name: "NoArgumentsException",
 					message: "From cannot be called with no arguments"
@@ -793,7 +793,7 @@ define('Truss.Mediator',['require','exports','module','Truss'], function ( requi
 		to: function ( subscriber, eventName ) {
 
 			if ( !currentEvent ) {
-			
+
 				throw {
 					name: "ToFunctionBadUsage",
 					message: "Cannot call to before from."
@@ -942,7 +942,7 @@ define('Truss.Mediator',['require','exports','module','Truss'], function ( requi
 					}, this );
 
 				} else {
-					
+
 					throw {
 						name: "ConfigTargetNotDefined",
 						message: "Config object needs a target defined."
@@ -971,25 +971,25 @@ define('Truss.Mediator',['require','exports','module','Truss'], function ( requi
 
 		}
 
-	});
+	};
 
-  return Mediator;
+  return mediator;
 
 });
-define('Truss.Utils',['require','exports','module'], function ( require, exports, module ) {
+define('utils',['require','exports','module'], function ( require, exports, module ) {
 
   var Utils = {
 
     isObject: function ( o ) {
-      // Concat Object with string to 
+      // Concat Object with string to
       // invoke toString() and test class definition
       return "[object Object]" === ''+o;
     },
 
-    realTypeOf: function ( value ) { 
+    realTypeOf: function ( value ) {
       // Borrow Object.toString to introspect the
-      // class definition of the value i.e. ([object Object]) 
-      // and return the latter portion which denotes 
+      // class definition of the value i.e. ([object Object])
+      // and return the latter portion which denotes
       // the real type of the input value.
       return ({}).toString.call(value).match( /\w+/g )[1].toLowerCase();
     }
@@ -999,9 +999,9 @@ define('Truss.Utils',['require','exports','module'], function ( require, exports
   return Utils;
 
 });
-define('Truss.Model',['require','exports','module','Truss'], function ( require, exports, module ) {
+define('Model',['require','exports','module','Base'], function ( require, exports, module ) {
 
-	var Truss = require ( 'Truss' ),
+	var Base = require( 'Base' ),
 
 		constants = {
 			ID: 1,
@@ -1017,9 +1017,9 @@ define('Truss.Model',['require','exports','module','Truss'], function ( require,
 		constants.ID = constants.ORIGID;
 	}
 
-	var Model = Truss.construct({
+	var Model = Base.construct({
 
-    start: function () {
+		start: function () {
 			this.id = getNewId();
 			this.resetId = resetId;
 		},
@@ -1030,7 +1030,7 @@ define('Truss.Model',['require','exports','module','Truss'], function ( require,
 
 		set: function ( name, value ) {
 			this[ name ] = value;
-		} 
+		}
 
 	});
 
@@ -1038,13 +1038,13 @@ define('Truss.Model',['require','exports','module','Truss'], function ( require,
 
 });
 
-define ('Truss.Collection',['require','exports','module','Truss','Truss.Model'], function ( require, exports, module ) {
+define ('Collection',['require','exports','module','Base','Model'], function ( require, exports, module ) {
 
-	// Require Truss
-	var Truss = require ( 'Truss' );
+	// Require Base
+	var Base = require ( 'Base' );
 
 	// TODO - remove this dependency
-	var Model = require ( 'Truss.Model' );
+	var Model = require ( 'Model' );
 
 	function getCount () {
 		return this.getModels().length;
@@ -1088,8 +1088,8 @@ define ('Truss.Collection',['require','exports','module','Truss','Truss.Model'],
 		}
 	}
 
-	// Use Truss.construct to build a constructor for a Collection
-	var Collection = Truss.construct({
+	// Use Base.construct to build a constructor for a Collection
+	var Collection = Base.construct({
 
 		start: function ( options ) {
 
@@ -1146,9 +1146,9 @@ define ('Truss.Collection',['require','exports','module','Truss','Truss.Model'],
 });
 
 
-define ('Truss.View',['require','exports','module','Truss'], function ( require, exports, module ) {
- 
-	var Truss = require ( 'Truss' );
+define ('View',['require','exports','module','Base'], function ( require, exports, module ) {
+
+	var Base = require ( 'Base' );
 
 	// Utility function
 	function realTypeOf ( o ) {
@@ -1166,7 +1166,7 @@ define ('Truss.View',['require','exports','module','Truss'], function ( require,
 	}
 
 	// Build the constructor
-	var View = Truss.construct({
+	var View = Base.construct({
 
 		// Start is optional, it's called if present,
 		// like a constructor
@@ -1205,7 +1205,7 @@ define ('Truss.View',['require','exports','module','Truss'], function ( require,
 				}
 
 				if (realTypeOf(contents) == "array") {
-					// If our contents is an array, 
+					// If our contents is an array,
 					// append each one to the tag
 					while ( i = contents.shift() ) {
 						tag.appendChild(i);
@@ -1225,9 +1225,9 @@ define ('Truss.View',['require','exports','module','Truss'], function ( require,
 					if (attrs.hasOwnProperty( attr )) {
 						// Add each attribute to the tag
 						tag[ attr ] = attrs[ attr ];
-						
+
 						if ( !( attr in tag.attributes ) ) {
-							// If the attribute wasnt't successfully added, 
+							// If the attribute wasnt't successfully added,
 							// try again with setAttribute
 							tag.setAttribute( attr, attrs[ attr ] );
 
@@ -1248,20 +1248,17 @@ define ('Truss.View',['require','exports','module','Truss'], function ( require,
   return View;
 
 });
+define('main',['require','exports','module','Base','events','mediator','utils','Collection','Model','View'], function ( require, exports, module ) {
 
-	
-define('main',['require','exports','module','Truss','Truss.EventEmitter','Truss.Mediator','Truss.Utils','Truss.Collection','Truss.Model','Truss.View'], function ( require, exports, module ) {
+	var Base = require('Base'),
+		events = require('events'),
+		mediator = require('mediator'),
+		utils = require('utils'),
+		Collection = require('Collection'),
+		Model = require('Model'),
+		View = require('View');
 
-	var Truss = require('Truss');
-	
-	Truss.EventEmitter = require('Truss.EventEmitter');
-	Truss.Mediator = require('Truss.Mediator');
-	Truss.Utils = require('Truss.Utils');
-	Truss.Collection = require('Truss.Collection');
-	Truss.Model = require('Truss.Model');
-	Truss.View = require('Truss.View');
-
-	return Truss;
+	return Base;
 
 });  var library = require('main');
   if(typeof module !== 'undefined' && module.exports) {
