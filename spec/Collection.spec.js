@@ -17,7 +17,6 @@ require( ['Base', 'Collection', 'Model'], function ( Base, Collection, Model ) {
 				collection = new Collection();
 			});
 			afterEach(function () {
-				collection.currentModel.resetId();
 				collection = null;
 			});
 			describe("When a collection recieves 1 new object", function () {
@@ -28,8 +27,8 @@ require( ['Base', 'Collection', 'Model'], function ( Base, Collection, Model ) {
 					spyFire = spyOn(collection, "fire");
 					collection.add(obj);
 				});
-				it("Should fire an 'add' event with a new model", function () {
-					expect(spyFire).toHaveBeenCalledWith("add", collection.getById("mid_1"));
+				it("Should fire an 'add' event with a the data that was added", function () {
+					expect(spyFire).toHaveBeenCalledWith("add", obj);
 				});
 			});
 		});
