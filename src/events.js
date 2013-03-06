@@ -1,6 +1,6 @@
-define ( function ( require, exports, module ) {
+define ( function ( ) {
 
-	var events = {
+	return {
 
 		events: {},
 
@@ -59,21 +59,20 @@ define ( function ( require, exports, module ) {
             ev.splice(len, 1);
 
           } else {
-            // If a callback was passed, 
+            // If a callback was passed,
             // remove the callback from the event
             if ( ev[len].callback === cb ) {
 
               ev[len].callback = null;
 
               delete ev[len].callback;
-            
             }
 
           }
 
-        } 
+        }
 
-      }  
+      }
 
     },
 
@@ -113,7 +112,5 @@ define ( function ( require, exports, module ) {
     }
 
 	};
- 
-  return events;
 
 });

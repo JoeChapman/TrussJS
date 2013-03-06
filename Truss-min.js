@@ -29,69 +29,65 @@ e||!w)a[t]=h}else t&&(a[t]=r)},r=i=s=function(t,r,i,a,f){return typeof t=="strin
 ,r).f):(t.splice||(l=t,r.splice?(t=r,r=i,i=null):t=e),r=r||function(){},typeof i=="function"&&(i=a,a=
 f),a?n(e,t,r,i):setTimeout(function(){n(e,t,r,i)},4),s)},s.config=function(e){return l=e,l.deps&&s(l.
 deps,l.callback),s},t=function(e,t,n){t.splice||(n=t,t=[]),!d(a,e)&&!d(f,e)&&(f[e]=[e,t,n])},t.amd={jQuery
-:!0}})(),t("vendor/almond",function(){}),t("events",["require","exports","module"],function(e,t,n){var r=
-{events:{},on:function(e,t){var n;if("string"!=typeof e)throw new Error("on() needs an event name string"
-);if("function"!=typeof t)throw new Error("on() needs a callback function");n=[].slice.call(arguments
-,2)[0],this.events[e]||(this.events[e]=[]),this.events[e].push({callback:t,context:n})},reset:function(
-){this.events={}},off:function(e){var t,n,r;if("string"!=typeof e)throw new Error("off() needs an event"
-);r=[].slice.call(arguments,1)[0];if(this.events[e]){t=this.events[e],n=t.length;while(n--)"function"!=typeof 
-r?t.splice(n,1):t[n].callback===r&&(t[n].callback=null,delete t[n].callback)}},fire:function(e){var t
-,n,r,i,s;if("string"!=typeof e)throw new Error("fire() needs an event");r=[].slice.call(arguments,1),
-i=r[0],s=r[1];if(this.events[e]){n=this.events[e].length;while(t=this.events[e][--n])"function"==typeof 
-t.callback&&t.callback.call(s||t.context||this,i)}}};return r}),t("Base",["require","exports","module"
-,"events"],function(e,t,n){var r=e("events"),i=function(e){"undefined"!=typeof e&&(this.options=e),"function"==typeof 
-this.start&&this.start(e)};return i.mixin=function(e,t,n){for(var r in t)n&&"object"==typeof t[r]?(e[
-r]=e[r]||{},i.mixin(e[r],t[r])):e[r]=t[r];return e},i.construct=function(e){function n(){return t.call
-(this,[].slice.call(arguments)[0])}var t=this;return n.prototype=i.mixin(i.mixin({},t.prototype),e),n
-.prototype.constructor=i.mixin(n,t),n},i.mixin(i.prototype,r),i}),t("mediator",["require","exports","module"
-,"Base"],function(e,t,n){function o(e,t,n){i[s][e].push({obj:t,eventName:n})}function u(e,t){if(e===t
-)return e!==0||1/e===1/t;if(e===null||t===null)return e===t;if(Object.prototype.toString.call(e)!==Object
-.prototype.toString.call(t))return!1}function a(e,t,n){var r;if(typeof Array.prototype.forEach=="function"&&
-e.length)e.forEach(t,n||this);else if(e.length)Array.prototype.forEach=function(t,n){for(var r=0,i=e.
-length;r<i;++r)t.call(n,e[r],r,e)};else for(r in e)e.hasOwnProperty(r)&&t.call(n||this,e[r],r,e)}function f
-(){a(i[s],function(e,t,n){a(n,function(e,t,n){a(n.from,function(e){e.obj.off(e.eventName),e.obj.on(e.
-eventName,function(e){a(n.to,function(t){t.obj.fire(t.eventName,e)},this)},this)},this)},this)},this)
-}var r=e("Base"),i={},s=null,l={from:function(e,t){if(!arguments.length)throw{name:"NoArgumentsException"
-,message:"From cannot be called with no arguments"};return s=t||"all",i[s]||(i[s]={}),i[s].from||(i[s
-].from=[]),o("from",e,t),this.removing&&(a(i,function(e,t){a(e.to,function(n,r){e.to[r].remove&&e.to[
-r].remove===!0&&(delete i[t].to[r],s=null)},this)},this),this.removing=!1),this},to:function(e,t){if(!
-s)throw{name:"ToFunctionBadUsage",message:"Cannot call to before from."};return i[s].to||(i[s].to=[])
-,o("to",e,t),this.register(),this},remove:function(e,t){if(!arguments.length)throw{name:"NoArgumentException"
-,message:"Remove cannot be called without arguments"};return this.removing=!0,a(i,function(n){a(n.to,
-function(r,i){typeof e=="string"?(t=e,r.eventName===t&&[].splice.call(n.to,i,1)):(u(r.obj,e)||e==null
-)&&(r.eventName===t||typeof t=="undefined")&&(r.remove=!0)})}),this},register:function(){var e=arguments
-[0];if(e){if(!e.source)throw{name:"ConfigSourceNotDefined",message:"Config object needs a source defined."
-};a(e.source,function(e){this.from(e.subscriber,e.event)},this);if(!e.target)throw{name:"ConfigTargetNotDefined"
-,message:"Config object needs a target defined."};a(e.target,function(e){this.to(e.subscriber,e.event
-)},this)}else f()},unregister:function(e){if(!e)throw{name:"NoArgumentException",message:"Unregister cannot be called without arguments"
+:!0}})(),t("vendor/almond",function(){}),t("events",[],function(){return{events:{},on:function(e,t){var n
+;if("string"!=typeof e)throw new Error("on() needs an event name string");if("function"!=typeof t)throw new 
+Error("on() needs a callback function");n=[].slice.call(arguments,2)[0],this.events[e]||(this.events[
+e]=[]),this.events[e].push({callback:t,context:n})},reset:function(){this.events={}},off:function(e){
+var t,n,r;if("string"!=typeof e)throw new Error("off() needs an event");r=[].slice.call(arguments,1)[0
+];if(this.events[e]){t=this.events[e],n=t.length;while(n--)"function"!=typeof r?t.splice(n,1):t[n].callback===
+r&&(t[n].callback=null,delete t[n].callback)}},fire:function(e){var t,n,r,i,s;if("string"!=typeof e)throw new 
+Error("fire() needs an event");r=[].slice.call(arguments,1),i=r[0],s=r[1];if(this.events[e]){n=this.events
+[e].length;while(t=this.events[e][--n])"function"==typeof t.callback&&t.callback.call(s||t.context||this
+,i)}}}}),t("Base",["events"],function(e){var t=function(e){"undefined"!=typeof e&&(this.options=e),"function"==typeof 
+this.start&&this.start(e)};return t.mixin=function(e,n,r){for(var i in n)r&&"object"==typeof n[i]?(e[
+i]=e[i]||{},t.mixin(e[i],n[i])):e[i]=n[i];return e},t.construct=function(e){function r(){return n.call
+(this,[].slice.call(arguments)[0])}var n=this;return r.prototype=t.mixin(t.mixin({},n.prototype),e),r
+.prototype.constructor=t.mixin(r,n),r},t.mixin(t.prototype,e),t}),t("mediator",[],function(){function e
+(e,t,n){i[s][e].push({obj:t,eventName:n})}function t(e,t){if(e===t)return e!==0||1/e===1/t;if(e===null||
+t===null)return e===t;if(Object.prototype.toString.call(e)!==Object.prototype.toString.call(t))return!1
+}function n(e,t,n){var r;if(typeof Array.prototype.forEach=="function"&&e.length)e.forEach(t,n||this)
+;else if(e.length)Array.prototype.forEach=function(t,n){for(var r=0,i=e.length;r<i;++r)t.call(n,e[r],
+r,e)};else for(r in e)e.hasOwnProperty(r)&&t.call(n||this,e[r],r,e)}function r(){n(i[s],function(e,t,
+r){n(r,function(e,t,r){n(r.from,function(e){e.obj.off(e.eventName),e.obj.on(e.eventName,function(e){n
+(r.to,function(t){t.obj.fire(t.eventName,e)},this)},this)},this)},this)},this)}var i={},s=null;return{
+from:function(t,r){if(!arguments.length)throw{name:"NoArgumentsException",message:"From cannot be called with no arguments"
+};return s=r||"all",i[s]||(i[s]={}),i[s].from||(i[s].from=[]),e("from",t,r),this.removing&&(n(i,function(
+e,t){n(e.to,function(n,r){e.to[r].remove&&e.to[r].remove===!0&&(delete i[t].to[r],s=null)},this)},this
+),this.removing=!1),this},to:function(t,n){if(!s)throw{name:"ToFunctionBadUsage",message:"Cannot call to before from."
+};return i[s].to||(i[s].to=[]),e("to",t,n),this.register(),this},remove:function(e,r){if(!arguments.length
+)throw{name:"NoArgumentException",message:"Remove cannot be called without arguments"};return this.removing=!0
+,n(i,function(i){n(i.to,function(n,s){typeof e=="string"?(r=e,n.eventName===r&&[].splice.call(i.to,s,1
+)):(t(n.obj,e)||e==null)&&(n.eventName===r||typeof r=="undefined")&&(n.remove=!0)})}),this},register:
+function(){var e=arguments[0];if(e){if(!e.source)throw{name:"ConfigSourceNotDefined",message:"Config object needs a source defined."
+};n(e.source,function(e){this.from(e.subscriber,e.event)},this);if(!e.target)throw{name:"ConfigTargetNotDefined"
+,message:"Config object needs a target defined."};n(e.target,function(e){this.to(e.subscriber,e.event
+)},this)}else r()},unregister:function(e){if(!e)throw{name:"NoArgumentException",message:"Unregister cannot be called without arguments"
 };if(e){this.removing=!0;if(!e.target)throw{name:"ConfigTargetNotDefined",message:"Config object needs a target defined."
-};a(e.target,function(e){this.remove(e.subscriber,e.event)},this);if(!e.source)throw{name:"ConfigSourceNotDefined"
-,message:"Config object needs a source defined."};a(e.source,function(e){this.from(e.subscriber,e.eventName
-)},this)}}};return l}),t("utils",["require","exports","module"],function(e,t,n){var r={isObject:function(
-e){return"[object Object]"==""+e},realTypeOf:function(e){return{}.toString.call(e).match(/\w+/g)[1].toLowerCase
-()}};return r}),t("Model",["require","exports","module","Base"],function(e,t,n){function s(){return i
-.IDPREFIX+i.ID++}function o(){i.ID=i.ORIGID}var r=e("Base"),i={ID:1,ORIGID:1,IDPREFIX:"mid_"},u=r.construct
-({start:function(){this.id=s(),this.resetId=o},get:function(e){return this[e]||this.options[e]},set:function(
-e,t){this[e]=t}});return u}),t("Collection",["require","exports","module","Base","Model"],function(e,
-t,n){function s(){return this.getModels().length}function o(e,t){var n=this.getModels(),r=n.length,i=
-[],s=0;while(0<r--)typeof n[r][e]!="undefined"?n[r][e]===t&&i.push(n[r]):n[r].get(e)===t&&i.push(n[r]
-);return i=i.length<2?i[0]:i}function u(e,t){var n=[].concat(o.call(this,e,t)),r=n.length,i=this.getModels
-(),s=i.length,u=-1;while(0<s--)while(0<r--)u=i.indexOf(n[r]),u!==-1&&(i.splice(u,1),this.fire("removed"
-,this.getModels()))}var r=e("Base"),i=e("Model"),a=r.construct({start:function(e){this.model=this.options&&
-this.options.model||i},models:[],add:function(e){var t=[].concat(e),n=t.length;while(n--)this.currentModel=new 
-this.model(t[n]),this.getModels().push(this.currentModel),this.fire("add",this.currentModel)},reset:function(
-){this.models=[],this.fire("reset")},getById:function(e){return o.call(this,"id",e)},getByText:function(
-e){return o.call(this,"text",e)},removeByText:function(e){u.call(this,"text",e)},removeById:function(
-e){u.call(this,"id",e)},getModels:function(){return this.models}});return a}),t("View",["require","exports"
-,"module","Base"],function(e,t,n){function i(e){return Object.prototype.toString.call(e).match(/\w+/g
-)[1].toLowerCase()}function s(){return document.getElementsByTagName("body")[0]}function o(){return"div"
-}var r=e("Base"),u=r.construct({start:function(){this.tagName=this.options?this.options.tagName:o(),this
-.rootNode=this.options?this.options.rootNode:s()},make:function(){var e=[].slice.call(arguments),t=e[0
-]||this.tagName,n=e[1],r=e[2],s,o,u=document.createElement(t);e.length===2&&i(n)=="object"&&(n=undefined
-,r=e[1]);if(typeof n!="undefined"){if(i(n)=="number"||typeof n=="string")n=document.createTextNode(n)
-;if(i(n)=="array")while(s=n.shift())u.appendChild(s);else u.appendChild(n)}if(r)for(o in r)r.hasOwnProperty
-(o)&&(u[o]=r[o],o in u.attributes||u.setAttribute(o,r[o]));return u}});return u}),t("main",["require"
-,"exports","module","Base","events","mediator","utils","Collection","Model","View"],function(e,t,n){var r=
-e("Base"),i=e("events"),s=e("mediator"),o=e("utils"),u=e("Collection"),a=e("Model"),f=e("View");return r
-});var s=i("main");typeof module!="undefined"&&module.exports?module.exports=s:n?function(e){e(function(
-){return s})}(n):e.Truss=s})(this);
+};n(e.target,function(e){this.remove(e.subscriber,e.event)},this);if(!e.source)throw{name:"ConfigSourceNotDefined"
+,message:"Config object needs a source defined."};n(e.source,function(e){this.from(e.subscriber,e.eventName
+)},this)}}}}),t("utils",[],function(){return{isObject:function(e){return"[object Object]"==""+e},realTypeOf
+:function(e){return{}.toString.call(e).match(/\w+/g)[1].toLowerCase()}}}),t("Collection",["Base"],function(
+e){function t(){return this.getModels().length}function n(e,t){var n=this.getModels(),r=n.length,i=[]
+,s=0;while(0<r--)typeof n[r][e]!="undefined"?n[r][e]===t&&i.push(n[r]):n[r].get(e)===t&&i.push(n[r]);
+return i=i.length<2?i[0]:i}function r(e,t){var r=[].concat(n.call(this,e,t)),i=r.length,s=this.getModels
+(),o=s.length,u=-1;while(0<o--)while(0<i--)u=s.indexOf(r[i]),u!==-1&&(s.splice(u,1),this.fire("removed"
+,this.getModels()))}return e.construct({start:function(e){this.model=this.options&&this.options.model
+},models:[],add:function(e){var t=[].concat(e),n=t.length;while(n--)this.currentModel=new this.model(
+t[n]),this.getModels().push(this.currentModel),this.fire("add",this.currentModel)},reset:function(){this
+.models=[],this.fire("reset")},getById:function(e){return n.call(this,"id",e)},getByText:function(e){
+return n.call(this,"text",e)},removeByText:function(e){r.call(this,"text",e)},removeById:function(e){
+r.call(this,"id",e)},getModels:function(){return this.models}})}),t("Model",["require","exports","module"
+,"Base"],function(e,t,n){function s(){return i.IDPREFIX+i.ID++}function o(){i.ID=i.ORIGID}var r=e("Base"
+),i={ID:1,ORIGID:1,IDPREFIX:"mid_"},u=r.construct({start:function(){this.id=s(),this.resetId=o},get:function(
+e){return this[e]||this.options[e]},set:function(e,t){this[e]=t}});return u}),t("View",["Base"],function(
+e){function t(e){return Object.prototype.toString.call(e).match(/\w+/g)[1].toLowerCase()}function n()
+{return document.getElementsByTagName("body")[0]}function r(){return"div"}return e.construct({start:function(
+){this.tagName=this.options?this.options.tagName:r(),this.rootNode=this.options?this.options.rootNode
+:n()},make:function(){var e=[].slice.call(arguments),n=e[0]||this.tagName,r=e[1],i=e[2],s,o,u=document
+.createElement(n);e.length===2&&t(r)=="object"&&(r=undefined,i=e[1]);if(typeof r!="undefined"){if(t(r
+)=="number"||typeof r=="string")r=document.createTextNode(r);if(t(r)=="array")while(s=r.shift())u.appendChild
+(s);else u.appendChild(r)}if(i)for(o in i)i.hasOwnProperty(o)&&(u[o]=i[o],o in u.attributes||u.setAttribute
+(o,i[o]));return u}})}),t("main",["require","exports","module","Base","events","mediator","utils","Collection"
+,"Model","View"],function(e,t,n){var r=e("Base"),i=e("events"),s=e("mediator"),o=e("utils"),u=e("Collection"
+),a=e("Model"),f=e("View");return r});var s=i("main");typeof module!="undefined"&&module.exports?module
+.exports=s:n?function(e){e(function(){return s})}(n):e.Truss=s})(this);

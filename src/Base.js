@@ -1,6 +1,4 @@
-define( function ( require, exports, module ) {
-
-  var events = require ( 'events' );
+define( ['events'], function ( events ) {
 
   /**
    * @constructor
@@ -72,7 +70,7 @@ define( function ( require, exports, module ) {
     return F;
   };
 
-  // Augment the Base prototype with the 
+  // Augment the Base prototype with the
   // properties of events;
   Base.mixin(Base.prototype, events);
 

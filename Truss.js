@@ -408,9 +408,9 @@ var requirejs, require, define;
 }());
 define("vendor/almond", function(){});
 
-define ('events',['require','exports','module'], function ( require, exports, module ) {
+define ('events',[], function ( ) {
 
-	var events = {
+	return {
 
 		events: {},
 
@@ -432,9 +432,9 @@ define ('events',['require','exports','module'], function ( require, exports, mo
         this.events[event] = [];
       }
 
-      this.events[event].push({ 
-        callback: callback, 
-        context: context 
+      this.events[event].push({
+        callback: callback,
+        context: context
       });
 
     },
@@ -469,21 +469,20 @@ define ('events',['require','exports','module'], function ( require, exports, mo
             ev.splice(len, 1);
 
           } else {
-            // If a callback was passed, 
+            // If a callback was passed,
             // remove the callback from the event
             if ( ev[len].callback === cb ) {
 
               ev[len].callback = null;
 
               delete ev[len].callback;
-            
             }
 
           }
 
-        } 
+        }
 
-      }  
+      }
 
     },
 
@@ -523,14 +522,10 @@ define ('events',['require','exports','module'], function ( require, exports, mo
     }
 
 	};
- 
-  return events;
 
 });
 
-define('Base',['require','exports','module','events'], function ( require, exports, module ) {
-
-  var events = require ( 'events' );
+define('Base', ['events'], function ( events ) {
 
   /**
    * @constructor
@@ -602,7 +597,7 @@ define('Base',['require','exports','module','events'], function ( require, expor
     return F;
   };
 
-  // Augment the Base prototype with the 
+  // Augment the Base prototype with the
   // properties of events;
   Base.mixin(Base.prototype, events);
 
@@ -610,13 +605,7 @@ define('Base',['require','exports','module','events'], function ( require, expor
   return Base;
 
 });
-define('mediator',['require','exports','module','Base'], function ( require, exports, module ) {
-
-	var Base = require ( 'Base' ),
-
-		passes = {},
-
-		currentEvent = null;
+define('mediator',[], function ( ) {
 
 	/**
 		* A little helper to remove duplication
@@ -725,7 +714,12 @@ define('mediator',['require','exports','module','Base'], function ( require, exp
 
 	}
 
-	var mediator = {
+	var passes = {},
+		currentEvent = null;
+
+
+	// Return medaitor api as module definition
+	return {
 
 		/**
 		* Registers the source subject subscriber and its event(s)
@@ -973,12 +967,10 @@ define('mediator',['require','exports','module','Base'], function ( require, exp
 
 	};
 
-  return mediator;
-
 });
-define('utils',['require','exports','module'], function ( require, exports, module ) {
+define('utils',[], function ( ) {
 
-  var Utils = {
+  return {
 
     isObject: function ( o ) {
       // Concat Object with string to
@@ -996,55 +988,8 @@ define('utils',['require','exports','module'], function ( require, exports, modu
 
   };
 
-  return Utils;
-
 });
-define('Model',['require','exports','module','Base'], function ( require, exports, module ) {
-
-	var Base = require( 'Base' ),
-
-		constants = {
-			ID: 1,
-			ORIGID: 1,
-			IDPREFIX: "mid_"
-		};
-
-	function getNewId () {
-		return constants.IDPREFIX + constants.ID++;
-	}
-
-	function resetId () {
-		constants.ID = constants.ORIGID;
-	}
-
-	var Model = Base.construct({
-
-		start: function () {
-			this.id = getNewId();
-			this.resetId = resetId;
-		},
-
-		get: function ( name ) {
-			return this[ name ] || this.options[ name ];
-		},
-
-		set: function ( name, value ) {
-			this[ name ] = value;
-		}
-
-	});
-
-	return Model;
-
-});
-
-define ('Collection',['require','exports','module','Base','Model'], function ( require, exports, module ) {
-
-	// Require Base
-	var Base = require ( 'Base' );
-
-	// TODO - remove this dependency
-	var Model = require ( 'Model' );
+define ('Collection', ['Base'], function ( Base ) {
 
 	function getCount () {
 		return this.getModels().length;
@@ -1084,16 +1029,16 @@ define ('Collection',['require','exports','module','Base','Model'], function ( r
 					models.splice(index, 1);
 					this.fire("removed", this.getModels());
 				}
-			}	
+			}
 		}
 	}
 
 	// Use Base.construct to build a constructor for a Collection
-	var Collection = Base.construct({
+	return Base.construct({
 
 		start: function ( options ) {
 
-			this.model = this.options && this.options.model || Model;
+			this.model = this.options && this.options.model;
 
 		},
 
@@ -1111,7 +1056,7 @@ define ('Collection',['require','exports','module','Base','Model'], function ( r
 				this.fire("add", this.currentModel);
 
 			}
-			
+
 		},
 
 		reset: function () {
@@ -1141,14 +1086,48 @@ define ('Collection',['require','exports','module','Base','Model'], function ( r
 
 	});
 
-	return Collection;
+});
+
+define('Model',['require','exports','module','Base'], function ( require, exports, module ) {
+
+	var Base = require( 'Base' ),
+
+		constants = {
+			ID: 1,
+			ORIGID: 1,
+			IDPREFIX: "mid_"
+		};
+
+	function getNewId () {
+		return constants.IDPREFIX + constants.ID++;
+	}
+
+	function resetId () {
+		constants.ID = constants.ORIGID;
+	}
+
+	var Model = Base.construct({
+
+		start: function () {
+			this.id = getNewId();
+			this.resetId = resetId;
+		},
+
+		get: function ( name ) {
+			return this[ name ] || this.options[ name ];
+		},
+
+		set: function ( name, value ) {
+			this[ name ] = value;
+		}
+
+	});
+
+	return Model;
 
 });
 
-
-define ('View',['require','exports','module','Base'], function ( require, exports, module ) {
-
-	var Base = require ( 'Base' );
+define ('View', ['Base'], function ( Base ) {
 
 	// Utility function
 	function realTypeOf ( o ) {
@@ -1166,7 +1145,7 @@ define ('View',['require','exports','module','Base'], function ( require, export
 	}
 
 	// Build the constructor
-	var View = Base.construct({
+	return Base.construct({
 
 		// Start is optional, it's called if present,
 		// like a constructor
@@ -1244,8 +1223,6 @@ define ('View',['require','exports','module','Base'], function ( require, export
 		}
 
 	});
-
-  return View;
 
 });
 define('main',['require','exports','module','Base','events','mediator','utils','Collection','Model','View'], function ( require, exports, module ) {
