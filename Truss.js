@@ -1033,7 +1033,7 @@ define ('Collection', ['Base'], function ( Base ) {
 		}
 	}
 
-	// Use Base.construct to build a constructor for a Collection
+	// Use Base.construct to build a constructor for the Collection
 	return Base.construct({
 
 		start: function ( options ) {
@@ -1051,9 +1051,11 @@ define ('Collection', ['Base'], function ( Base ) {
 
 			while (len--) {
 
-				this.currentModel = new this.model(attrs[len]);
-				this.getModels().push(this.currentModel);
-				this.fire("add", this.currentModel);
+				if (this.model) {
+					this.currentModel = new this.model(attrs[len]);
+					this.getModels().push(this.currentModel);
+				}
+				this.fire("add", this.currentModel || attrs[len]);
 
 			}
 

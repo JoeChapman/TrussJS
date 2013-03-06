@@ -72,22 +72,22 @@ e){function t(){return this.getModels().length}function n(e,t){var n=this.getMod
 return i=i.length<2?i[0]:i}function r(e,t){var r=[].concat(n.call(this,e,t)),i=r.length,s=this.getModels
 (),o=s.length,u=-1;while(0<o--)while(0<i--)u=s.indexOf(r[i]),u!==-1&&(s.splice(u,1),this.fire("removed"
 ,this.getModels()))}return e.construct({start:function(e){this.model=this.options&&this.options.model
-},models:[],add:function(e){var t=[].concat(e),n=t.length;while(n--)this.currentModel=new this.model(
-t[n]),this.getModels().push(this.currentModel),this.fire("add",this.currentModel)},reset:function(){this
-.models=[],this.fire("reset")},getById:function(e){return n.call(this,"id",e)},getByText:function(e){
-return n.call(this,"text",e)},removeByText:function(e){r.call(this,"text",e)},removeById:function(e){
-r.call(this,"id",e)},getModels:function(){return this.models}})}),t("Model",["require","exports","module"
-,"Base"],function(e,t,n){function s(){return i.IDPREFIX+i.ID++}function o(){i.ID=i.ORIGID}var r=e("Base"
-),i={ID:1,ORIGID:1,IDPREFIX:"mid_"},u=r.construct({start:function(){this.id=s(),this.resetId=o},get:function(
-e){return this[e]||this.options[e]},set:function(e,t){this[e]=t}});return u}),t("View",["Base"],function(
-e){function t(e){return Object.prototype.toString.call(e).match(/\w+/g)[1].toLowerCase()}function n()
-{return document.getElementsByTagName("body")[0]}function r(){return"div"}return e.construct({start:function(
-){this.tagName=this.options?this.options.tagName:r(),this.rootNode=this.options?this.options.rootNode
-:n()},make:function(){var e=[].slice.call(arguments),n=e[0]||this.tagName,r=e[1],i=e[2],s,o,u=document
-.createElement(n);e.length===2&&t(r)=="object"&&(r=undefined,i=e[1]);if(typeof r!="undefined"){if(t(r
-)=="number"||typeof r=="string")r=document.createTextNode(r);if(t(r)=="array")while(s=r.shift())u.appendChild
-(s);else u.appendChild(r)}if(i)for(o in i)i.hasOwnProperty(o)&&(u[o]=i[o],o in u.attributes||u.setAttribute
-(o,i[o]));return u}})}),t("main",["require","exports","module","Base","events","mediator","utils","Collection"
-,"Model","View"],function(e,t,n){var r=e("Base"),i=e("events"),s=e("mediator"),o=e("utils"),u=e("Collection"
-),a=e("Model"),f=e("View");return r});var s=i("main");typeof module!="undefined"&&module.exports?module
-.exports=s:n?function(e){e(function(){return s})}(n):e.Truss=s})(this);
+},models:[],add:function(e){var t=[].concat(e),n=t.length;while(n--)this.model&&(this.currentModel=new 
+this.model(t[n]),this.getModels().push(this.currentModel)),this.fire("add",this.currentModel||t[n])},
+reset:function(){this.models=[],this.fire("reset")},getById:function(e){return n.call(this,"id",e)},getByText
+:function(e){return n.call(this,"text",e)},removeByText:function(e){r.call(this,"text",e)},removeById
+:function(e){r.call(this,"id",e)},getModels:function(){return this.models}})}),t("Model",["require","exports"
+,"module","Base"],function(e,t,n){function s(){return i.IDPREFIX+i.ID++}function o(){i.ID=i.ORIGID}var r=
+e("Base"),i={ID:1,ORIGID:1,IDPREFIX:"mid_"},u=r.construct({start:function(){this.id=s(),this.resetId=
+o},get:function(e){return this[e]||this.options[e]},set:function(e,t){this[e]=t}});return u}),t("View"
+,["Base"],function(e){function t(e){return Object.prototype.toString.call(e).match(/\w+/g)[1].toLowerCase
+()}function n(){return document.getElementsByTagName("body")[0]}function r(){return"div"}return e.construct
+({start:function(){this.tagName=this.options?this.options.tagName:r(),this.rootNode=this.options?this
+.options.rootNode:n()},make:function(){var e=[].slice.call(arguments),n=e[0]||this.tagName,r=e[1],i=e
+[2],s,o,u=document.createElement(n);e.length===2&&t(r)=="object"&&(r=undefined,i=e[1]);if(typeof r!="undefined"
+){if(t(r)=="number"||typeof r=="string")r=document.createTextNode(r);if(t(r)=="array")while(s=r.shift
+())u.appendChild(s);else u.appendChild(r)}if(i)for(o in i)i.hasOwnProperty(o)&&(u[o]=i[o],o in u.attributes||
+u.setAttribute(o,i[o]));return u}})}),t("main",["require","exports","module","Base","events","mediator"
+,"utils","Collection","Model","View"],function(e,t,n){var r=e("Base"),i=e("events"),s=e("mediator"),o=
+e("utils"),u=e("Collection"),a=e("Model"),f=e("View");return r});var s=i("main");typeof module!="undefined"&&
+module.exports?module.exports=s:n?function(e){e(function(){return s})}(n):e.Truss=s})(this);
