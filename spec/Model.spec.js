@@ -13,7 +13,7 @@ require( ['Base', 'Model'], function ( Base, Model ) {
 			count = 3;
 			beforeEach(function () {
 				while (0 < count--) {
-					model = new Model(attributes);
+					model = Model(attributes);
 					models.push(model);
 				}
 				count = models.length;
@@ -43,7 +43,7 @@ require( ['Base', 'Model'], function ( Base, Model ) {
 			count = 3;
 			beforeEach(function () {
 				while (0 < count--) {
-					model = new Model(attributes);
+					model = Model(attributes);
 					models.push(model);
 				}
 				count = models.length;

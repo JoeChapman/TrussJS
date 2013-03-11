@@ -580,21 +580,43 @@ define('Base', ['events'], function ( events ) {
    */
   Base.construct = function (props) {
 
-    var parent = this;
+    var parent = this,
+        name = props && props.name ? props.name : '';
 
-    // The new constructor Function invokes the parent with arguments
-    // passed on instantiation of this constructor
-    function F () {
-      return parent.call(this, [].slice.call(arguments)[0]);
+    function F() {
+        return parent.call(this, [].slice.call(arguments)[0]);
     }
 
-    // Build the prototype from parent.prototype and the props arg.
     F.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
-    // Augment the constructor with the parent.
     F.prototype.constructor = Base.mixin( F, parent );
 
-    // Retun the constructor
-    return F;
+    function proxy(options) {
+        parent.call(this, [].slice.call(arguments)[0]);
+        return new F(options);
+    }
+
+    proxy.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
+    proxy.prototype.name = name;
+    proxy.prototype.constructor = Base.mixin( F, parent );
+    proxy.construct = parent.construct;
+
+    return proxy;
+
+    // var parent = this;
+
+    // // The new constructor Function invokes the parent with arguments
+    // // passed on instantiation of this constructor
+    // function F () {
+    //   return parent.call(this, [].slice.call(arguments)[0]);
+    // }
+
+    // // Build the prototype from parent.prototype and the props arg.
+    // F.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
+    // // Augment the constructor with the parent.
+    // F.prototype.constructor = Base.mixin( F, parent );
+
+    // // Retun the constructor
+    // return F;
   };
 
   // Augment the Base prototype with the
@@ -989,143 +1011,189 @@ define('utils',[], function ( ) {
   };
 
 });
-define ('Collection', ['Base'], function ( Base ) {
+define('Model', ['Base'], function ( Base ) {
 
-	function getCount () {
-		return this.getModels().length;
-	}
+    var constants = {
+            ID: 1,
+            ORIGID: 1,
+            IDPREFIX: "mid_"
+        };
 
-	function getBy (method, value) {
-		var models = this.getModels(),
-			len = models.length,
-			found = [],
-			i = 0;
+    function getNewId () {
+        return constants.IDPREFIX + constants.ID++;
+    }
 
-		while (0 < len--) {
-			if (typeof models[len][method] !== "undefined") {
-				if (models[len][method] === value) {
-					found.push(models[len]);
-				}
-			} else {
-				if (models[len].get(method) === value) {
-					found.push(models[len]);
-				}
-			}
-		}
-		return found = (found.length < 2) ? found[0] : found;
-	}
+    function resetId () {
+        constants.ID = constants.ORIGID;
+    }
 
-	function removeBy (method, value) {
-		var found = [].concat(getBy.call(this, method, value)),
-			num = found.length,
-			models = this.getModels(),
-			len = models.length,
-			index = -1;
+    return Base.construct({
 
-		while (0 < len--) {
-			while (0 < num--) {
-				index = models.indexOf(found[num]);
-				if (index !== -1) {
-					models.splice(index, 1);
-					this.fire("removed", this.getModels());
-				}
-			}
-		}
-	}
+        start: function (options) {
+            this.id = getNewId();
+            this.resetId = resetId;
+            this.properties = {};
 
-	// Use Base.construct to build a constructor for the Collection
-	return Base.construct({
+            if (options) {
+                this.set( options );
+            }
 
-		start: function ( options ) {
+            return this;
+        },
 
-			this.model = this.options && this.options.model;
+        get: function ( name ) {
+            return this[ name ] || this.properties[ name ];
+        },
 
-		},
+        set: function ( name, value ) {
 
-		models: [],
+            if (typeof name == 'string') {
+                this.properties[ name ] = value;
+            } else {
+                for (var n in name) {
+                    if  (name.hasOwnProperty(n) ) {
+                        this.properties[ n ] = name[n];
+                    }
+                }
+            }
 
-		add: function (data) {
+        }
 
-			var attrs = [].concat(data),
-				len = attrs.length;
-
-			while (len--) {
-
-				if (this.model) {
-					this.currentModel = new this.model(attrs[len]);
-					this.getModels().push(this.currentModel);
-				}
-				this.fire("add", this.currentModel || attrs[len]);
-
-			}
-
-		},
-
-		reset: function () {
-			this.models = [];
-			this.fire("reset");
-		},
-
-		getById: function (id) {
-			return getBy.call(this, "id", id);
-		},
-
-		getByText: function (text) {
-			return getBy.call(this, "text", text);
-		},
-
-		removeByText: function (text) {
-			removeBy.call(this, "text", text);
-		},
-
-		removeById: function (id) {
-			removeBy.call(this, "id", id);
-		},
-
-		getModels: function () {
-			return this.models;
-		}
-
-	});
+    });
 
 });
 
-define('Model',['require','exports','module','Base'], function ( require, exports, module ) {
+define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
 
-	var Base = require( 'Base' ),
+    function getCount () {
+        return this.getModels().length;
+    }
 
-		constants = {
-			ID: 1,
-			ORIGID: 1,
-			IDPREFIX: "mid_"
-		};
+    function getBy (method, value) {
+        var models = this.getModels(),
+            len = models.length,
+            found = [],
+            i = 0;
 
-	function getNewId () {
-		return constants.IDPREFIX + constants.ID++;
-	}
+        while (0 < len--) {
+            if (typeof models[len][method] !== "undefined") {
+                if (models[len][method] === value) {
+                    found.push(models[len]);
+                }
+            } else {
+                if (models[len].get(method) === value) {
+                    found.push(models[len]);
+                }
+            }
+        }
+        return found = (found.length < 2) ? found[0] : found;
+    }
 
-	function resetId () {
-		constants.ID = constants.ORIGID;
-	}
+    function removeBy (method, value) {
+        var found = [].concat(getBy.call(this, method, value)),
+            num = found.length,
+            models = this.getModels(),
+            len = models.length,
+            index = -1;
 
-	var Model = Base.construct({
+        while (0 < len--) {
+            while (0 < num--) {
+                index = models.indexOf(found[num]);
+                if (index !== -1) {
+                    models.splice(index, 1);
+                    this.fire("removed", this.getModels());
+                }
+            }
+        }
+    }
 
-		start: function () {
-			this.id = getNewId();
-			this.resetId = resetId;
-		},
+    var currentModel;
 
-		get: function ( name ) {
-			return this[ name ] || this.options[ name ];
-		},
+    // Use Base.construct to build a constructor for the Collection
+    return Base.construct({
 
-		set: function ( name, value ) {
-			this[ name ] = value;
-		}
+        start: function ( options ) {
 
-	});
+            this.model = options && options.model ? options.model : Model;
 
-	return Model;
+        },
+
+        models: [],
+
+        add: function (data) {
+
+            var items = [].concat(data),
+                len = items.length,
+                model,
+                item,
+                p,
+                currentModel;
+
+            while (len--) {
+
+                model = items[len];
+
+                if (model.name && model.name === 'model') {
+
+                    this.getModels().push( model );
+
+                } else {
+
+                    item = items[len];
+
+                    if ( this.model ) {
+
+                        model = this.model();
+                        this.getModels().push(model);
+
+                        for ( p in item ) {
+                            model.set( p, item[p] );
+                        }
+
+                    }
+                }
+
+                this.setCurrentModel(model);
+
+                this.fire("add", model);
+            }
+
+        },
+
+        reset: function () {
+            this.models = [];
+            this.fire("reset");
+        },
+
+        getById: function (id) {
+            return getBy.call(this, "id", id);
+        },
+
+        getByText: function (text) {
+            return getBy.call(this, "text", text);
+        },
+
+        removeByText: function (text) {
+            removeBy.call(this, "text", text);
+        },
+
+        removeById: function (id) {
+            removeBy.call(this, "id", id);
+        },
+
+        getModels: function () {
+            return this.models;
+        },
+
+        setCurrentModel: function (model) {
+            currentModel = model;
+        },
+
+        getCurrentModel: function () {
+            return currentModel;
+        }
+
+    });
 
 });
 
@@ -1227,19 +1295,32 @@ define ('View', ['Base'], function ( Base ) {
 	});
 
 });
-define('main',['require','exports','module','Base','events','mediator','utils','Collection','Model','View'], function ( require, exports, module ) {
+define('main.js', [
+    'Base',
+    'events',
+    'mediator',
+    'utils',
+    'Collection',
+    'Model',
+    'View'
+    ],
+    function ( Base, events, mediator, utils, Collection, Model, View ) {
 
-	var Base = require('Base'),
-		events = require('events'),
-		mediator = require('mediator'),
-		utils = require('utils'),
-		Collection = require('Collection'),
-		Model = require('Model'),
-		View = require('View');
+        var args = [].slice.call(arguments, 1),
+                i = 0,
+                len = args.length,
+                namespace = {},
+                item;
 
-	return Base;
+            for (; i < len; i++) {
+                item = args[i] && args[i].prototype ? args[i].prototype.name : args[i].name;
+                namespace[item] = args[i];
+            }
 
-});  var library = require('main');
+            return namespace;
+
+    }
+);  var library = require('main');
   if(typeof module !== 'undefined' && module.exports) {
     module.exports = library;
   } else if(globalDefine) {

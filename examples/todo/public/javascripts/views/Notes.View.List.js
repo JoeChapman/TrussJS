@@ -1,18 +1,15 @@
 
-	var Notes = Notes || {};
-	Notes.View =  Notes.View || {};
-
-	Notes.View.List = Truss.View.construct({
+	var todoList = Truss.View.construct({
 
 		start:  function (options) {
-		
+
 			if (!options) {
 				throw {
 					name: "ArgumentError",
 					message: "View requires options rootNode and collection"
 				};
 			}
-			
+
 			if (!options.rootNode) {
 				throw {
 					name: "ArgumentError",
@@ -30,7 +27,7 @@
 
 			this.rootNode = options.rootNode;
 			this.collection = options.collection;
-			this.collection.on("add", this._renderNote.bind(this), this);	
+			this.collection.on("add", this._renderNote.bind(this), this);
 			this.render();
 		},
 
@@ -40,11 +37,11 @@
 		},
 
 		_renderNote: function (model) {
-			var note = new Notes.View.Note({
+			todoItem({
 				parentEl: this._getElement(),
-				model: model, 
+				model: model,
 				collection: this._getCollection()
-			});	
+			});
 		},
 
 		_getCollection: function () {

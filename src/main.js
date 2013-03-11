@@ -1,13 +1,26 @@
-define( function ( require, exports, module ) {
+define( [
+    'Base',
+    'events',
+    'mediator',
+    'utils',
+    'Collection',
+    'Model',
+    'View'
+    ],
+    function ( Base, events, mediator, utils, Collection, Model, View ) {
 
-	var Base = require('Base'),
-		events = require('events'),
-		mediator = require('mediator'),
-		utils = require('utils'),
-		Collection = require('Collection'),
-		Model = require('Model'),
-		View = require('View');
+        var args = [].slice.call(arguments, 1),
+                i = 0,
+                len = args.length,
+                namespace = {},
+                item;
 
-	return Base;
+            for (; i < len; i++) {
+                item = args[i] && args[i].prototype ? args[i].prototype.name : args[i].name;
+                namespace[item] = args[i];
+            }
 
-});
+            return namespace;
+
+    }
+);

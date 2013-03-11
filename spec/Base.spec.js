@@ -8,22 +8,26 @@ require( ['Base'], function ( Base ) {
 				expect(typeof Base.construct).toEqual("function");
 			});
 
+			it("Should have a static mixin function", function () {
+				expect(typeof Base.mixin).toEqual("function");
+			});
+
 		});
 
 		describe("When Base.construct is invoked with NO arguments", function () {
 
-			var retVal;
+			var returnFunc;
 
 			beforeEach(function () {
-				retVal = Base.construct();
+				returnFunc = Base.construct();
 			});
 
 			it("Should return a function object", function () {
-				expect(typeof retVal).toEqual("function");
+				expect(typeof returnFunc).toEqual("function");
 			});
 
 			it("Should return a function with a static contruct function", function () {
-				expect(typeof retVal.construct).toEqual("function");
+				expect(typeof returnFunc.construct).toEqual("function");
 			});
 
 		});
@@ -32,15 +36,15 @@ require( ['Base'], function ( Base ) {
 
 			describe("When the argument is an object with a method", function () {
 
-				var retVal;
+				var returnFunc;
 
 				beforeEach(function () {
-					retVal = Base.construct({fn: function () {}});
+					returnFunc = Base.construct({fn: function () {}});
 				});
 
 				it("Should return a function with the method on its prototype", function () {
 
-					expect(typeof retVal.prototype.fn).toEqual("function");
+					expect(typeof returnFunc.prototype.fn).toEqual("function");
 
 				});
 			});
@@ -49,24 +53,24 @@ require( ['Base'], function ( Base ) {
 
 		describe("When construct is invoked on the returned function with an argument", function () {
 
-			var retVal1;
+			var returnFunc1;
 
 			beforeEach(function () {
-				retVal1 = Base.construct();
+				returnFunc1 = Base.construct();
 			});
 
 			describe("When the argument is an object with a method", function () {
 
-				var retVal2;
+				var returnFunc2;
 
 				beforeEach(function () {
-					retVal2 = retVal1.construct({fn: function () {}});
+					returnFunc2 = returnFunc1.construct({fn: function () {}});
 				});
 
 				it("Should return a function with the method on its prototype", function () {
-					expect(typeof retVal2.prototype.fn).toEqual("function");
+					expect(typeof returnFunc2.prototype.fn).toEqual("function");
 				});
-				
+
 			});
 
 		});
