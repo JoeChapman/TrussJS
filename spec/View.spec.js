@@ -6,13 +6,13 @@ require( ['Base', 'View'], function ( Base, View ) {
 		describe("When a view is created without options", function () {
 			it("Should not throw an error", function () {
 				expect(function () {
-					view = new View();
+					view = View();
 				}).not.toThrow();
 			});
 		});
 		describe("When a view is created without options", function () {
 			beforeEach(function () {
-				view = new View();
+				view = View();
 			});
 			afterEach(function () {
 				view = null;
@@ -50,7 +50,7 @@ require( ['Base', 'View'], function ( Base, View ) {
 						expect(html.firstChild.nodeName.toLowerCase()).toEqual("span");
 					});
 				});
-				
+
 			});
 			describe("When make is called with the tag name argument 'p'", function () {
 				describe("When make is called with the contents argument 'span' element", function () {
@@ -93,7 +93,7 @@ require( ['Base', 'View'], function ( Base, View ) {
 							beforeEach(function () {
 								html = view.make(name, view.make(), attrs);
 							});
-							it("Should make a p element", function () {								
+							it("Should make a p element", function () {
 								expect(html.nodeName.toLowerCase()).toEqual(name);
 							});
 							it("Should make a p element with a nested div element", function () {

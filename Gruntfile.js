@@ -26,14 +26,14 @@ module.exports = function( grunt ) {
 		},
 
 		jasmine : {
-			baseUrl: "./src",
-			options : {
-				specs : '<%= meta.spec %>',
-				// host : 'http://127.0.0.1:8000',
-				template: require('grunt-template-jasmine-requirejs'),
-				templateOptions: {
-					requireConfig: {
-						baseUrl: './src'
+			all: {
+				options : {
+					specs : '<%= meta.spec %>',
+					template: require('grunt-template-jasmine-requirejs'),
+					templateOptions: {
+						requireConfig: {
+							baseUrl: './src'
+						}
 					}
 				}
 			}
@@ -51,13 +51,13 @@ module.exports = function( grunt ) {
 					},
 					baseUrl: "./src",
 					name: 'vendor/almond',
-					include: ['<%= pkg.main %>'],
+					include: ['main.js'],
 					wrap: {
 						start: "(function(global, define) {\n"+
 						// check for amd loader on global namespace
 						"  var globalDefine = global.define;\n",
 
-						end:   "  var library = require('<%= pkg.main %>');\n"+
+						end:   "  var library = require('main');\n"+
 						"  if(typeof module !== 'undefined' && module.exports) {\n"+
 						// export library for node
 						"    module.exports = library;\n"+
@@ -80,13 +80,13 @@ module.exports = function( grunt ) {
 					optimize: "none",
 					baseUrl: "./src",
 					name: 'vendor/almond',
-					include: ['<%= pkg.main %>'],
+					include: ['main.js'],
 					wrap: {
 						start: "(function(global, define) {\n"+
 						// check for amd loader on global namespace
 						"  var globalDefine = global.define;\n",
 
-						end:   "  var library = require('<%= pkg.main %>');\n"+
+						end:   "  var library = require('main');\n"+
 						"  if(typeof module !== 'undefined' && module.exports) {\n"+
 						// export library for node
 						"    module.exports = library;\n"+

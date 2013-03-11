@@ -1,38 +1,51 @@
-define( function ( require, exports, module ) {
+define( ['Base'], function ( Base ) {
 
-	var Base = require( 'Base' ),
+    var constants = {
+            ID: 1,
+            ORIGID: 1,
+            IDPREFIX: "mid_"
+        };
 
-		constants = {
-			ID: 1,
-			ORIGID: 1,
-			IDPREFIX: "mid_"
-		};
+    function getNewId () {
+        return constants.IDPREFIX + constants.ID++;
+    }
 
-	function getNewId () {
-		return constants.IDPREFIX + constants.ID++;
-	}
+    function resetId () {
+        constants.ID = constants.ORIGID;
+    }
 
-	function resetId () {
-		constants.ID = constants.ORIGID;
-	}
+    return Base.construct({
 
-	var Model = Base.construct({
+        start: function (options) {
+            this.id = getNewId();
+            this.resetId = resetId;
+            this.properties = {};
 
-		start: function () {
-			this.id = getNewId();
-			this.resetId = resetId;
-		},
+            if (options) {
+                this.set( options );
+            }
 
-		get: function ( name ) {
-			return this[ name ] || this.options[ name ];
-		},
+            return this;
+        },
 
-		set: function ( name, value ) {
-			this[ name ] = value;
-		}
+        get: function ( name ) {
+            return this[ name ] || this.properties[ name ];
+        },
 
-	});
+        set: function ( name, value ) {
 
-	return Model;
+            if (typeof name == 'string') {
+                this.properties[ name ] = value;
+            } else {
+                for (var n in name) {
+                    if  (name.hasOwnProperty(n) ) {
+                        this.properties[ n ] = name[n];
+                    }
+                }
+            }
+
+        }
+
+    });
 
 });

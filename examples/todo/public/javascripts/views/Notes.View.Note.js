@@ -1,18 +1,14 @@
 
-
-	var Notes = Notes || {};
-	Notes.View =  Notes.View || {};
-
-	Notes.View.Note = Truss.View.construct({
+	var todoItem = Truss.View.construct({
 
 		start: function (options) {
 
 			this.parentEl = options.parentEl;
 			this.model = options.model;
 			this.collection = options.collection;
-			
+
 			this.render();
-			
+
 			this.button.addEventListener("click", this.delete.bind(this), false);
 
 			this.text.addEventListener("click", this.edit.bind(this), false);
@@ -20,8 +16,8 @@
 		},
 
 		edit: function () {
-			var edit = new Notes.View.Edit_Note({
-				parentEl: this.element, 
+			todoEdit({
+				parentEl: this.element,
 				model: this.model
 			});
 		},
@@ -30,7 +26,7 @@
 
 			var button = this.make("button"),
 				em = this.make("em", this.model.get("text") ),
-				element = this.make("li", 
+				element = this.make("li",
 					[em, button], {
 					id: this.model.get("id"),
 					draggable: true

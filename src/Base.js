@@ -53,21 +53,43 @@ define( ['events'], function ( events ) {
    */
   Base.construct = function (props) {
 
-    var parent = this;
+    var parent = this,
+        name = props && props.name ? props.name : '';
 
-    // The new constructor Function invokes the parent with arguments
-    // passed on instantiation of this constructor
-    function F () {
-      return parent.call(this, [].slice.call(arguments)[0]);
+    function F() {
+        return parent.call(this, [].slice.call(arguments)[0]);
     }
 
-    // Build the prototype from parent.prototype and the props arg.
     F.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
-    // Augment the constructor with the parent.
     F.prototype.constructor = Base.mixin( F, parent );
 
-    // Retun the constructor
-    return F;
+    function proxy(options) {
+        parent.call(this, [].slice.call(arguments)[0]);
+        return new F(options);
+    }
+
+    proxy.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
+    proxy.prototype.name = name;
+    proxy.prototype.constructor = Base.mixin( F, parent );
+    proxy.construct = parent.construct;
+
+    return proxy;
+
+    // var parent = this;
+
+    // // The new constructor Function invokes the parent with arguments
+    // // passed on instantiation of this constructor
+    // function F () {
+    //   return parent.call(this, [].slice.call(arguments)[0]);
+    // }
+
+    // // Build the prototype from parent.prototype and the props arg.
+    // F.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
+    // // Augment the constructor with the parent.
+    // F.prototype.constructor = Base.mixin( F, parent );
+
+    // // Retun the constructor
+    // return F;
   };
 
   // Augment the Base prototype with the

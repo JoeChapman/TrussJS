@@ -1,8 +1,5 @@
 
-var Notes = Notes || {};
-	Notes.View =  Notes.View || {};
-
-	Notes.View.Edit_Note = Truss.View.construct({
+var todoEdit = Truss.View.construct({
 
 		start: function (options) {
 
@@ -12,7 +9,7 @@ var Notes = Notes || {};
 			this.render();
 
 			this.element.addEventListener("blur", this.update.bind(this), false);
-			
+
 		},
 
 		render: function () {
