@@ -1,34 +1,37 @@
 
-
-	var Notes = Notes || {};
-	Notes.View =  Notes.View || {};
-
-	Notes.View.Form = Truss.View.construct({
+	var todoForm = Truss.View.construct({
 
 		start: function (options) {
+			console.log( 'in start', options );
 			this.rootNode = options.rootNode;
 			this.collection = options.collection;
 			this._makeElements();
 		},
 
+		name: 'formView',
+
 		_add: function (e) {
+
 			e.preventDefault();
 			var value = this.input.value;
 			if (/\S/g.test(value)) {
-				this.collection.add({
-					text: value
-				});
-			}	
+
+				//var model = Truss.Model.construct({});
+				//model.set('text', value);
+				this.collection.add({'text': value});
+
+			}
 		},
 
 		_makeElements: function () {
+
 			var fieldset;
 
 			this.submit = this.make("input", {
 								type: "submit",
 								value: "Add"
 							});
-				
+
 			this.input = this.make("input", {
 							type: 'text',
 							autofocus: 'true',

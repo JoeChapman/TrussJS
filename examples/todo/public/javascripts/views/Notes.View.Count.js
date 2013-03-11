@@ -1,8 +1,5 @@
 
-	var Notes = Notes || {};
-	Notes.View =  Notes.View || {};
-
-	Notes.View.Count = Truss.View.construct({
+	var todoCount = Truss.View.construct({
 
 		start: function (options) {
 
@@ -12,7 +9,7 @@
 					message: "View requires options rootNode and collection"
 				};
 			}
-			
+
 			if (!options.rootNode) {
 				throw {
 					name: "ArgumentError",
@@ -39,6 +36,7 @@
 		},
 
 		_increment: function (model) {
+			console.log( 'model', this.collection.getModels())
 			this.output.innerHTML = this.collection.getModels().length;
 		},
 

@@ -1,20 +1,18 @@
 require( ['Base', 'Collection', 'Model'], function ( Base, Collection, Model ) {
 
-	// TODO - stub Model
-
 	describe("Collection", function () {
 		var collection = null;
 
 		describe("When a collection is created without options", function () {
 			it("Should not throw an error", function () {
 				expect(function () {
-					collection = new Collection();
+					collection =  Collection();
 				}).not.toThrow();
 			});
 		});
 		describe("When a collection is created without a model", function () {
 			beforeEach(function () {
-				collection = new Collection();
+				collection =  Collection();
 			});
 			afterEach(function () {
 				collection = null;
@@ -27,19 +25,20 @@ require( ['Base', 'Collection', 'Model'], function ( Base, Collection, Model ) {
 					spyFire = spyOn(collection, "fire");
 					collection.add(obj);
 				});
-				it("Should fire an 'add' event with a the data that was added", function () {
-					expect(spyFire).toHaveBeenCalledWith("add", obj);
+				it("Should fire an 'add' event with the data that was added", function () {
+					expect(spyFire.mostRecentCall.args[0]).toEqual( 'add' );
+					expect(spyFire.mostRecentCall.args[1].properties).toEqual( obj );
 				});
 			});
 		});
 		describe("When a collection is created with a model", function () {
 			beforeEach(function () {
-				collection = new Collection({
+				collection = Collection({
 					model: Model
 				});
 			});
 			afterEach(function () {
-				collection.currentModel.resetId();
+				collection.getCurrentModel().resetId();
 				collection = null;
 			});
 			describe("When a collection recieves 1 new object", function () {
@@ -52,7 +51,8 @@ require( ['Base', 'Collection', 'Model'], function ( Base, Collection, Model ) {
 					collection.add(obj);
 				});
 				it("Should fire an 'add' event with the new model", function () {
-					expect(spyFire).toHaveBeenCalledWith("add", collection.getById("mid_1"));
+					expect(spyFire.mostRecentCall.args[0]).toEqual( 'add' );
+					expect(spyFire.mostRecentCall.args[1].properties).toEqual( obj );
 				});
 			});
 			describe("When a collection recieves two new objects", function () {
@@ -69,10 +69,12 @@ require( ['Base', 'Collection', 'Model'], function ( Base, Collection, Model ) {
 					expect(spyFire.callCount).toEqual(2);
 				});
 				it("Should fire an 'add' event with a new model for obj1", function () {
-					expect(spyFire).toHaveBeenCalledWith("add", collection.getById("mid_1"));
+					expect(spyFire.mostRecentCall.args[0]).toEqual( 'add' );
+					expect(spyFire.mostRecentCall.args[1].properties).toEqual( obj1 );
 				});
 				it("Should fire an 'add' event with a new model for obj2", function () {
-					expect(spyFire).toHaveBeenCalledWith("add", collection.getById("mid_2"));
+					expect(spyFire.mostRecentCall.args[0]).toEqual( 'add' );
+					expect(spyFire.mostRecentCall.object.models[0].properties).toEqual( obj2 );
 				});
 			});
 			describe("When the collection has 2  models", function () {
@@ -85,7 +87,7 @@ require( ['Base', 'Collection', 'Model'], function ( Base, Collection, Model ) {
 					spyFire = spyOn(collection, "fire");
 					collection.add([obj1, obj2]);
 				});
-				describe("When a removedById is called with by the id of the first model", function () {
+				describe("When removedById is called with the id of the first model", function () {
 					beforeEach(function () {
 						collection.removeById("mid_1");
 					});

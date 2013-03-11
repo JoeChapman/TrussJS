@@ -1,100 +1,133 @@
-define ( ['Base'], function ( Base ) {
+define ( ['Base', 'Model'], function ( Base, Model ) {
 
-	function getCount () {
-		return this.getModels().length;
-	}
+    function getCount () {
+        return this.getModels().length;
+    }
 
-	function getBy (method, value) {
-		var models = this.getModels(),
-			len = models.length,
-			found = [],
-			i = 0;
+    function getBy (method, value) {
+        var models = this.getModels(),
+            len = models.length,
+            found = [],
+            i = 0;
 
-		while (0 < len--) {
-			if (typeof models[len][method] !== "undefined") {
-				if (models[len][method] === value) {
-					found.push(models[len]);
-				}
-			} else {
-				if (models[len].get(method) === value) {
-					found.push(models[len]);
-				}
-			}
-		}
-		return found = (found.length < 2) ? found[0] : found;
-	}
+        while (0 < len--) {
+            if (typeof models[len][method] !== "undefined") {
+                if (models[len][method] === value) {
+                    found.push(models[len]);
+                }
+            } else {
+                if (models[len].get(method) === value) {
+                    found.push(models[len]);
+                }
+            }
+        }
+        return found = (found.length < 2) ? found[0] : found;
+    }
 
-	function removeBy (method, value) {
-		var found = [].concat(getBy.call(this, method, value)),
-			num = found.length,
-			models = this.getModels(),
-			len = models.length,
-			index = -1;
+    function removeBy (method, value) {
+        var found = [].concat(getBy.call(this, method, value)),
+            num = found.length,
+            models = this.getModels(),
+            len = models.length,
+            index = -1;
 
-		while (0 < len--) {
-			while (0 < num--) {
-				index = models.indexOf(found[num]);
-				if (index !== -1) {
-					models.splice(index, 1);
-					this.fire("removed", this.getModels());
-				}
-			}
-		}
-	}
+        while (0 < len--) {
+            while (0 < num--) {
+                index = models.indexOf(found[num]);
+                if (index !== -1) {
+                    models.splice(index, 1);
+                    this.fire("removed", this.getModels());
+                }
+            }
+        }
+    }
 
-	// Use Base.construct to build a constructor for the Collection
-	return Base.construct({
+    var currentModel;
 
-		start: function ( options ) {
+    // Use Base.construct to build a constructor for the Collection
+    return Base.construct({
 
-			this.model = this.options && this.options.model;
+        start: function ( options ) {
 
-		},
+            this.model = options && options.model ? options.model : Model;
 
-		models: [],
+        },
 
-		add: function (data) {
+        models: [],
 
-			var attrs = [].concat(data),
-				len = attrs.length;
+        add: function (data) {
 
-			while (len--) {
+            var items = [].concat(data),
+                len = items.length,
+                model,
+                item,
+                p,
+                currentModel;
 
-				if (this.model) {
-					this.currentModel = new this.model(attrs[len]);
-					this.getModels().push(this.currentModel);
-				}
-				this.fire("add", this.currentModel || attrs[len]);
+            while (len--) {
 
-			}
+                model = items[len];
 
-		},
+                if (model.name && model.name === 'model') {
 
-		reset: function () {
-			this.models = [];
-			this.fire("reset");
-		},
+                    this.getModels().push( model );
 
-		getById: function (id) {
-			return getBy.call(this, "id", id);
-		},
+                } else {
 
-		getByText: function (text) {
-			return getBy.call(this, "text", text);
-		},
+                    item = items[len];
 
-		removeByText: function (text) {
-			removeBy.call(this, "text", text);
-		},
+                    if ( this.model ) {
 
-		removeById: function (id) {
-			removeBy.call(this, "id", id);
-		},
+                        model = this.model();
+                        this.getModels().push(model);
 
-		getModels: function () {
-			return this.models;
-		}
+                        for ( p in item ) {
+                            model.set( p, item[p] );
+                        }
 
-	});
+                    }
+                }
+
+                this.setCurrentModel(model);
+
+                this.fire("add", model);
+            }
+
+        },
+
+        reset: function () {
+            this.models = [];
+            this.fire("reset");
+        },
+
+        getById: function (id) {
+            return getBy.call(this, "id", id);
+        },
+
+        getByText: function (text) {
+            return getBy.call(this, "text", text);
+        },
+
+        removeByText: function (text) {
+            removeBy.call(this, "text", text);
+        },
+
+        removeById: function (id) {
+            removeBy.call(this, "id", id);
+        },
+
+        getModels: function () {
+            return this.models;
+        },
+
+        setCurrentModel: function (model) {
+            currentModel = model;
+        },
+
+        getCurrentModel: function () {
+            return currentModel;
+        }
+
+    });
 
 });
