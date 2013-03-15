@@ -51,7 +51,7 @@ module.exports = function( grunt ) {
 					},
 					baseUrl: "./src",
 					name: 'vendor/almond',
-					include: ['main.js'],
+					include: ['main'],
 					wrap: {
 						start: "(function(global, define) {\n"+
 						// check for amd loader on global namespace
@@ -80,7 +80,7 @@ module.exports = function( grunt ) {
 					optimize: "none",
 					baseUrl: "./src",
 					name: 'vendor/almond',
-					include: ['main.js'],
+					include: ['main'],
 					wrap: {
 						start: "(function(global, define) {\n"+
 						// check for amd loader on global namespace

@@ -6,13 +6,13 @@ require( ['Base', 'View'], function ( Base, View ) {
 		describe("When a view is created without options", function () {
 			it("Should not throw an error", function () {
 				expect(function () {
-					view = View();
+					view = View.create();
 				}).not.toThrow();
 			});
 		});
 		describe("When a view is created without options", function () {
 			beforeEach(function () {
-				view = View();
+				view = View.create();
 			});
 			afterEach(function () {
 				view = null;

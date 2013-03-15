@@ -410,13 +410,11 @@ define("vendor/almond", function(){});
 
 define ('events',[], function ( ) {
 
-	return {
+    return {
 
-        name: 'events',
+        events: {},
 
-		events: {},
-
-		on: function (event, callback) {
+        on: function (event, callback) {
 
       var context;
 
@@ -523,7 +521,7 @@ define ('events',[], function ( ) {
 
     }
 
-	};
+    };
 
 });
 
@@ -543,11 +541,8 @@ define('Base', ['events'], function ( events ) {
       this.options = options;
     }
 
-
     // Call the start function to do any setup
     if ( "function" == typeof this.start ) {
-
-        //console.log( 'base options', options, this)
       this.start( options );
     }
 
@@ -562,6 +557,7 @@ define('Base', ['events'], function ( events ) {
    * @return {Object} augmented dest
    */
   Base.mixin = function ( dest, source, deep ) {
+
     for (var property in source) {
       // Iterate over all source properties
       if ( deep && "object" == typeof source[property] ) {
@@ -574,8 +570,9 @@ define('Base', ['events'], function ( events ) {
         dest[property] = source[property];
       }
     }
+
     return dest;
-  },
+  };
 
   /**
    * @static
@@ -583,27 +580,29 @@ define('Base', ['events'], function ( events ) {
    * -> Construct is a static inheritance function
    * @return {Function} constructor function
    */
-  Base.construct = function construct(props) {
-    // Parent is the object that construct is invoked on.
+  Base.construct = function (props) {
+
     var parent = this,
-        name = props && props.name ? props.name : '';
+        proto = props || {};
 
-    function F() {
-        return parent.call(this, [].slice.call(arguments)[0]);
-    }
-
-    F.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
+    function F () {}
+    F.prototype = parent.prototype;
     F.prototype.constructor = Base.mixin( F, parent );
 
-    function proxy(options) {
-        parent.call(this, [].slice.call(arguments)[0]);
-        return new F(options);
+    function create (options) {
+        var proto = mix();
+        Base.call(proto, options);
+        return proto;
     }
 
-    proxy.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
-    proxy.prototype.name = name;
-    proxy.prototype.constructor = Base.mixin( F, parent );
-    proxy.construct = parent.construct;
+    function mix() {
+      return Base.mixin( new F(), proto );
+    }
+
+    function proxy () {}
+    proxy.prototype = mix();
+    proxy.construct = F.construct;
+    proxy.create = create;
 
     return proxy;
 
@@ -619,373 +618,370 @@ define('Base', ['events'], function ( events ) {
 });
 define('mediator',[], function ( ) {
 
-	/**
-		* A little helper to remove duplication
-		* @param type {String} to|from
-		* @param obj {Object}
-		* @param eventName {String}
-		* @private
-		*/
-	function add (type, obj, eventName) {
+    /**
+        * A little helper to remove duplication
+        * @param type {String} to|from
+        * @param obj {Object}
+        * @param eventName {String}
+        * @private
+        */
+    function add (type, obj, eventName) {
 
-		passes[ currentEvent ][ type ].push({
-			obj: obj,
-			eventName: eventName
-		});
+        passes[ currentEvent ][ type ].push({
+            obj: obj,
+            eventName: eventName
+        });
 
-	}
+    }
 
-	function isEqual (a, b) {
+    function isEqual (a, b) {
 
-		if (a === b) {
-			return a !== 0 || 1 / a === 1 / b;
-		}
+        if (a === b) {
+            return a !== 0 || 1 / a === 1 / b;
+        }
 
-		if (a === null || b === null) {
-			return a === b;
-		}
+        if (a === null || b === null) {
+            return a === b;
+        }
 
-		if (Object.prototype.toString.call(a) !== Object.prototype.toString.call(b)) {
-			return false;
-		}
+        if (Object.prototype.toString.call(a) !== Object.prototype.toString.call(b)) {
+            return false;
+        }
 
-	}
+    }
 
-	// Polyfill for nativeForEach
-	function each (list, callback, context) {
+    // Polyfill for nativeForEach
+    function each (list, callback, context) {
 
-		var i;
+        var i;
 
-		// Native forEach
-		if (typeof Array.prototype.forEach == "function" && list.length) {
+        // Native forEach
+        if (typeof Array.prototype.forEach == "function" && list.length) {
 
-			list.forEach( callback, context || this);
+            list.forEach( callback, context || this);
 
-		} else if ( list.length ) {
+        } else if ( list.length ) {
 
-			// Polyfill
-			Array.prototype.forEach = function( callback, context ) {
+            // Polyfill
+            Array.prototype.forEach = function( callback, context ) {
 
-				for (var i = 0, len = list.length; i < len; ++i) {
+                for (var i = 0, len = list.length; i < len; ++i) {
 
-					callback.call(context, list[i], i, list);
+                    callback.call(context, list[i], i, list);
 
-				}
+                }
 
-			};
+            };
 
-		} else {
+        } else {
 
-			// If the list is an [object Object] (i.e. Not an Array)
-			for ( i in list ) {
+            // If the list is an [object Object] (i.e. Not an Array)
+            for ( i in list ) {
 
-				if ( list.hasOwnProperty( i ) ) {
+                if ( list.hasOwnProperty( i ) ) {
 
-					callback.call( context || this, list[i], i, list );
+                    callback.call( context || this, list[i], i, list );
 
-				}
+                }
 
-			}
+            }
 
-		}
+        }
 
-	}
+    }
 
-	/**
-	* Bind one or more target events to one or more source events
-	* @private
-	*/
-	function bind () {
+    /**
+    * Bind one or more target events to one or more source events
+    * @private
+    */
+    function bind () {
 
-		each( passes[ currentEvent ], function (sources, type, passes) {
+        each( passes[ currentEvent ], function (sources, type, passes) {
 
-			each( passes, function ( sources, type, pass ) {
+            each( passes, function ( sources, type, pass ) {
 
-				each( pass.from, function ( from ) {
+                each( pass.from, function ( from ) {
 
-					// Remove any previous binding
-					from.obj.off( from.eventName );
+                    // Remove any previous binding
+                    from.obj.off( from.eventName );
 
-					// Bind the event to a callback
-					from.obj.on( from.eventName, function( args ) {
+                    // Bind the event to a callback
+                    from.obj.on( from.eventName, function( args ) {
 
-						each( pass.to, function ( to ) {
+                        each( pass.to, function ( to ) {
 
-							// The callback binds the |to| event
-							to.obj.fire( to.eventName, args);
+                            // The callback binds the |to| event
+                            to.obj.fire( to.eventName, args);
 
-						}, this);
+                        }, this);
 
-					}, this);
+                    }, this);
 
-				}, this);
+                }, this);
 
-			}, this);
+            }, this);
 
-		}, this);
+        }, this);
 
-	}
+    }
 
-	var passes = {},
-		currentEvent = null;
+    var passes = {},
+        currentEvent = null;
 
 
-	// Return medaitor api as module definition
-	return {
+    // Return medaitor api as module definition
+    return {
 
-        name: 'mediator',
-		/**
-		* Registers the source subject subscriber and its event(s)
-		* @param subscribee {Object}
-		* @param eventName {String}
-		* @return {this}
-		*/
+        /**
+        * Registers the source subject subscriber and its event(s)
+        * @param subscribee {Object}
+        * @param eventName {String}
+        * @return {this}
+        */
 
-		from: function (subscribee, eventName) {
+        from: function (subscribee, eventName) {
 
-			if (!arguments.length) {
+            if (!arguments.length) {
 
-				throw {
-					name: "NoArgumentsException",
-					message: "From cannot be called with no arguments"
-				};
+                throw {
+                    name: "NoArgumentsException",
+                    message: "From cannot be called with no arguments"
+                };
 
-			}
+            }
 
-			currentEvent = eventName || 'all';
+            currentEvent = eventName || 'all';
 
-			if ( !passes[ currentEvent ] ) {
-				passes[ currentEvent ] = {};
-			}
+            if ( !passes[ currentEvent ] ) {
+                passes[ currentEvent ] = {};
+            }
 
-			if ( !passes[ currentEvent ].from ) {
-				passes[ currentEvent ].from = [];
-			}
+            if ( !passes[ currentEvent ].from ) {
+                passes[ currentEvent ].from = [];
+            }
 
-			add( "from", subscribee, eventName );
+            add( "from", subscribee, eventName );
 
-			if ( this.removing ) {
+            if ( this.removing ) {
 
-				// Has to object been marked for removal??
-				each( passes, function ( pass, j ) {
+                // Has to object been marked for removal??
+                each( passes, function ( pass, j ) {
 
-					each( pass.to, function ( to, i) {
+                    each( pass.to, function ( to, i) {
 
-						if (pass.to[i].remove && pass.to[i].remove === true) {
-							// Dedlete the target object and event,
-							// null the currentEvent
-							delete passes[j].to[i];
-							currentEvent = null;
+                        if (pass.to[i].remove && pass.to[i].remove === true) {
+                            // Dedlete the target object and event,
+                            // null the currentEvent
+                            delete passes[j].to[i];
+                            currentEvent = null;
 
-						}
+                        }
 
-					}, this);
+                    }, this);
 
-				}, this);
+                }, this);
 
-				this.removing = false;
-			}
-			// Make it chainable
-			return this;
+                this.removing = false;
+            }
+            // Make it chainable
+            return this;
 
-		},
+        },
 
 
-		/**
-		* Adds a target subscriber by eventName to the mediator
-		* @param subscriber {Object}
-		* @param eventName {String}
-		* @return {this}
-		*/
-		to: function ( subscriber, eventName ) {
+        /**
+        * Adds a target subscriber by eventName to the mediator
+        * @param subscriber {Object}
+        * @param eventName {String}
+        * @return {this}
+        */
+        to: function ( subscriber, eventName ) {
 
-			if ( !currentEvent ) {
+            if ( !currentEvent ) {
 
-				throw {
-					name: "ToFunctionBadUsage",
-					message: "Cannot call to before from."
-				};
+                throw {
+                    name: "ToFunctionBadUsage",
+                    message: "Cannot call to before from."
+                };
 
-			}
+            }
 
-			if ( !passes[ currentEvent ].to ) {
-				passes[ currentEvent ].to = [];
-			}
+            if ( !passes[ currentEvent ].to ) {
+                passes[ currentEvent ].to = [];
+            }
 
-			add( "to", subscriber, eventName );
+            add( "to", subscriber, eventName );
 
-			// No config object parameter
-			this.register();
+            // No config object parameter
+            this.register();
 
-			// Make it chainable
-			return this;
-		},
+            // Make it chainable
+            return this;
+        },
 
-		/**
-		* Marks target and eventName for removal
-		* @param target {Object}
-		* @param eventName {String}
-		* @return {this}
-		*/
-		remove: function (obj, eventName) {
+        /**
+        * Marks target and eventName for removal
+        * @param target {Object}
+        * @param eventName {String}
+        * @return {this}
+        */
+        remove: function (obj, eventName) {
 
-			if (!arguments.length) {
+            if (!arguments.length) {
 
-				throw {
-					name: "NoArgumentException",
-					message: "Remove cannot be called without arguments"
-				};
+                throw {
+                    name: "NoArgumentException",
+                    message: "Remove cannot be called without arguments"
+                };
 
-			}
+            }
 
-			this.removing = true;
+            this.removing = true;
 
-			each(passes, function ( pass ) {
+            each(passes, function ( pass ) {
 
-				each( pass.to, function ( to, i ) {
+                each( pass.to, function ( to, i ) {
 
-					if (typeof obj == "string") {
+                    if (typeof obj == "string") {
 
-						eventName = obj;
+                        eventName = obj;
 
-						if ( to.eventName === eventName ) {
+                        if ( to.eventName === eventName ) {
 
-							[].splice.call(pass.to, i, 1);
+                            [].splice.call(pass.to, i, 1);
 
-						}
+                        }
 
-					} else {
+                    } else {
 
-						if ( ( isEqual(to.obj, obj) || obj == null ) && ( to.eventName === eventName || typeof eventName == "undefined" ) ) {
+                        if ( ( isEqual(to.obj, obj) || obj == null ) && ( to.eventName === eventName || typeof eventName == "undefined" ) ) {
 
-							to.remove = true;
+                            to.remove = true;
 
-						}
+                        }
 
-					}
+                    }
 
-				});
+                });
 
-			});
+            });
 
-			return this;
+            return this;
 
-		},
+        },
 
-		/**
-		* Registers the source and target subscriber objects and their events for binding
-		* @param optional config Object
-		*/
-		register: function () {
+        /**
+        * Registers the source and target subscriber objects and their events for binding
+        * @param optional config Object
+        */
+        register: function () {
 
-			var config = arguments[0];
+            var config = arguments[0];
 
-			if ( config ) {
+            if ( config ) {
 
-				if ( config.source ) {
+                if ( config.source ) {
 
-					each(config.source, function ( from ) {
+                    each(config.source, function ( from ) {
 
-						this.from( from.subscriber, from.event );
+                        this.from( from.subscriber, from.event );
 
-					}, this);
+                    }, this);
 
-				} else {
+                } else {
 
-					throw {
-						name: "ConfigSourceNotDefined",
-						message: "Config object needs a source defined."
-					};
+                    throw {
+                        name: "ConfigSourceNotDefined",
+                        message: "Config object needs a source defined."
+                    };
 
-				}
+                }
 
-				if ( config.target ) {
+                if ( config.target ) {
 
-					each( config.target, function (to) {
+                    each( config.target, function (to) {
 
-						this.to( to.subscriber, to.event );
+                        this.to( to.subscriber, to.event );
 
-					}, this);
+                    }, this);
 
-				} else {
+                } else {
 
-					throw {
-						name: "ConfigTargetNotDefined",
-						message: "Config object needs a target defined."
-					};
-				}
+                    throw {
+                        name: "ConfigTargetNotDefined",
+                        message: "Config object needs a target defined."
+                    };
+                }
 
-			} else {
-				bind();
-			}
+            } else {
+                bind();
+            }
 
-		},
+        },
 
-		/**
-		* Notifies mediator that target and source subscriber and events should be removed.
-		* @param config {Object}
-		*/
-		unregister: function ( config ) {
+        /**
+        * Notifies mediator that target and source subscriber and events should be removed.
+        * @param config {Object}
+        */
+        unregister: function ( config ) {
 
-			if ( !config ) {
+            if ( !config ) {
 
-				throw {
-					name: "NoArgumentException",
-					message: "Unregister cannot be called without arguments"
-				};
+                throw {
+                    name: "NoArgumentException",
+                    message: "Unregister cannot be called without arguments"
+                };
 
-			}
+            }
 
-			if ( config ) {
+            if ( config ) {
 
-				this.removing = true;
+                this.removing = true;
 
-				if ( config.target ) {
+                if ( config.target ) {
 
-					each( config.target, function ( to ) {
+                    each( config.target, function ( to ) {
 
-					this.remove( to.subscriber, to.event );
+                    this.remove( to.subscriber, to.event );
 
-					}, this );
+                    }, this );
 
-				} else {
+                } else {
 
-					throw {
-						name: "ConfigTargetNotDefined",
-						message: "Config object needs a target defined."
-					};
+                    throw {
+                        name: "ConfigTargetNotDefined",
+                        message: "Config object needs a target defined."
+                    };
 
-				}
+                }
 
-				if ( config.source ) {
+                if ( config.source ) {
 
-					each(config.source, function (from) {
+                    each(config.source, function (from) {
 
-						this.from(from.subscriber, from.eventName);
+                        this.from(from.subscriber, from.eventName);
 
-					}, this );
+                    }, this );
 
-				} else {
+                } else {
 
-					throw {
-						name: "ConfigSourceNotDefined",
-						message: "Config object needs a source defined."
-					};
+                    throw {
+                        name: "ConfigSourceNotDefined",
+                        message: "Config object needs a source defined."
+                    };
 
-				}
+                }
 
-			}
+            }
 
-		}
+        }
 
-	};
+    };
 
 });
 define('utils',[], function ( ) {
 
   return {
-
-    name: 'utils',
 
     isObject: function ( o ) {
       // Concat Object with string to
@@ -1004,306 +1000,318 @@ define('utils',[], function ( ) {
   };
 
 });
-define ('Collection', ['Base'], function ( Base ) {
+define('Model', ['Base'], function ( Base ) {
 
-	function getCount () {
-		return this.getModels().length;
-	}
+    var constants = {
+            ID: 1,
+            ORIGID: 1,
+            IDPREFIX: "mid_"
+        };
 
-	function getBy (method, value) {
-		var models = this.getModels(),
-			len = models.length,
-			found = [],
-			i = 0;
+    function getNewId () {
+        return constants.IDPREFIX + constants.ID++;
+    }
 
-		while (0 < len--) {
-			if (typeof models[len][method] !== "undefined") {
-				if (models[len][method] === value) {
-					found.push(models[len]);
-				}
-			} else {
-				if (models[len].get(method) === value) {
-					found.push(models[len]);
-				}
-			}
-		}
-		return found = (found.length < 2) ? found[0] : found;
-	}
+    function resetId () {
+        constants.ID = constants.ORIGID;
+    }
 
-	function removeBy (method, value) {
-		var found = [].concat(getBy.call(this, method, value)),
-			num = found.length,
-			models = this.getModels(),
-			len = models.length,
-			index = -1;
+    return Base.construct({
 
-		while (0 < len--) {
-			while (0 < num--) {
-				index = models.indexOf(found[num]);
-				if (index !== -1) {
-					models.splice(index, 1);
-					this.fire("removed", this.getModels());
-				}
-			}
-		}
-	}
+        start: function (options) {
+            this.id = getNewId();
+            this.resetId = resetId;
+            this.properties = {};
 
-	// Use Base.construct to build a constructor for the Collection
-	return Base.construct({
-
-		start: function ( options ) {
-
-			this.model = options && options.model ? options.model: Truss.Model;
-
-		},
-
-        name: 'Collection',
-
-		models: [],
-
-		add: function (data) {
-
-			var attrs, len, currentModel = data;
-
-            if (data.name === 'model') {
-                // The data is a model, add the model to the collection
-                this.getModels().push(currentModel);
-
-            } else {
-
-                attrs = [].concat(data);
-                len = attrs.length;
-
-                if (this.model) {
-                    currentModel = this.model();
-                    this.getModels().push(currentModel);
-
-                    for (var p in data) {
-                        currentModel.set(p, data[p])
-                    }
-
-                }
-
-                // // The data is not a model, its probably an object
-                // while (len--) {
-                //     console.log( len, data, attrs )
-                //     if (this.model) {
-                //         this.currentModel = attrs[len];
-                //         this.getModels().push(this.currentModel);
-                //     }
-
-                // }
+            if (options) {
+                this.set( options );
             }
 
-            // Fire an event to notify that the model has been added to the collection
-            this.fire("add", currentModel);
+            return this;
+        },
 
-		},
+        get: function ( name ) {
+            return this[ name ] || this.properties[ name ];
+        },
 
-		reset: function () {
-			this.models = [];
-			this.fire("reset");
-		},
+        set: function ( name, value ) {
+            if (typeof name == 'string') {
+                this.properties[ name ] = value;
+            } else {
+                for (var n in name) {
+                    if  (name.hasOwnProperty(n) ) {
+                        this.properties[ n ] = name[n];
+                    }
+                }
+            }
 
-		getById: function (id) {
-			return getBy.call(this, "id", id);
-		},
+        }
 
-		getByText: function (text) {
-			return getBy.call(this, "text", text);
-		},
-
-		removeByText: function (text) {
-			removeBy.call(this, "text", text);
-		},
-
-		removeById: function (id) {
-			removeBy.call(this, "id", id);
-		},
-
-		getModels: function () {
-			return this.models;
-		}
-
-	});
+    });
 
 });
 
-define('Model',['require','exports','module','Base'], function ( require, exports, module ) {
+define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
 
-	var Base = require( 'Base' ),
+    function getCount () {
+        return this.getModels().length;
+    }
 
-		constants = {
-			ID: 1,
-			ORIGID: 1,
-			IDPREFIX: "mid_"
-		};
+    function getBy (method, value) {
+        var models = this.getModels(),
+            len = models.length,
+            found = [],
+            i = 0;
 
-	function getNewId () {
-		return constants.IDPREFIX + constants.ID++;
-	}
+        while (0 < len--) {
+            if (typeof models[len][method] !== "undefined") {
+                if (models[len][method] === value) {
+                    found.push(models[len]);
+                }
+            } else {
+                if (models[len].get(method) === value) {
+                    found.push(models[len]);
+                }
+            }
+        }
+        return found = (found.length < 2) ? found[0] : found;
+    }
 
-	function resetId () {
-		constants.ID = constants.ORIGID;
-	}
+    function removeBy (method, value) {
+        var found = [].concat(getBy.call(this, method, value)),
+            num = found.length,
+            models = this.getModels(),
+            len = models.length,
+            index = -1;
 
-	var Model = Base.construct({
+        while (0 < len--) {
+            while (0 < num--) {
+                index = models.indexOf(found[num]);
+                if (index !== -1) {
+                    models.splice(index, 1);
+                    this.fire("removed", this.getModels());
+                }
+            }
+        }
+    }
 
-		start: function () {
-			this.id = getNewId();
-			this.resetId = resetId;
-		},
+    var currentModel;
 
-        name: 'Model',
+    // Use Base.construct to build a constructor for the Collection
+    return Base.construct({
 
-		get: function ( name ) {
-			return this[ name ] || this.options[ name ];
-		},
+        start: function ( options ) {
 
-		set: function ( name, value ) {
-			this[ name ] = value;
-		}
+            this.model = options && options.model ? options.model : Model;
 
-	});
+        },
 
-	return Model;
+        models: [],
+
+        add: function (data) {
+
+            var items = [].concat(data),
+                len = items.length,
+                model,
+                item,
+                p,
+                currentModel;
+
+            while (len--) {
+
+                model = items[len];
+
+                if (model.name && model.name === 'model') {
+
+                    this.getModels().push( model );
+
+                } else {
+
+                    item = items[len];
+
+                    if ( this.model ) {
+
+                        model = this.model.create();
+                        this.getModels().push(model);
+
+                        for ( p in item ) {
+                            model.set( p, item[p] );
+                        }
+
+                    }
+                }
+
+                this.setCurrentModel(model);
+
+                this.fire("add", model);
+            }
+
+        },
+
+        reset: function () {
+            this.models = [];
+            this.fire("reset");
+        },
+
+        getById: function (id) {
+            return getBy.call(this, "id", id);
+        },
+
+        getByText: function (text) {
+            return getBy.call(this, "text", text);
+        },
+
+        removeByText: function (text) {
+            removeBy.call(this, "text", text);
+        },
+
+        removeById: function (id) {
+            removeBy.call(this, "id", id);
+        },
+
+        getModels: function () {
+            return this.models;
+        },
+
+        setCurrentModel: function (model) {
+            currentModel = model;
+        },
+
+        getCurrentModel: function () {
+            return currentModel;
+        }
+
+    });
 
 });
 
 define ('View', ['Base'], function ( Base ) {
 
-	// Utility function
-	function realTypeOf ( o ) {
-		// Use toString to cast 'o' to its class definition,
-		// e.g. [ object Object ] and return the 2nd part, i.e. "Object"
-		return Object.prototype.toString.call( o ).match( /\w+/g )[ 1 ].toLowerCase();
-	}
+    // Utility function
+    function realTypeOf ( o ) {
+        // Use toString to cast 'o' to its class definition,
+        // e.g. [ object Object ] and return the 2nd part, i.e. "Object"
+        return Object.prototype.toString.call( o ).match( /\w+/g )[ 1 ].toLowerCase();
+    }
 
-	function getRootNode () {
-		return document.getElementsByTagName("body")[0];
-	}
+    function getRootNode () {
+        return document.getElementsByTagName("body")[0];
+    }
 
-	function getTagName () {
-		return "div";
-	}
+    function getTagName () {
+        return "div";
+    }
 
-	// Build the constructor
-	return Base.construct({
+    // Build the constructor
+    return Base.construct({
 
-		// Start is optional, it's called if present,
-		// like a constructor
-		start: function () {
+        // Start is optional, it's called if present,
+        // like a constructor
+        start: function () {
 
-			// Option properties override view properties
-			this.tagName = this.options ? this.options.tagName : getTagName();
-			this.rootNode = this.options ? this.options.rootNode : getRootNode();
-		},
+            // Option properties override view properties
+            this.tagName = this.options ? this.options.tagName : getTagName();
+            this.rootNode = this.options ? this.options.rootNode : getRootNode();
+        },
 
-        name: 'View',
+        /**
+         * Make a dom node
+         */
+        make: function () {
+            // All arguments are optional
+            var args = [].slice.call(arguments),
+                name = args[0] || this.tagName,
+                contents = args[1],
+                attrs = args[2],
+                i,
+                attr,
+                tag = document.createElement(name);
 
-		/**
-		 * Make a dom node
-		 */
-		make: function () {
-			// All arguments are optional
-			var args = [].slice.call(arguments),
-				name = args[0] || this.tagName,
-				contents = args[1],
-				attrs = args[2],
-				i,
-				attr,
-				tag = document.createElement(name);
-
-			if (args.length === 2 && realTypeOf(contents) == "object") {
-				contents = undefined;
-				attrs = args[1];
-			}
-
-			// Add the contents
-			if (typeof contents != "undefined") {
-
-				if (realTypeOf(contents) == "number" || typeof contents == "string") {
-					// If the contents is a Number or a String,
-					// parse it to a textnode
-					contents = document.createTextNode(contents);
-				}
-
-				if (realTypeOf(contents) == "array") {
-					// If our contents is an array,
-					// append each one to the tag
-					while ( i = contents.shift() ) {
-						tag.appendChild(i);
-					}
-
-				} else {
-
-					tag.appendChild(contents);
-				}
-			}
-
-			// Add the attributes
-			if ( attrs ) {
-
-				for ( attr in attrs ) {
-
-					if (attrs.hasOwnProperty( attr )) {
-						// Add each attribute to the tag
-						tag[ attr ] = attrs[ attr ];
-
-						if ( !( attr in tag.attributes ) ) {
-							// If the attribute wasnt't successfully added,
-							// try again with setAttribute
-							tag.setAttribute( attr, attrs[ attr ] );
-
-						}
-
-					}
-
-				}
-
-			}
-			// Finally return the new tag
-			return tag;
-
-		}
-
-	});
-
-});
-    define('main', [
-        'Base',
-        'events',
-        'mediator',
-        'utils',
-        'Collection',
-        'Model',
-        'View'
-        ],
-        function ( Base, events, mediator, utils, Collection, Model, View ) {
-
-            var args = [].slice.call(arguments, 1),
-                i = 0,
-                len = args.length,
-                namespace = {},
-                item;
-
-            for (; i < len; i++) {
-                item = args[i] && args[i].prototype ? args[i].prototype.name : args[i].name;
-                namespace[item] = args[i];
+            if (args.length === 2 && realTypeOf(contents) == "object") {
+                contents = undefined;
+                attrs = args[1];
             }
 
-            console.log( 'namespace', namespace);
-            return namespace;
+            // Add the contents
+            if (typeof contents != "undefined") {
+
+                if (realTypeOf(contents) == "number" || typeof contents == "string") {
+                    // If the contents is a Number or a String,
+                    // parse it to a textnode
+                    contents = document.createTextNode(contents);
+                }
+
+                if (realTypeOf(contents) == "array") {
+                    // If our contents is an array,
+                    // append each one to the tag
+                    while ( i = contents.shift() ) {
+                        tag.appendChild(i);
+                    }
+
+                } else {
+
+                    tag.appendChild(contents);
+                }
+            }
+
+            // Add the attributes
+            if ( attrs ) {
+
+                for ( attr in attrs ) {
+
+                    if (attrs.hasOwnProperty( attr )) {
+                        // Add each attribute to the tag
+                        tag[ attr ] = attrs[ attr ];
+
+                        if ( !( attr in tag.attributes ) ) {
+                            // If the attribute wasnt't successfully added,
+                            // try again with setAttribute
+                            tag.setAttribute( attr, attrs[ attr ] );
+
+                        }
+
+                    }
+
+                }
+
+            }
+            // Finally return the new tag
+            return tag;
+
         }
-    );
-    var library = require('main');
-      if(typeof module !== 'undefined' && module.exports) {
-        module.exports = library;
-      } else if(globalDefine) {
-            (function (define) {
-            define(function () { return library; });
-            }(globalDefine));
-      } else {
-        global['Truss'] = library;
-      }
-    }(this));
+
+    });
+
+});
+define('main', [
+    'Base',
+    'events',
+    'mediator',
+    'utils',
+    'Collection',
+    'Model',
+    'View'
+    ],
+    function ( Base, events, mediator, utils, collection, model, view ) {
+
+        return {
+            events: events,
+            mediator: mediator,
+            utisl: utils,
+            collection: collection,
+            model: model,
+            view: view
+        };
+
+    }
+);  var library = require('main');
+  if(typeof module !== 'undefined' && module.exports) {
+    module.exports = library;
+  } else if(globalDefine) {
+    (function (define) {
+      define(function () { return library; });
+    }(globalDefine));
+  } else {
+    global['Truss'] = library;
+  }
+}(this));

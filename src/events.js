@@ -93,7 +93,7 @@ define ( function ( ) {
       // If this event has been registered
       if ( this.events[event] ) {
 
-        len = this.events[event].length; 
+        len = this.events[event].length;
 
         // Invoke the callback on each event object
         while ( ev = this.events[event][--len] ) {

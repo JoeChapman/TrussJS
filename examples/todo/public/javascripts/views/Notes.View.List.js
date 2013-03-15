@@ -1,5 +1,5 @@
 
-	var todoList = Truss.View.construct({
+	var todoList = Truss.view.construct({
 
 		start:  function (options) {
 
@@ -37,7 +37,7 @@
 		},
 
 		_renderNote: function (model) {
-			todoItem({
+			todoItem.create({
 				parentEl: this._getElement(),
 				model: model,
 				collection: this._getCollection()

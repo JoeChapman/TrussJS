@@ -33,7 +33,6 @@ define( ['Base'], function ( Base ) {
         },
 
         set: function ( name, value ) {
-
             if (typeof name == 'string') {
                 this.properties[ name ] = value;
             } else {

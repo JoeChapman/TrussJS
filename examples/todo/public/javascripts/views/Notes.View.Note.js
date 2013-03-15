@@ -1,5 +1,5 @@
 
-	var todoItem = Truss.View.construct({
+	var todoItem = Truss.view.construct({
 
 		start: function (options) {
 
@@ -15,8 +15,10 @@
 
 		},
 
+		name: 'todoItem',
+
 		edit: function () {
-			todoEdit({
+			todoEdit.create({
 				parentEl: this.element,
 				model: this.model
 			});

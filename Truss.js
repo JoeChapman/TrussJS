@@ -503,7 +503,7 @@ define ('events',[], function ( ) {
       // If this event has been registered
       if ( this.events[event] ) {
 
-        len = this.events[event].length; 
+        len = this.events[event].length;
 
         // Invoke the callback on each event object
         while ( ev = this.events[event][--len] ) {
@@ -557,6 +557,7 @@ define('Base', ['events'], function ( events ) {
    * @return {Object} augmented dest
    */
   Base.mixin = function ( dest, source, deep ) {
+
     for (var property in source) {
       // Iterate over all source properties
       if ( deep && "object" == typeof source[property] ) {
@@ -569,8 +570,9 @@ define('Base', ['events'], function ( events ) {
         dest[property] = source[property];
       }
     }
+
     return dest;
-  },
+  };
 
   /**
    * @static
@@ -581,42 +583,29 @@ define('Base', ['events'], function ( events ) {
   Base.construct = function (props) {
 
     var parent = this,
-        name = props && props.name ? props.name : '';
+        proto = props || {};
 
-    function F() {
-        return parent.call(this, [].slice.call(arguments)[0]);
-    }
-
-    F.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
+    function F () {}
+    F.prototype = parent.prototype;
     F.prototype.constructor = Base.mixin( F, parent );
 
-    function proxy(options) {
-        parent.call(this, [].slice.call(arguments)[0]);
-        return new F(options);
+    function create (options) {
+        var proto = mix();
+        Base.call(proto, options);
+        return proto;
     }
 
-    proxy.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
-    proxy.prototype.name = name;
-    proxy.prototype.constructor = Base.mixin( F, parent );
-    proxy.construct = parent.construct;
+    function mix() {
+      return Base.mixin( new F(), proto );
+    }
+
+    function proxy () {}
+    proxy.prototype = mix();
+    proxy.construct = F.construct;
+    proxy.create = create;
 
     return proxy;
 
-    // var parent = this;
-
-    // // The new constructor Function invokes the parent with arguments
-    // // passed on instantiation of this constructor
-    // function F () {
-    //   return parent.call(this, [].slice.call(arguments)[0]);
-    // }
-
-    // // Build the prototype from parent.prototype and the props arg.
-    // F.prototype = Base.mixin( Base.mixin( {}, parent.prototype ), props );
-    // // Augment the constructor with the parent.
-    // F.prototype.constructor = Base.mixin( F, parent );
-
-    // // Retun the constructor
-    // return F;
   };
 
   // Augment the Base prototype with the
@@ -869,7 +858,7 @@ define('mediator',[], function ( ) {
 
 							to.remove = true;
 
-						} 
+						}
 
 					}
 
@@ -924,8 +913,8 @@ define('mediator',[], function ( ) {
 					};
 				}
 
-			} else { 
-				bind(); 
+			} else {
+				bind();
 			}
 
 		},
@@ -1046,7 +1035,6 @@ define('Model', ['Base'], function ( Base ) {
         },
 
         set: function ( name, value ) {
-
             if (typeof name == 'string') {
                 this.properties[ name ] = value;
             } else {
@@ -1143,7 +1131,7 @@ define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
 
                     if ( this.model ) {
 
-                        model = this.model();
+                        model = this.model.create();
                         this.getModels().push(model);
 
                         for ( p in item ) {
@@ -1295,7 +1283,7 @@ define ('View', ['Base'], function ( Base ) {
 	});
 
 });
-define('main.js', [
+define('main', [
     'Base',
     'events',
     'mediator',
@@ -1304,20 +1292,16 @@ define('main.js', [
     'Model',
     'View'
     ],
-    function ( Base, events, mediator, utils, Collection, Model, View ) {
+    function ( Base, events, mediator, utils, collection, model, view ) {
 
-        var args = [].slice.call(arguments, 1),
-                i = 0,
-                len = args.length,
-                namespace = {},
-                item;
-
-            for (; i < len; i++) {
-                item = args[i] && args[i].prototype ? args[i].prototype.name : args[i].name;
-                namespace[item] = args[i];
-            }
-
-            return namespace;
+        return {
+            events: events,
+            mediator: mediator,
+            utisl: utils,
+            collection: collection,
+            model: model,
+            view: view
+        };
 
     }
 );  var library = require('main');

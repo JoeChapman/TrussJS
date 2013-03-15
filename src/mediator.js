@@ -240,7 +240,7 @@ define( function ( ) {
 
 							to.remove = true;
 
-						} 
+						}
 
 					}
 
@@ -295,8 +295,8 @@ define( function ( ) {
 					};
 				}
 
-			} else { 
-				bind(); 
+			} else {
+				bind();
 			}
 
 		},
