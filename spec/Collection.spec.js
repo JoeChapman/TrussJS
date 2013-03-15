@@ -6,13 +6,13 @@ require( ['Base', 'Collection', 'Model'], function ( Base, Collection, Model ) {
 		describe("When a collection is created without options", function () {
 			it("Should not throw an error", function () {
 				expect(function () {
-					collection =  Collection();
+					collection =  Collection.create();
 				}).not.toThrow();
 			});
 		});
 		describe("When a collection is created without a model", function () {
 			beforeEach(function () {
-				collection =  Collection();
+				collection =  Collection.create();
 			});
 			afterEach(function () {
 				collection = null;
@@ -33,7 +33,7 @@ require( ['Base', 'Collection', 'Model'], function ( Base, Collection, Model ) {
 		});
 		describe("When a collection is created with a model", function () {
 			beforeEach(function () {
-				collection = Collection({
+				collection = Collection.create({
 					model: Model
 				});
 			});
