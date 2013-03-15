@@ -78,7 +78,7 @@ define ( ['Base', 'Model'], function ( Base, Model ) {
 
                     if ( this.model ) {
 
-                        model = this.model();
+                        model = this.model.create();
                         this.getModels().push(model);
 
                         for ( p in item ) {

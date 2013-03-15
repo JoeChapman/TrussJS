@@ -1,8 +1,8 @@
 
-	var todoForm = Truss.View.construct({
+	var todoForm = Truss.view.construct({
 
 		start: function (options) {
-			console.log( 'in start', options );
+
 			this.rootNode = options.rootNode;
 			this.collection = options.collection;
 			this._makeElements();
@@ -16,8 +16,6 @@
 			var value = this.input.value;
 			if (/\S/g.test(value)) {
 
-				//var model = Truss.Model.construct({});
-				//model.set('text', value);
 				this.collection.add({'text': value});
 
 			}

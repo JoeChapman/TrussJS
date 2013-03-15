@@ -6,14 +6,14 @@ require( ['Base', 'Model'], function ( Base, Model ) {
 
 		describe("When 3 new models are created without attributes", function () {
 			var attributes = {
-				name: "note",
+				item: "note",
 				time: +Date.now()
 			},
 			models = [],
 			count = 3;
 			beforeEach(function () {
 				while (0 < count--) {
-					model = Model(attributes);
+					model = Model.create(attributes);
 					models.push(model);
 				}
 				count = models.length;
@@ -36,14 +36,15 @@ require( ['Base', 'Model'], function ( Base, Model ) {
 
 		describe("When 3 models are created with attributes", function () {
 			var attributes = {
-				name: "note",
+				item: "note",
 				time: +Date.now()
 			},
+			model,
 			models = [],
 			count = 3;
 			beforeEach(function () {
 				while (0 < count--) {
-					model = Model(attributes);
+					model = Model.create(attributes);
 					models.push(model);
 				}
 				count = models.length;

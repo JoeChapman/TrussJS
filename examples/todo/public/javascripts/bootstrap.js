@@ -2,11 +2,11 @@
 var rootNode = document.getElementById("rootNode"),
 	options = {
 		rootNode: rootNode,
-		collection: Truss.Collection()
+        tagName: 'div',
+		collection: Truss.collection.create(),
+        colour: 'red'
 	};
 
-var form = todoForm(options);
-todoCount(options);
-todoList(options);
-
-console.log('form view', form)
+todoForm.create(options);
+todoCount.create(options);
+todoList.create(options);

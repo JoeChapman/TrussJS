@@ -1,5 +1,5 @@
 
-var todoEdit = Truss.View.construct({
+var todoEdit = Truss.view.construct({
 
 		start: function (options) {
 

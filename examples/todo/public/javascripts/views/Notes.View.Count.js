@@ -1,5 +1,5 @@
 
-	var todoCount = Truss.View.construct({
+	var todoCount = Truss.view.construct({
 
 		start: function (options) {
 
@@ -36,7 +36,6 @@
 		},
 
 		_increment: function (model) {
-			console.log( 'model', this.collection.getModels())
 			this.output.innerHTML = this.collection.getModels().length;
 		},
 
