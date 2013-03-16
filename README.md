@@ -1,64 +1,60 @@
 <h1>TrussJS</h1> [![Build Status](https://travis-ci.org/JoeChapman/TrussJS.png)](https://travis-ci.org/JoeChapman/TrussJS)
 
-<p>A JavaScript application framework to promote decoupled event-driven systems and simple composite views. We're still in the development process, but please feel free to play around and give us your feedback.</p>
-
-<h2>Currently on the roadmap</h2>
-
-<ol>
-	<li>Controller</li>
-	<li>Cross-browser Utils</li>
-	<li>Support for offline</li>
-</ol>
+<p>A JavaScript application framework to promote decoupled event-driven systems and simple composite views.</p>
 
 <h2>Getting started</h2>
 
 <h3>Get it</h3>
-<p>If you want to play around, fork Truss and clone the new repo to your machine. When finished, cd into the Truss root directory and run <code>npm install</code> to install the dependencies, if it gives you the ok, you're ready to start coding.</p>
+<p>TrussJs has no dependencices other than <a href="https://github.com/jrburke/almond">Almond</a>, which is built into the distributed Truss.js and Truss-min.js, so you can drop either one into your project and start using TrussJS immediately.</p>
 
 <h3>Test it</h3>
-<p>Run the tests and jshint with <code>grunt test</code> or just <code>grunt jasmine</code> to run them without jshint.</p>
+<p>However, if you want to make changes to the source code, you'll need to run the tests. To do so, install the devDependencies with <code>npm install</code>, which will add grunt and grunt-contrib-jasmine. Use <code>grunt test</code> or just <code>grunt jasmine</code> to run them without jshint.</p>
 
-<h3>Build it</h3>
-<p>Run <code>grunt requirejs</code> to minify and concat all scripts, that'll output Truss.0.1.0-min.js to the root, which you can then point to in a script tag from your project. Alternatively, link to each script you want to use in the src directory. However, please bear in mind that Truss.EventEmitter.js, Truss.Utils.js and Truss.js are currently hard dependencies, in that order.</p>
+<p><strong>Please note, TrussJS uses Grunt 0.4.0, which is not supported on versions of Node less than 0.8.</strong></p>
 
-<h2>Developing</h2>
-<p>I think the best way to start is with an example, so...</p>
+<h2>Using TrussJS</h2>
 
-<h3>Inheritance</h3>
-<p>Use the construct function to create a new constructor function and prototype that inherits from its parent</p>
+<h3>Build your constructor</h3>
+<p>There are three Function constructors you can build from, each of which lives in the Truss namespace;</p>
+<ul>
+    <li>Truss.View</li>
+    <li>Truss.Collection and,</li>
+    <li>Truss.Model</li>
+</ul>
+<p>Each is extended from Truss.Base and has a prototype chain to the events module.</p>
+<p>To build a new constructor from any of these Functions, use the static construct function.</p>
+
 <pre>
-<code>var func = Truss.construct({
-	protoMethod: function () {}
+<code>var MyConstructor = Truss.View.construct({
+    myProperty: 'property',
+	myMethod: function () {}
 });</code>
 </pre>
-<p><code>func</code> also has a construct function</p>
-<pre>
-<code>var cool = func.construct({
-	anotherProtoMethod: function () {}
-});</code>
-</pre>
-<p> and <code>cool</code> has a link to the prototype of <code>func</code></p>
-<pre>
-<code>typeof cool.prototype.protoMethod === 'function' // true</code>
-</pre>
-<p>If you want something to happen when the new constructor function is instantiated, add it to a start function</p>
-<pre>
-<code>var cool = func.construct({
-	start: function () {
-		// do something on instantiation
-  },
-	anotherProtoMethod: function () {}
-});</code>
-</pre>
-<p>And pass in options</p>
-<pre><code>new cool({name: "Fonzy"});<code></pre>
 
-<h3>Mixin</h3>
-<p>If you'd prefer to just augment your object with more properties</p>
+<p>To instantiate the constructor, simply invoke its create function. There's no 'new' keyword here.</p>
 <pre>
-<code>var mixed = Truss.mixin(Truss.Mediator, Truss.EventEmitter, false);</code>
+<code>var myNewInstance = MyConstructor.create({myOptions: 'anOption'});</code>
 </pre>
-<p>Change the third paramter to true to make deep mixins</p>
+
+<p>Or if you prefer, create a new constructor Function.</p>
+<pre>
+    <code>var anotherConstructor.construct({
+        anotherMethod: function () {}
+    });</code>
+</pre>
+
+<p>If you pass a 'start' function to construct, it will be invoked when the new constructor is instantiated with create. Any options will be added to the instance and passed as an argument to the 'start' function.</p>
+
+<pre>
+    <code>AnotherConstructor = anotherConstructor.construct({
+        start: function () {}
+    });</code>
+</pre>
+
+<p>The option argument is passed into AnotherConstructor.prototype.start.</p>
+<pre>
+<code>var AnotherInstance = AnotherConstructor.create({myOptions: 'anOption'});</code>
+</pre>
 
 
 
