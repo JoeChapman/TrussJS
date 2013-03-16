@@ -38,17 +38,17 @@
 
 <p>Or if you prefer, create a new constructor Function.</p>
 <pre>
-    <code>var anotherConstructor.construct({
-        anotherMethod: function () {}
-    });</code>
+<code>var anotherConstructor.construct({
+    anotherMethod: function () {}
+});</code>
 </pre>
 
 <p>If you pass a 'start' function to construct, it will be invoked when the new constructor is instantiated with create. Any options will be added to the instance and passed as an argument to the 'start' function.</p>
 
 <pre>
-    <code>AnotherConstructor = anotherConstructor.construct({
-        start: function () {}
-    });</code>
+<code>AnotherConstructor = anotherConstructor.construct({
+    start: function () {}
+});</code>
 </pre>
 
 <p>The option argument is passed into AnotherConstructor.prototype.start.</p>
