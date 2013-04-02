@@ -16,6 +16,184 @@ require( ['Base'], function ( Base ) {
 
         describe('Invoking Base.mixin', function () {
 
+            describe('with empty destination object and simple source object', function () {
+                var mixed, source = {sProp: 'sVal'};
+
+                beforeEach(function () {
+                    mixed = Base.mixin({}, source);
+                });
+
+                it('returns a copy of the source object', function () {
+                    expect(mixed).toEqual(source);
+                });
+
+            });
+
+            describe('with simple destination object and simple source object', function () {
+                var mixed, source = {sProp: 'sVal'};
+
+                beforeEach(function () {
+                    mixed = Base.mixin({dProp: 'dVal'}, source);
+                });
+
+                it('returns a copy of the source object', function () {
+                    expect(mixed).toEqual({dProp:'dVal', sProp:'sVal'});
+                });
+
+            });
+
+            describe('with simple destination object and complex source object', function () {
+                var mixed,
+                    source = {
+                        sNode: {
+                            node: {
+                                property: 'value'
+                            }
+                        }
+                    };
+
+                beforeEach(function () {
+                    mixed = Base.mixin({dProp: 'dVal'}, source);
+                });
+
+                it('returns a copy of the source object', function () {
+                    expect(mixed).toEqual({dProp:'dVal', sNode: { node: { property: 'value' } }});
+                });
+
+            });
+
+            describe('with simple destination object and complex source object with a method', function () {
+                var mixed,
+                    source = {
+                        sNode: {
+                            node: {
+                                method: function () {
+                                    return 'it works';
+                                }
+                            }
+                        }
+                    };
+
+                beforeEach(function () {
+                    mixed = Base.mixin({dProp: 'dVal'}, source);
+                });
+
+                it('returns a copy of the source object with the method', function () {
+                    expect(mixed.sNode.node.method).toBeDefined();
+                });
+
+                it('can call the method', function () {
+                    expect(mixed.sNode.node.method()).toEqual('it works');
+                });
+
+            });
+
+            describe('with simple destination object and several simple source objects', function () {
+                var mixed,
+                    source1 = {prop1: 'val1'},
+                    source2 = {prop2: 'val2'},
+                    source3 = {prop3: 'val3'};
+
+                beforeEach(function () {
+                    mixed = Base.mixin({dProp: 'dVal'}, source1, source2, source3);
+                });
+
+                it('returns a copy of the source objects', function () {
+                    expect(mixed.prop1).toEqual('val1');
+                    expect(mixed.prop2).toEqual('val2');
+                    expect(mixed.prop3).toEqual('val3');
+                });
+
+            });
+
+            describe('with complex destination object with method and several simple source objects', function () {
+                var mixed,
+                    dest = {
+                        dNode: {
+                            node: {
+                                dProp: 'dVal',
+                                dMethod: function () {
+                                    return this.dProp;
+                                }
+                            }
+                        }
+                    },
+                    source1 = {prop1: 'val1'},
+                    source2 = {prop2: 'val2'},
+                    source3 = {prop3: 'val3'};
+
+                beforeEach(function () {
+                    mixed = Base.mixin(dest, source1, source2, source3);
+                });
+
+                it('returns a copy of the source objects', function () {
+                    expect(mixed.prop1).toEqual('val1');
+                    expect(mixed.prop2).toEqual('val2');
+                    expect(mixed.prop3).toEqual('val3');
+                });
+
+                it('still has the original property', function () {
+                    expect(mixed.dNode.node.dProp).toBeDefined();
+                });
+
+                it('still has the original, callable method', function () {
+                    expect(mixed.dNode.node.dMethod()).toEqual('dVal');
+                });
+
+            });
+
+            describe('with complex destination object and two complex source objects', function () {
+                var mixed,
+                    dest = {
+                        node: {
+                            dProp: 'destination value',
+                            dMethod: function () {
+                                return this.dProp;
+                            }
+                        }
+                    },
+                    source1 = {
+                        node: {
+                            prop1: 'source 1 value',
+                            method1: function () {
+                                return this.prop1;
+                            }
+                        }
+                    },
+                    source2 = {
+                        node: {
+                            prop2: 'source 2 value',
+                            method2: function () {
+                                return this.prop2;
+                            }
+                        }
+                    };
+
+
+                beforeEach(function () {
+                    mixed = Base.mixin(dest, source1, source2);
+                });
+
+                it('returns a copy of the source properties to the destination', function () {
+                    expect(mixed.node.prop1).toEqual('source 1 value');
+                    expect(mixed.node.prop2).toEqual('source 2 value');
+                });
+
+                it('adds the source methods to the destination', function () {
+                    expect(mixed.node.method1()).toEqual('source 1 value');
+                    expect(mixed.node.method2()).toEqual('source 2 value');
+                });
+
+                it('still has the original property', function () {
+                    expect(mixed.node.dProp).toEqual('destination value');
+                });
+
+                it('still has the original, callable method', function () {
+                    expect(mixed.node.dMethod()).toEqual('destination value');
+                });
+
+            });
+
         });
 
         describe("Invoking Base.construct", function () {

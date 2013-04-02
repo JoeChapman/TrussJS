@@ -76,7 +76,7 @@ define ( ['Base', 'Model'], function ( Base, Model ) {
 
                     item = items[len];
 
-                    if ( this.model ) {
+                    if ( typeof this.model === 'function' ) {
 
                         model = this.model.create();
                         this.getModels().push(model);

@@ -24,24 +24,29 @@ define( ['events'], function ( events ) {
   /**
    * @static
    * @description
-   * -> Takes two objects and applies all proprties from one to the other.
+   * -> Takes object params and adds all object properties to the first (dest) param.
    * @param {Object} dest
-   * @param {Object} source
+   * @param {Object} src
    * @return {Object} augmented dest
    */
-  Base.mixin = function ( dest, source, deep ) {
+  Base.mixin = function ( dest, src ) {
 
-    for (var property in source) {
-      // Iterate over all source properties
-      if ( deep && "object" == typeof source[property] ) {
-        dest[property] = dest[property] || {};
-        // If the value is an object itself, then we need to recurse
-        // to to perform a deep copy; Objects copy by refernce
-        Base.mixin( dest[property], source[property] );
-      } else {
-        // Assign the value form the source to the destination
-        dest[property] = source[property];
+    var prop, sources = [].slice.call(arguments, 1);
+
+    while(src = sources.shift()) {
+      // Iterate over all src properties
+      for (prop in src) {
+        if (src.hasOwnProperty(prop)) {
+          if ( "object" === typeof src[prop] ) {
+            dest[prop] = dest[prop] || src[prop];
+            Base.mixin(dest[prop], src[prop]);
+          } else {
+            // Assign the value form the src to the destination
+            dest[prop] = src[prop];
+          }
+        }
       }
+
     }
 
     return dest;
