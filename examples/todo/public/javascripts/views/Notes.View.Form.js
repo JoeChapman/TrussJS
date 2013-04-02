@@ -1,59 +1,59 @@
 
-	var todoForm = Truss.view.construct({
+    var todoForm = Truss.View.construct({
 
-		start: function (options) {
+        start: function (options) {
 
-			this.rootNode = options.rootNode;
-			this.collection = options.collection;
-			this._makeElements();
-		},
+            this.rootNode = options.rootNode;
+            this.collection = options.collection;
+            this._makeElements();
+        },
 
-		name: 'formView',
+        _add: function (e) {
 
-		_add: function (e) {
+            e.preventDefault();
+            var value = this.input.value;
+            if (this._isValid(value)) {
+                this.collection.add({'text': value});
+            }
+        },
 
-			e.preventDefault();
-			var value = this.input.value;
-			if (/\S/g.test(value)) {
+        _isValid: function (value) {
+            return (/\S/g).test(value);
+        },
 
-				this.collection.add({'text': value});
+        _makeElements: function () {
 
-			}
-		},
+            var fieldset;
 
-		_makeElements: function () {
+            this.submit = this.make("input", {
+                                type: "submit",
+                                value: "Add"
+                            });
 
-			var fieldset;
+            this.input = this.make("input", {
+                            type: 'text',
+                            autofocus: 'true',
+                            required: 'true',
+                            placeholder: 'Add a note...'
+                        });
 
-			this.submit = this.make("input", {
-								type: "submit",
-								value: "Add"
-							});
+            fieldset = this.make("fieldset", [this.input, this.submit]);
 
-			this.input = this.make("input", {
-							type: 'text',
-							autofocus: 'true',
-							required: 'true',
-							placeholder: 'Add a note...'
-						});
+            this.element = this.make("form", fieldset, {
+                                            action: "",
+                                            method: "get"
+                                        });
 
-			fieldset = this.make("fieldset", [this.input, this.submit]);
+            this._render();
+        },
 
-			this.element = this.make("form", fieldset, {
-											action: "",
-											method: "get"
-										});
+        _render: function () {
+            this._submitListener();
+            this.rootNode.appendChild(this.element);
+        },
 
-			this._render();
-		},
+        _submitListener: function () {
+            this.submit.addEventListener("click", this._add.bind(this), false);
+        }
 
-		_render: function () {
-			this._submitListener();
-			this.rootNode.appendChild(this.element);
-		},
-
-		_submitListener: function () {
-			this.submit.addEventListener("click", this._add.bind(this), false);
-		}
-
-	});
+    });
