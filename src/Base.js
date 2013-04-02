@@ -61,24 +61,25 @@ define( ['events'], function ( events ) {
   Base.construct = function (props) {
 
     var parent = this,
-        proto = props || {};
+        props = props || {};
 
     function F () {}
     F.prototype = parent.prototype;
     F.prototype.constructor = Base.mixin( F, parent );
 
     function create (options) {
-        var proto = mix();
+        var proto = getPrototype();
         Base.call(proto, options);
         return proto;
     }
 
-    function mix() {
-      return Base.mixin( new F(), proto );
+    function getPrototype() {
+      var proto = proto || Base.mixin( new F(), props );
+      return proto;
     }
 
     function proxy () {}
-    proxy.prototype = mix();
+    proxy.prototype = getPrototype();
     proxy.construct = F.construct;
     proxy.create = create;
 
