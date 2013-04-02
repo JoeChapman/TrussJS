@@ -58,10 +58,10 @@ define( ['events', 'utils'], function ( events, utils ) {
    * -> Construct is a static inheritance function
    * @return {Function} constructor function
    */
-  Base.construct = function (props) {
+  Base.construct = function (properties) {
 
     var parent = this,
-        props = props || {};
+        props = properties || {};
 
     function F () {}
     F.prototype = parent.prototype;

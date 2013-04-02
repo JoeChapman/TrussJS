@@ -3,7 +3,7 @@ var rootNode = document.getElementById("rootNode"),
 	options = {
 		rootNode: rootNode,
         tagName: 'div',
-		collection: Truss.collection.create()
+		collection: Truss.Collection.create()
 	};
 
 todoForm.create(options);

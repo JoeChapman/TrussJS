@@ -7,15 +7,16 @@ define( [
     'Model',
     'View'
     ],
-    function ( Base, events, mediator, utils, collection, model, view ) {
+
+    function ( Base, events, mediator, utils, Collection, Model, View ) {
 
         return {
             events: events,
             mediator: mediator,
-            utisl: utils,
-            collection: collection,
-            model: model,
-            view: view
+            utils: utils,
+            Collection: Collection,
+            Model: Model,
+            View: View
         };
 
     }

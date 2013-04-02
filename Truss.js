@@ -408,124 +408,51 @@ var requirejs, require, define;
 }());
 define("vendor/almond", function(){});
 
-define ('events',[], function ( ) {
+define ('events',[], function ( ) {  return {    events: {},    on: function (event, callback) {      var context;      if ( "string" != typeof event ) {        throw new Error("on() needs an event name string");      }      if ( "function" != typeof callback ) {        throw new Error("on() needs a callback function");      }      context = [].slice.call( arguments, 2 )[0];      if ( !this.events[event] ) {        this.events[event] = [];      }      this.events[event].push({        callback: callback,        context: context      });    },    reset: function () {      this.events = {};    },    off: function (event) {      var ev, len, cb;      // Event must be a string      if ( "string" != typeof event ) {        throw new Error( "off() needs an event" );      }      cb = [].slice.call( arguments, 1 )[0];      // If the event has been registered      if ( this.events[event] ) {        ev = this.events[event];        len = ev.length;        // Loop over each event object that matches ours.        while ( len-- ) {          if ( "function" != typeof cb ) {            // If no callback was given, remove the event            // and all its callbacks            ev.splice(len, 1);          } else {            // If a callback was passed,            // remove the callback from the event            if ( ev[len].callback === cb ) {              ev[len].callback = null;              delete ev[len].callback;            }          }        }      }    },    fire: function ( event ) {      var ev, len, opt, data, ctx;      // event argument is mandatory      if ( "string" != typeof event ) {        throw new Error("fire() needs an event");      }      // Optional arguments      opt = [].slice.call( arguments, 1 );      data = opt[0];      ctx = opt[1];      // If this event has been registered      if ( this.events[event] ) {        len = this.events[event].length;        // Invoke the callback on each event object        while ( ev = this.events[event][--len] ) {          if ("function" == typeof ev.callback) {            // Invoke in either context with data if present            ev.callback.call( ( ctx || ev.context || this ), data );          }        }      }    }  };});
+define('utils',[], function ( ) {
 
-	return {
+  return {
 
-		events: {},
-
-		on: function (event, callback) {
-
-      var context;
-
-      if ( "string" != typeof event ) {
-        throw new Error("on() needs an event name string");
-      }
-
-      if ( "function" != typeof callback ) {
-        throw new Error("on() needs a callback function");
-      }
-
-      context = [].slice.call( arguments, 2 )[0];
-
-      if ( !this.events[event] ) {
-        this.events[event] = [];
-      }
-
-      this.events[event].push({
-        callback: callback,
-        context: context
-      });
-
+    realTypeOf: function ( value ) {
+      // Borrow Object.toString to introspect the
+      // class definition of the value i.e. ([object Object])
+      // and return the latter portion which denotes
+      // the real type of value.
+      return ({}).toString.call(value).match( /\w+/g )[1].toLowerCase();
     },
 
-    reset: function () {
-      this.events = {};
+    isObject: function ( value ) {
+      //delegate to realTypeOf
+      return this.realTypeOf(value) === 'object';
     },
 
-    off: function (event) {
-
-      var ev, len, cb;
-
-      // Event must be a string
-      if ( "string" != typeof event ) {
-        throw new Error( "off() needs an event" );
+    isArray: function ( value ) {
+      if (Array.isArray) {
+        return Array.isArray(value);
       }
-
-      cb = [].slice.call( arguments, 1 )[0];
-
-      // If the event has been registered
-      if ( this.events[event] ) {
-
-        ev = this.events[event];
-        len = ev.length;
-
-        // Loop over each event object that matches ours.
-        while ( len-- ) {
-
-          if ( "function" != typeof cb ) {
-            // If no callback was given, remove the event
-            // and all its callbacks
-            ev.splice(len, 1);
-
-          } else {
-            // If a callback was passed,
-            // remove the callback from the event
-            if ( ev[len].callback === cb ) {
-
-              ev[len].callback = null;
-
-              delete ev[len].callback;
-            }
-
-          }
-
-        }
-
-      }
-
+      //delegate to realTypeOf if isArray is not supported
+      return this.realTypeOf(value) === 'array';
     },
 
-    fire: function ( event ) {
+    isString: function ( value ) {
+      //delegate to realTypeOf
+      return this.realTypeOf(value) === 'string';
+    },
 
-      var ev, len, opt, data, ctx;
+    isNumber: function ( value ) {
+      //delegate to realTypeOf
+      return this.realTypeOf(value) === 'number';
+    },
 
-      // event argument is mandatory
-      if ( "string" != typeof event ) {
-        throw new Error("fire() needs an event");
-      }
-
-      // Optional arguments
-      opt = [].slice.call( arguments, 1 );
-      data = opt[0];
-      ctx = opt[1];
-
-      // If this event has been registered
-      if ( this.events[event] ) {
-
-        len = this.events[event].length;
-
-        // Invoke the callback on each event object
-        while ( ev = this.events[event][--len] ) {
-
-          if ("function" == typeof ev.callback) {
-
-            // Invoke in either context with data if present
-            ev.callback.call( ( ctx || ev.context || this ), data );
-
-          }
-
-        }
-
-      }
-
+    isFunction: function ( value ) {
+      //delegate to realTypeOf
+      return this.realTypeOf(value) === 'function';
     }
 
-	};
+  };
 
 });
-
-define('Base', ['events'], function ( events ) {
+define('Base', ['events', 'utils'], function ( events, utils ) {
 
   /**
    * @constructor
@@ -542,7 +469,7 @@ define('Base', ['events'], function ( events ) {
     }
 
     // Call the start function to do any setup
-    if ( "function" == typeof this.start ) {
+    if ( utils.isFunction(this.start) ) {
       this.start( options );
     }
 
@@ -564,7 +491,7 @@ define('Base', ['events'], function ( events ) {
       // Iterate over all src properties
       for (prop in src) {
         if (src.hasOwnProperty(prop)) {
-          if ( "object" === typeof src[prop] ) {
+          if ( utils.isObject(src[prop])  ) {
             dest[prop] = dest[prop] || src[prop];
             Base.mixin(dest[prop], src[prop]);
           } else {
@@ -585,27 +512,28 @@ define('Base', ['events'], function ( events ) {
    * -> Construct is a static inheritance function
    * @return {Function} constructor function
    */
-  Base.construct = function (props) {
+  Base.construct = function (properties) {
 
     var parent = this,
-        proto = props || {};
+        props = properties || {};
 
     function F () {}
     F.prototype = parent.prototype;
     F.prototype.constructor = Base.mixin( F, parent );
 
     function create (options) {
-        var proto = mix();
+        var proto = getPrototype();
         Base.call(proto, options);
         return proto;
     }
 
-    function mix() {
-      return Base.mixin( new F(), proto );
+    function getPrototype() {
+      var proto = proto || Base.mixin( new F(), props );
+      return proto;
     }
 
     function proxy () {}
-    proxy.prototype = mix();
+    proxy.prototype = getPrototype();
     proxy.construct = F.construct;
     proxy.create = create;
 
@@ -659,7 +587,7 @@ define('Model', ['Base'], function ( Base ) {
         },
 
         set: function ( name, value ) {
-            if (typeof name == 'string') {
+            if ( Base.isString(name) ) {
                 this.properties[ name ] = value;
             } else {
                 for (var n in name) {
@@ -753,7 +681,7 @@ define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
 
                     item = items[len];
 
-                    if ( typeof this.model === 'function' ) {
+                    if ( Base.isFunction(this.model) ) {
 
                         model = this.model.create();
                         this.getModels().push(model);

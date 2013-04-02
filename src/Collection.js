@@ -68,7 +68,7 @@ define ( ['Base', 'Model'], function ( Base, Model ) {
 
                 model = items[len];
 
-                if (model.name && model.name === 'model') {
+                if (Base.isFunction(model.set)) {
 
                     this.getModels().push( model );
 
@@ -76,7 +76,7 @@ define ( ['Base', 'Model'], function ( Base, Model ) {
 
                     item = items[len];
 
-                    if ( typeof this.model === 'function' ) {
+                    if ( Base.isFunction(this.model) ) {
 
                         model = this.model.create();
                         this.getModels().push(model);

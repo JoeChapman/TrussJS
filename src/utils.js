@@ -6,7 +6,7 @@ define( function ( ) {
       // Borrow Object.toString to introspect the
       // class definition of the value i.e. ([object Object])
       // and return the latter portion which denotes
-      // the real type of the input value.
+      // the real type of value.
       return ({}).toString.call(value).match( /\w+/g )[1].toLowerCase();
     },
 
