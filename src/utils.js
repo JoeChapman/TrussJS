@@ -31,6 +31,11 @@ define( function ( ) {
     isNumber: function ( value ) {
       //delegate to realTypeOf
       return this.realTypeOf(value) === 'number';
+    },
+
+    isFunction: function ( value ) {
+      //delegate to realTypeOf
+      return this.realTypeOf(value) === 'function';
     }
 
   };
