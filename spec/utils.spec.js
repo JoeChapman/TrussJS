@@ -1,90 +1,1 @@
-require( ['utils'], function ( Utils ) {
-
-	describe("utils", function () {
-
-		describe("Utils.isObject", function () {
-
-			describe("When isObject is called with an real Object", function () {
-				it("Should return true", function () {
-					expect(Utils.isObject({})).toEqual(true);
-				});
-			});
-			describe("When isObject is called with an Array", function () {
-				it("Should return false", function () {
-					expect(Utils.isObject([])).toEqual(false);
-				});
-			});
-			describe("When isObject is called with a Function", function () {
-				it("Should return false", function () {
-					expect(Utils.isObject(function () {})).toEqual(false);
-				});
-			});
-			describe("When isObject is called with a Date", function () {
-				it("Should return false", function () {
-					expect(Utils.isObject(Date.now())).toEqual(false);
-				});
-			});
-			describe("When isObject is called with a RegExp", function () {
-				it("Should return false", function () {
-					expect(Utils.isObject(/\d+/)).toEqual(false);
-				});
-			});
-			describe("When isObject is called with a String", function () {
-				it("Should return false", function () {
-					expect(Utils.isObject("string")).toEqual(false);
-				});
-			});
-			describe("When isObject is called with a Number", function () {
-				it("Should return false", function () {
-					expect(Utils.isObject(1)).toEqual(false);
-				});
-			});
-			describe("When isObject is called with arguments", function () {
-				it("Should return false", function () {
-					expect(Utils.isObject(arguments)).toEqual(false);
-				});
-			});
-
-		});
-
-		describe("Utils.realTypeOf", function () {
-
-			describe("When realTypeOf is called with an Object", function () {
-				it("Should return 'object'", function () {
-					expect(Utils.realTypeOf({})).toEqual("object");
-				});
-			});
-			describe("When realTypeOf is called with an Array", function () {
-				it("Should return 'array'", function () {
-					expect(Utils.realTypeOf([])).toEqual("array");
-				});
-			});
-			describe("When realTypeOf is called with a Function", function () {
-				it("Should return 'function'", function () {
-					expect(Utils.realTypeOf(function () {})).toEqual("function");
-				});
-			});
-			describe("When realTypeOf is called with a String", function () {
-				it("Should return 'string'", function () {
-					expect(Utils.realTypeOf("string")).toEqual("string");
-				});
-			});
-			describe("When realTypeOf is called with a Number", function () {
-				it("Should return 'number'", function () {
-					expect(Utils.realTypeOf(1)).toEqual("number");
-				});
-			});
-			describe("When realTypeOf is called with a RegExp", function () {
-				it("Should return 'regexp'", function () {
-					expect(Utils.realTypeOf(/\d+/)).toEqual("regexp");
-				});
-			});
-			describe("When realTypeOf is called with arguments", function () {
-				it("Should return 'arguments'", function () {
-					expect(Utils.realTypeOf(arguments)).toEqual("arguments");
-				});
-			});
-		});
-	});
-
-});
+require( ['utils'], function ( Utils ) {    describe("utils", function () {        describe("Utils.realTypeOf", function () {            describe("When realTypeOf is called with an Object", function () {                it("Should return 'object'", function () {                    expect(Utils.realTypeOf({})).toEqual("object");                });            });            describe("When realTypeOf is called with an Array", function () {                it("Should return 'array'", function () {                    expect(Utils.realTypeOf([])).toEqual("array");                });            });            describe("When realTypeOf is called with a Function", function () {                it("Should return 'function'", function () {                    expect(Utils.realTypeOf(function () {})).toEqual("function");                });            });            describe("When realTypeOf is called with a String", function () {                it("Should return 'string'", function () {                    expect(Utils.realTypeOf("string")).toEqual("string");                });            });            describe("When realTypeOf is called with a Number", function () {                it("Should return 'number'", function () {                    expect(Utils.realTypeOf(1)).toEqual("number");                });            });            describe("When realTypeOf is called with a RegExp", function () {                it("Should return 'regexp'", function () {                    expect(Utils.realTypeOf(/\d+/)).toEqual("regexp");                });            });            describe("When realTypeOf is called with arguments", function () {                it("Should return 'arguments'", function () {                    expect(Utils.realTypeOf(arguments)).toEqual("arguments");                });            });        });        describe("Utils.isObject", function () {            describe("When isObject is called with an real Object", function () {                it("Should return true", function () {                    expect(Utils.isObject({})).toEqual(true);                });            });            describe("When isObject is called with an Array", function () {                it("Should return false", function () {                    expect(Utils.isObject([])).toEqual(false);                });            });            describe("When isObject is called with a Function", function () {                it("Should return false", function () {                    expect(Utils.isObject(function () {})).toEqual(false);                });            });            describe("When isObject is called with a Date", function () {                it("Should return false", function () {                    expect(Utils.isObject(Date.now())).toEqual(false);                });            });            describe("When isObject is called with a RegExp", function () {                it("Should return false", function () {                    expect(Utils.isObject(/\d+/)).toEqual(false);                });            });            describe("When isObject is called with a String", function () {                it("Should return false", function () {                    expect(Utils.isObject("string")).toEqual(false);                });            });            describe("When isObject is called with a Number", function () {                it("Should return false", function () {                    expect(Utils.isObject(1)).toEqual(false);                });            });            describe("When isObject is called with arguments", function () {                it("Should return false", function () {                    expect(Utils.isObject(arguments)).toEqual(false);                });            });        });        describe("Utils.isArray", function () {            describe("When isArray is called with an plain Object", function () {                it("Should return false", function () {                    expect(Utils.isArray({})).toEqual(false);                });            });            describe("When isArray is called with an Array", function () {                it("Should return true", function () {                    expect(Utils.isArray([])).toEqual(true);                });            });            describe("When isArray is called with a Function", function () {                it("Should return false", function () {                    expect(Utils.isArray(function () {})).toEqual(false);                });            });            describe("When isArray is called with a Date", function () {                it("Should return false", function () {                    expect(Utils.isArray(Date.now())).toEqual(false);                });            });            describe("When isArray is called with a RegExp", function () {                it("Should return false", function () {                    expect(Utils.isArray(/\d+/)).toEqual(false);                });            });            describe("When isArray is called with a String", function () {                it("Should return false", function () {                    expect(Utils.isArray("string")).toEqual(false);                });            });            describe("When isArray is called with a Number", function () {                it("Should return false", function () {                    expect(Utils.isArray(1)).toEqual(false);                });            });            describe("When isArray is called with arguments", function () {                it("Should return false", function () {                    expect(Utils.isObject(arguments)).toEqual(false);                });            });        });        describe("Utils.isString", function () {            describe("When isString is called with an plain Object", function () {                it("Should return false", function () {                    expect(Utils.isString({})).toEqual(false);                });            });            describe("When isString is called with an Array", function () {                it("Should return false", function () {                    expect(Utils.isString([])).toEqual(false);                });            });            describe("When isString is called with a Function", function () {                it("Should return false", function () {                    expect(Utils.isString(function () {})).toEqual(false);                });            });            describe("When isString is called with a Date", function () {                it("Should return false", function () {                    expect(Utils.isString(Date.now())).toEqual(false);                });            });            describe("When isString is called with a RegExp", function () {                it("Should return false", function () {                    expect(Utils.isString(/\d+/)).toEqual(false);                });            });            describe("When isString is called with a String", function () {                it("Should return true", function () {                    expect(Utils.isString("string")).toEqual(true);                });            });            describe("When isString is called with a Number", function () {                it("Should return false", function () {                    expect(Utils.isString(1)).toEqual(false);                });            });            describe("When isString is called with arguments", function () {                it("Should return false", function () {                    expect(Utils.isObject(arguments)).toEqual(false);                });            });        });        describe("Utils.isNumber", function () {            describe("When isNumber is called with an plain Object", function () {                it("Should return true", function () {                    expect(Utils.isNumber({})).toEqual(false);                });            });            describe("When isNumber is called with an Array", function () {                it("Should return false", function () {                    expect(Utils.isNumber([])).toEqual(false);                });            });            describe("When isNumber is called with a Function", function () {                it("Should return false", function () {                    expect(Utils.isNumber(function () {})).toEqual(false);                });            });            describe("When isNumber is called with a Date", function () {                it("Should return true", function () {                    expect(Utils.isNumber(Date.now())).toEqual(true);                });            });            describe("When isNumber is called with a RegExp", function () {                it("Should return false", function () {                    expect(Utils.isNumber(/\d+/)).toEqual(false);                });            });            describe("When isNumber is called with a String", function () {                it("Should return false", function () {                    expect(Utils.isNumber("string")).toEqual(false);                });            });            describe("When isNumber is called with a Number", function () {                it("Should return true", function () {                    expect(Utils.isNumber(1)).toEqual(true);                });            });            describe("When isNumber is called with arguments", function () {                it("Should return false", function () {                    expect(Utils.isObject(arguments)).toEqual(false);                });            });        });    });});
