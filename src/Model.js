@@ -33,7 +33,7 @@ define( ['Base'], function ( Base ) {
         },
 
         set: function ( name, value ) {
-            if (typeof name == 'string') {
+            if ( Base.isString(name) ) {
                 this.properties[ name ] = value;
             } else {
                 for (var n in name) {

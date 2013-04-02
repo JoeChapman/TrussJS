@@ -1,4 +1,4 @@
-define( ['events'], function ( events ) {
+define( ['events', 'utils'], function ( events, utils ) {
 
   /**
    * @constructor
@@ -15,7 +15,7 @@ define( ['events'], function ( events ) {
     }
 
     // Call the start function to do any setup
-    if ( "function" == typeof this.start ) {
+    if ( utils.isFunction(this.start) ) {
       this.start( options );
     }
 
@@ -37,7 +37,7 @@ define( ['events'], function ( events ) {
       // Iterate over all src properties
       for (prop in src) {
         if (src.hasOwnProperty(prop)) {
-          if ( "object" === typeof src[prop] ) {
+          if ( utils.isObject(src[prop])  ) {
             dest[prop] = dest[prop] || src[prop];
             Base.mixin(dest[prop], src[prop]);
           } else {
@@ -90,6 +90,8 @@ define( ['events'], function ( events ) {
   // Augment the Base prototype with the
   // properties of events;
   Base.mixin(Base.prototype, events);
+
+  Base.mixin(Base, utils);
 
   // Return Base as the module definition
   return Base;

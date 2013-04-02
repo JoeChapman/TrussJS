@@ -1,4 +1,4 @@
-require( ['Base', 'View'], function ( Base, View ) {
+require( ['View'], function ( View ) {
 
 	describe("View", function () {
 		var view = null;
