@@ -543,9 +543,8 @@ define('Base', ['events', 'utils'], function ( events, utils ) {
 
   // Augment the Base prototype with the
   // properties of events;
-  Base.mixin(Base.prototype, events);
+  Base.mixin(Base.prototype, events, utils);
 
-  Base.mixin(Base, utils);
 
   // Return Base as the module definition
   return Base;
@@ -576,7 +575,7 @@ define('Model', ['Base'], function ( Base ) {
             this.properties = {};
 
             if (options) {
-                this.set( options );
+                this.set(options);
             }
 
             return this;
@@ -587,7 +586,7 @@ define('Model', ['Base'], function ( Base ) {
         },
 
         set: function ( name, value ) {
-            if ( Base.isString(name) ) {
+            if ( this.isString(name) ) {
                 this.properties[ name ] = value;
             } else {
                 for (var n in name) {
@@ -673,7 +672,7 @@ define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
 
                 model = items[len];
 
-                if (model.name && model.name === 'model') {
+                if (this.isFunction(model.set)) {
 
                     this.getModels().push( model );
 
@@ -681,7 +680,7 @@ define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
 
                     item = items[len];
 
-                    if ( Base.isFunction(this.model) ) {
+                    if ( this.isFunction(this.model) ) {
 
                         model = this.model.create();
                         this.getModels().push(model);
@@ -737,7 +736,7 @@ define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
 
 });
 
-define ('View',['Base'], function ( Base ) {    var TAGNAME = 'div';    function getRootNode () {        return document.getElementsByTagName("body")[0];    }    // Build the constructor    return Base.construct({        // Start is optional, it's called if present,        // like a constructor        start: function () {            // Option properties override view properties            this.tagName = this.options ? this.options.tagName : TAGNAME;            this.rootNode = this.options ? this.options.rootNode : getRootNode();        },        /**         * Make a Tag         */        make: function () {            // All arguments are optional            var args = [].slice.call(arguments),                name = args[0] || this.tagName,                contents = args[1],                attrs = args[2],                i,                attr,                tag = document.createElement(name);            if (args.length === 2 && Base.isObject(contents)) {                contents = undefined;                attrs = args[1];            }            // Add the contents            if (typeof contents !== "undefined") {                if (Base.isNumber(contents) || Base.isString(contents)) {                    // If the contents is a Number or a String,                    // parse it to a textnode                    contents = document.createTextNode(contents);                }                if (Base.isArray(contents)) {                    // If our contents is an array,                    // append each one to the tag                    while ( i = contents.shift() ) {                        tag.appendChild(i);                    }                } else {                    tag.appendChild(contents);                }            }            // Add the attributes            if ( attrs ) {                for ( attr in attrs ) {                    if (attrs.hasOwnProperty( attr )) {                        // Add each attribute to the tag                        tag[ attr ] = attrs[ attr ];                        if ( !( attr in tag.attributes ) ) {                            // If the attribute wasnt't successfully added,                            // try again with setAttribute                            tag.setAttribute( attr, attrs[ attr ] );                        }                    }                }            }            // Finally return the new tag            return tag;        }    });});
+define ('View',['Base'], function ( Base ) {    var TAGNAME = 'div';    function getRootNode () {        return document.getElementsByTagName("body")[0];    }    // Build the constructor    return Base.construct({        // Start is optional, it's called if present,        // like a constructor        start: function () {            // Option properties override view properties            this.tagName = this.options ? this.options.tagName : TAGNAME;            this.rootNode = this.options ? this.options.rootNode : getRootNode();        },        /**         * Make a Tag         */        make: function () {            // All arguments are optional            var args = [].slice.call(arguments),                name = args[0] || this.tagName,                contents = args[1],                attrs = args[2],                i,                attr,                tag = document.createElement(name);            if (args.length === 2 && this.isObject(contents)) {                contents = undefined;                attrs = args[1];            }            // Add the contents            if (typeof contents !== "undefined") {                if (this.isNumber(contents) || this.isString(contents)) {                    // If the contents is a Number or a String,                    // parse it to a textnode                    contents = document.createTextNode(contents);                }                if (this.isArray(contents)) {                    // If our contents is an array,                    // append each one to the tag                    while ( i = contents.shift() ) {                        tag.appendChild(i);                    }                } else {                    tag.appendChild(contents);                }            }            // Add the attributes            if ( attrs ) {                for ( attr in attrs ) {                    if (attrs.hasOwnProperty( attr )) {                        // Add each attribute to the tag                        tag[ attr ] = attrs[ attr ];                        if ( !( attr in tag.attributes ) ) {                            // If the attribute wasnt't successfully added,                            // try again with setAttribute                            tag.setAttribute( attr, attrs[ attr ] );                        }                    }                }            }            // Finally return the new tag            return tag;        }    });});
 define('main', [
     'Base',
     'events',
@@ -747,15 +746,16 @@ define('main', [
     'Model',
     'View'
     ],
-    function ( Base, events, mediator, utils, collection, model, view ) {
+
+    function ( Base, events, mediator, utils, Collection, Model, View ) {
 
         return {
             events: events,
             mediator: mediator,
-            utisl: utils,
-            collection: collection,
-            model: model,
-            view: view
+            utils: utils,
+            Collection: Collection,
+            Model: Model,
+            View: View
         };
 
     }
