@@ -31,7 +31,7 @@
 });</code>
 </pre>
 
-<p>To instantiate the constructor, simply invoke its create function. There's no 'new' keyword here.</p>
+<p>To instantiate the constructor, simply invoke its create function. There's no <code>new</code> keyword here.</p>
 <pre>
 <code>var myNewInstance = MyConstructor.create({myOptions: 'anOption'});</code>
 </pre>
@@ -53,7 +53,7 @@
 
 <p>The option argument is passed into AnotherConstructor.prototype.start.</p>
 <pre>
-<code>var AnotherInstance = AnotherConstructor.create({myOptions: 'anOption'});</code>
+<code>var anotherInstance = AnotherConstructor.create({myOptions: 'anOption'});</code>
 </pre>
 
 
