@@ -89,9 +89,8 @@ define( ['events', 'utils'], function ( events, utils ) {
 
   // Augment the Base prototype with the
   // properties of events;
-  Base.mixin(Base.prototype, events);
+  Base.mixin(Base.prototype, events, utils);
 
-  Base.mixin(Base, utils);
 
   // Return Base as the module definition
   return Base;

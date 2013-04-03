@@ -1,17 +1,27 @@
-require( ['Base'], function ( Base ) {
+require( ['Base', 'events', 'utils'], function ( Base, events, utils ) {
 
     describe("Base", function () {
 
         describe("When Base has not been created", function () {
-
             it("it has a static construct function", function () {
                 expect(typeof Base.construct).toEqual("function");
             });
-
             it("it has a static mixin function", function () {
                 expect(typeof Base.mixin).toEqual("function");
             });
+        });
 
+        describe('prototype', function () {
+            it('has events mixin', function () {
+                for (var i in events) {
+                    expect(i in Base.prototype).toEqual(true);
+                }
+            });
+            it('has utils mixin', function () {
+                for (var i in utils) {
+                    expect(i in Base.prototype).toEqual(true);
+                }
+            });
         });
 
         describe('Invoking Base.mixin', function () {
