@@ -22,7 +22,7 @@ define( ['Base'], function ( Base ) {
             this.properties = {};
 
             if (options) {
-                this.set( options );
+                this.set(options);
             }
 
             return this;
@@ -33,7 +33,7 @@ define( ['Base'], function ( Base ) {
         },
 
         set: function ( name, value ) {
-            if ( Base.isString(name) ) {
+            if ( this.isString(name) ) {
                 this.properties[ name ] = value;
             } else {
                 for (var n in name) {
