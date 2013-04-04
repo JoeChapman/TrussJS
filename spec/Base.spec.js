@@ -255,7 +255,11 @@ require( ['Base', 'events', 'utils'], function ( Base, events, utils ) {
                 });
 
                 it('invokes start with the options passed to create', function () {
-                    expect(spyStart).toHaveBeenCalledWith(opts);
+                    expect(spyStart).toHaveBeenCalled();
+                });
+
+                it('creates object with options passed to create', function () {
+                    expect(factored.good).toEqual('times');
                 });
 
             });
@@ -319,7 +323,11 @@ require( ['Base', 'events', 'utils'], function ( Base, events, utils ) {
                 });
 
                 it('invokes start with the options passed to create', function () {
-                    expect(spyStart).toHaveBeenCalledWith(opts);
+                    expect(spyStart).toHaveBeenCalled();
+                });
+
+                it('creates object with options passed to create', function () {
+                    expect(factored.even).toEqual('better');
                 });
 
                 it('does not invoke startParent', function () {
@@ -397,7 +405,11 @@ require( ['Base', 'events', 'utils'], function ( Base, events, utils ) {
                 });
 
                 it('invokes start with the options passed to create', function () {
-                    expect(spyStart).toHaveBeenCalledWith(opts);
+                    expect(spyStart).toHaveBeenCalled();
+                });
+
+                it('creates object with options passed to create', function () {
+                    expect(factored.blatantly).toEqual('awesome');
                 });
 
                 it('does not invoke startParent', function () {

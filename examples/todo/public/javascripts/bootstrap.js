@@ -1,11 +1,1 @@
-
-var rootNode = document.getElementById("rootNode"),
-	options = {
-		rootNode: rootNode,
-        tagName: 'div',
-		collection: Truss.Collection.create()
-	};
-
-todoForm.create(options);
-todoCount.create(options);
-todoList.create(options);
+var rootNode = document.getElementById("rootNode"),    options = {        rootNode: rootNode,        tagName: 'div',        collection: Truss.Collection.create()    };ViewTodoForm.create(options);ViewTodoCount.create(options);ViewTodoList.create(options);

@@ -1,34 +1,17 @@
 
-    var todoCount = Truss.View.construct({
+    var ViewTodoCount = Truss.View.construct({
 
-        start: function (options) {
+        start: function () {
 
-            if (!options) {
-                throw {
-                    name: "ArgumentError",
-                    message: "View requires options rootNode and collection"
-                };
-            }
-
-            if (!options.rootNode) {
-                throw {
-                    name: "ArgumentError",
-                    message: "View requires a rootNode of type HTMLElement"
-                };
-            }
-
-            if (!options.collection) {
-                throw {
-                    name: "ArgumentError",
-                    message: "View requires a collection"
-                };
+            if (!this.options.collection) {
+                throw new Error("View requires a collection");
             }
 
             this.tagName = "output";
             this.counter = 0;
 
-            this.rootNode = options.rootNode;
-            this.collection = options.collection;
+            this.rootNode = this.options.rootNode;
+            this.collection = this.options.collection;
 
             this._render();
             this.collection.on("add", this._increment.bind(this));

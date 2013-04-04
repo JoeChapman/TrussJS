@@ -262,6 +262,95 @@ require( ['View'], function ( View ) {
 					expect(html.unknown).toEqual("test");
 				});
 			});
+
+			describe('calling setElement with an element', function () {
+				var element;
+				beforeEach(function () {
+					element = view.make('div');
+					view.setElement(element);
+				});
+				it('adds the element to the view object', function () {
+					expect(view.element).toEqual(element);
+				});
+			});
+
+			describe('Calling removeElement', function () {
+
+				describe('with no arguments', function () {
+					var parent,
+						element;
+					beforeEach(function () {
+						parent = view.make('div');
+						element = view.make('p');
+						parent.appendChild(element);
+						view.setElement(element);
+						view.removeElement();
+					});
+
+					it('removes the element from the view', function () {
+						expect(view.element).toEqual(null);
+					});
+					it('removes the element from the parent', function () {
+						expect(parent.hasChildNodes()).toEqual(false);
+					});
+				});
+
+				describe('with an element', function () {
+					var parent,
+						element;
+					beforeEach(function () {
+						parent = view.make('div');
+						element = view.make('p');
+						parent.appendChild(element);
+						view.removeElement(element);
+					});
+					it('removes the element from the parent', function () {
+						expect(parent.hasChildNodes()).toEqual(false);
+					});
+				});
+			});
+
+			describe('Calling replaceElement', function () {
+
+				describe('with a replacement element', function () {
+					var parent,
+						element,
+						replacement;
+					beforeEach(function () {
+						parent = view.make('div');
+						element = view.make('p');
+						parent.appendChild(element);
+						replacement = view.make('span');
+						view.setElement(element);
+						view.replaceElement(replacement);
+					});
+					it('replaces the view element with the replacement', function () {
+						expect(parent.firstChild).toEqual(replacement);
+					});
+					it('sets old element', function () {
+						expect(view.oldElement.nodeName).toEqual('P');
+					});
+				});
+
+				describe('with a replacement element and replacee', function () {
+					var parent,
+						replacee,
+						replacement;
+					beforeEach(function () {
+						parent = view.make('div');
+						replacee = view.make('p');
+						parent.appendChild(replacee);
+						replacement = view.make('span');
+						view.replaceElement(replacement, replacee);
+					});
+					it('replaces the view element with the replacement', function () {
+						expect(parent.firstChild).toEqual(replacement);
+					});
+					it('sets old element', function () {
+						expect(view.oldElement.nodeName).toEqual('P');
+					});
+				});
+			});
 		});
 	});
 });

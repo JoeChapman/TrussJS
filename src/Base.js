@@ -11,12 +11,13 @@ define( ['events', 'utils'], function ( events, utils ) {
 
     // Add any arguments to this.options
     if ( "undefined" != typeof options ) {
-      this.options = options;
+        this.options = options;
+        Base.mixin(this, options);
     }
 
     // Call the start function to do any setup
-    if ( utils.isFunction(this.start) ) {
-      this.start( options );
+    if ( this.isFunction(this.start) ) {
+        this.start();
     }
 
   };
