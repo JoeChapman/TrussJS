@@ -33,12 +33,12 @@
 
 <p>To instantiate the constructor, simply invoke its create function. There's no <code>new</code> keyword here.</p>
 <pre>
-<code>var myNewInstance = MyConstructor.create({myOptions: 'anOption'});</code>
+<code>var myInstance = MyConstructor.create({myOptions: 'anOption'});</code>
 </pre>
 
 <p>Or if you prefer, create a new constructor Function.</p>
 <pre>
-<code>var anotherConstructor.construct({
+<code>var AnotherConstructor = MyConstructor.construct({
     anotherMethod: function () {}
 });</code>
 </pre>
@@ -46,12 +46,13 @@
 <p>If you pass a 'start' function to construct, it will be invoked when the new constructor is instantiated with create. Any options will be added to the instance and passed as an argument to the 'start' function.</p>
 
 <pre>
-<code>AnotherConstructor = anotherConstructor.construct({
-    start: function () {}
+<code>AnotherConstructor = MyConstructor.construct({
+    start: function () {},
+    anotherMethod: function () {}
 });</code>
 </pre>
 
-<p>The option argument is passed into AnotherConstructor.prototype.start.</p>
+<p>The options argument is passed into AnotherConstructor.prototype.start.</p>
 <pre>
 <code>var anotherInstance = AnotherConstructor.create({myOptions: 'anOption'});</code>
 </pre>
