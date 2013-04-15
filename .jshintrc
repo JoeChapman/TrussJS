@@ -10,7 +10,8 @@
     "spyOn": true,
     "runs": true,
     "waitsFor": true,
-    "document": true
+    "document": true,
+    "window": true
   },
   "curly": false,
   "eqeqeq": false,
