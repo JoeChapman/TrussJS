@@ -1,8 +1,8 @@
-define(['Base'], function (Base) {
+define(function () {
 
-    function XHR() {
+    var xhr;
 
-        var xhr, ctx = this;
+    (function () {
 
         if (window.XMLHttpRequest) {
             xhr = new window.XMLHttpRequest();
@@ -18,56 +18,58 @@ define(['Base'], function (Base) {
             }
         }
 
-        xhr.onreadystatechange = function (resp) {
-            response.call(ctx, resp);
+        xhr.onreadystatechange = function (res) {
+            ajax.response(res);
         };
 
-        return xhr;
-    }
+    }());
 
-    function response(resp) {
-        try {
-            if (resp.readyState === 4) {
-                if (resp.statusCode === 200) {
-                    this.success(resp);
-                } else {
-                    this.failure(resp);
+    var ajax = {
+
+        xhr: xhr,
+
+        response: function(resp) {
+            try {
+                if (resp.readyState === 4) {
+                    if (resp.statusCode === 200) {
+                        this.success(resp);
+                    } else {
+                        this.failure(resp);
+                    }
                 }
+            } catch( e ) {
+                this.error(e);
             }
-        } catch( e ) {
-            this.error();
-        }
-    }
-
-    return Base.construct({
-
-        start: function () {
-            this.xhr = XHR.call(this);
         },
 
-        ajax: function (data) {
-            this.xhr.open(data.method, data.url, true);
-            this.xhr.send(data.query || null);
+        request: function (data) {
+            if (!xhr) {
+                this.setXHR();
+            }
+            xhr.open(data.method, data.url, true);
+            xhr.send(data.query || null);
         },
 
         get: function (url) {
-            this.ajax({method: 'GET', url: url});
+            this.request({method: 'GET', url: url});
         },
 
         post: function (url, query) {
-            if (this.isFunction(this.xhr.setRequestHeader)) {
-                //this.xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            }
-            this.ajax({method: 'POST', url: url, query: query});
+            // if (this.isFunction(xhr.setRequestHeader)) {
+            //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            // }
+            this.request({method: 'POST', url: url, query: query});
         },
 
         success: function () {},
 
         failure: function () {},
 
-        error: function () {}
+        error: function (e) {}
 
-    });
+    };
+
+    return ajax;
 
 });
 

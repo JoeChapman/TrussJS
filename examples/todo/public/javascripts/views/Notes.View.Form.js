@@ -15,7 +15,10 @@ var ViewTodoForm = Truss.View.construct({
         e.preventDefault();
         var value = this.input.value;
         if (this.isValid(value)) {
-            this.collection.add({'text': value});
+            var i = this.collection.add({'text': value});
+            console.log(i);
+            i.post('/note')
+
         }
     },
 

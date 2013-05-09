@@ -1,12 +1,6 @@
-require(['Ajax'], function (Ajax) {
+require(['ajax'], function (ajax) {
 
-    var ajax = null;
-
-    describe('Ajax', function () {
-
-        beforeEach(function () {
-            ajax = Ajax.create();
-        });
+    describe('ajax', function () {
 
         describe('successful GET request', function () {
 
@@ -17,6 +11,7 @@ require(['Ajax'], function (Ajax) {
                 response = {readyState: 4, statusCode: 200};
 
             beforeEach(function () {
+                //ajax.setXHR();
                 spyOpen = spyOn(ajax.xhr, 'open');
                 spySend = spyOn(ajax.xhr, 'send').andCallFake(function () {
                     ajax.xhr.onreadystatechange(response);

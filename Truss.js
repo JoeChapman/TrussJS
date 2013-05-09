@@ -409,6 +409,82 @@ var requirejs, require, define;
 define("vendor/almond", function(){});
 
 define ('events',[], function ( ) {  return {    events: {},    on: function (event, callback) {      var context;      if ( "string" != typeof event ) {        throw new Error("on() needs an event name string");      }      if ( "function" != typeof callback ) {        throw new Error("on() needs a callback function");      }      context = [].slice.call( arguments, 2 )[0];      if ( !this.events[event] ) {        this.events[event] = [];      }      this.events[event].push({        callback: callback,        context: context      });    },    reset: function () {      this.events = {};    },    off: function (event) {      var ev, len, cb;      // Event must be a string      if ( "string" != typeof event ) {        throw new Error( "off() needs an event" );      }      cb = [].slice.call( arguments, 1 )[0];      // If the event has been registered      if ( this.events[event] ) {        ev = this.events[event];        len = ev.length;        // Loop over each event object that matches ours.        while ( len-- ) {          if ( "function" != typeof cb ) {            // If no callback was given, remove the event            // and all its callbacks            ev.splice(len, 1);          } else {            // If a callback was passed,            // remove the callback from the event            if ( ev[len].callback === cb ) {              ev[len].callback = null;              delete ev[len].callback;            }          }        }      }    },    fire: function ( event ) {      var ev, len, opt, data, ctx;      // event argument is mandatory      if ( "string" != typeof event ) {        throw new Error("fire() needs an event");      }      // Optional arguments      opt = [].slice.call( arguments, 1 );      data = opt[0];      ctx = opt[1];      // If this event has been registered      if ( this.events[event] ) {        len = this.events[event].length;        // Invoke the callback on each event object        while ( ev = this.events[event][--len] ) {          if ("function" == typeof ev.callback) {            // Invoke in either context with data if present            ev.callback.call( ( ctx || ev.context || this ), data );          }        }      }    }  };});
+define('ajax',[],function () {
+
+    var xhr;
+
+    (function () {
+
+        if (window.XMLHttpRequest) {
+            xhr = new window.XMLHttpRequest();
+        } else if (window.ActiveXObject) {
+            try {
+                xhr = new window.ActiveXObject("Msxml2.XMLHTTP");
+            }
+            catch (e) {
+                try {
+                    xhr = new window.ActiveXObject("Microsoft.XMLHTTP");
+                }
+                catch (e) {}
+            }
+        }
+
+        xhr.onreadystatechange = function (res) {
+            ajax.response(res);
+        };
+
+    }());
+
+    var ajax = {
+
+        xhr: xhr,
+
+        response: function(resp) {
+            try {
+                if (resp.readyState === 4) {
+                    if (resp.statusCode === 200) {
+                        this.success(resp);
+                    } else {
+                        this.failure(resp);
+                    }
+                }
+            } catch( e ) {
+                this.error(e);
+            }
+        },
+
+        request: function (data) {
+            if (!xhr) {
+                this.setXHR();
+            }
+            xhr.open(data.method, data.url, true);
+            xhr.send(data.query || null);
+        },
+
+        get: function (url) {
+            this.request({method: 'GET', url: url});
+        },
+
+        post: function (url, query) {
+            // if (this.isFunction(xhr.setRequestHeader)) {
+            //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            // }
+            this.request({method: 'POST', url: url, query: query});
+        },
+
+        success: function () {},
+
+        failure: function () {},
+
+        error: function (e) {}
+
+    };
+
+    return ajax;
+
+});
+
+
 define('utils',[], function ( ) {
 
   return {
@@ -452,7 +528,7 @@ define('utils',[], function ( ) {
   };
 
 });
-define('Base', ['events', 'utils'], function ( events, utils ) {
+define('Base', ['events', 'ajax', 'utils'], function ( events, ajax, utils ) {
 
   /**
    * @constructor
@@ -543,8 +619,8 @@ define('Base', ['events', 'utils'], function ( events, utils ) {
   };
 
   // Augment the Base prototype with the
-  // properties of events;
-  Base.mixin(Base.prototype, events, utils);
+  // properties of events, ajax and utils;
+  Base.mixin(Base.prototype, events, ajax, utils);
 
 
   // Return Base as the module definition
@@ -552,7 +628,7 @@ define('Base', ['events', 'utils'], function ( events, utils ) {
 
 });
 define('mediator',[], function ( ) {    /**        * A little helper to remove duplication        * @param type {String} to|from        * @param obj {Object}        * @param eventName {String}        * @private        */    function add (type, obj, eventName) {        passes[ currentEvent ][ type ].push({            obj: obj,            eventName: eventName        });    }    function isEqual (a, b) {        if (a === b) {            return a !== 0 || 1 / a === 1 / b;        }        if (a === null || b === null) {            return a === b;        }        if (Object.prototype.toString.call(a) !== Object.prototype.toString.call(b)) {            return false;        }    }    // Polyfill for nativeForEach    function each (list, callback, context) {        var i;        // Native forEach        if (typeof Array.prototype.forEach == "function" && list.length) {            list.forEach( callback, context || this);        } else if ( list.length ) {            // Polyfill            Array.prototype.forEach = function( callback, context ) {                for (var i = 0, len = list.length; i < len; ++i) {                    callback.call(context, list[i], i, list);                }            };        } else {            // If the list is an [object Object] (i.e. Not an Array)            for ( i in list ) {                if ( list.hasOwnProperty( i ) ) {                    callback.call( context || this, list[i], i, list );                }            }        }    }    /**    * Bind one or more target events to one or more source events    * @private    */    function bind () {        each( passes[ currentEvent ], function (sources, type, passes) {            each( passes, function ( sources, type, pass ) {                each( pass.from, function ( from ) {                    // Remove any previous binding                    from.obj.off( from.eventName );                    // Bind the event to a callback                    from.obj.on( from.eventName, function( args ) {                        each( pass.to, function ( to ) {                            // The callback binds the |to| event                            to.obj.fire( to.eventName, args);                        }, this);                    }, this);                }, this);            }, this);        }, this);    }    var passes = {},        currentEvent = null;    // Return medaitor api as module definition    return {        /**        * Registers the source subject subscriber and its event(s)        * @param subscribee {Object}        * @param eventName {String}        * @return {this}        */        from: function (subscribee, eventName) {            if (!arguments.length) {                throw {                    name: "NoArgumentsException",                    message: "From cannot be called with no arguments"                };            }            currentEvent = eventName || 'all';            if ( !passes[ currentEvent ] ) {                passes[ currentEvent ] = {};            }            if ( !passes[ currentEvent ].from ) {                passes[ currentEvent ].from = [];            }            add( "from", subscribee, eventName );            if ( this.removing ) {                // Has to object been marked for removal??                each( passes, function ( pass, j ) {                    each( pass.to, function ( to, i) {                        if (pass.to[i].remove && pass.to[i].remove === true) {                            // Dedlete the target object and event,                            // null the currentEvent                            delete passes[j].to[i];                            currentEvent = null;                        }                    }, this);                }, this);                this.removing = false;            }            // Make it chainable            return this;        },        /**        * Adds a target subscriber by eventName to the mediator        * @param subscriber {Object}        * @param eventName {String}        * @return {this}        */        to: function ( subscriber, eventName ) {            if ( !currentEvent ) {                throw {                    name: "ToFunctionBadUsage",                    message: "Cannot call to before from."                };            }            if ( !passes[ currentEvent ].to ) {                passes[ currentEvent ].to = [];            }            add( "to", subscriber, eventName );            // No config object parameter            this.register();            // Make it chainable            return this;        },        /**        * Marks target and eventName for removal        * @param target {Object}        * @param eventName {String}        * @return {this}        */        remove: function (obj, eventName) {            if (!arguments.length) {                throw {                    name: "NoArgumentException",                    message: "Remove cannot be called without arguments"                };            }            this.removing = true;            each(passes, function ( pass ) {                each( pass.to, function ( to, i ) {                    if (typeof obj == "string") {                        eventName = obj;                        if ( to.eventName === eventName ) {                            [].splice.call(pass.to, i, 1);                        }                    } else {                        if ( ( isEqual(to.obj, obj) || obj == null ) && ( to.eventName === eventName || typeof eventName == "undefined" ) ) {                            to.remove = true;                        }                    }                });            });            return this;        },        /**        * Registers the source and target subscriber objects and their events for binding        * @param optional config Object        */        register: function () {            var config = arguments[0];            if ( config ) {                if ( config.source ) {                    each(config.source, function ( from ) {                        this.from( from.subscriber, from.event );                    }, this);                } else {                    throw {                        name: "ConfigSourceNotDefined",                        message: "Config object needs a source defined."                    };                }                if ( config.target ) {                    each( config.target, function (to) {                        this.to( to.subscriber, to.event );                    }, this);                } else {                    throw {                        name: "ConfigTargetNotDefined",                        message: "Config object needs a target defined."                    };                }            } else {                bind();            }        },        /**        * Notifies mediator that target and source subscriber and events should be removed.        * @param config {Object}        */        unregister: function ( config ) {            if ( !config ) {                throw {                    name: "NoArgumentException",                    message: "Unregister cannot be called without arguments"                };            }            if ( config ) {                this.removing = true;                if ( config.target ) {                    each( config.target, function ( to ) {                    this.remove( to.subscriber, to.event );                    }, this );                } else {                    throw {                        name: "ConfigTargetNotDefined",                        message: "Config object needs a target defined."                    };                }                if ( config.source ) {                    each(config.source, function (from) {                        this.from(from.subscriber, from.eventName);                    }, this );                } else {                    throw {                        name: "ConfigSourceNotDefined",                        message: "Config object needs a source defined."                    };                }            }        }    };});
-define('Model', ['Base'], function ( Base ) {
+define('Model',['Base'], function ( Base ) {
 
     var constants = {
             ID: 1,
@@ -698,6 +774,8 @@ define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
                 this.fire("add", model);
             }
 
+            return model;
+
         },
 
         reset: function () {
@@ -743,17 +821,19 @@ define('main', [
     'events',
     'mediator',
     'utils',
+    'ajax',
     'Collection',
     'Model',
     'View'
     ],
 
-    function ( Base, events, mediator, utils, Collection, Model, View ) {
+    function ( Base, events, mediator, utils, ajax, Collection, Model, View ) {
 
         return {
             events: events,
             mediator: mediator,
             utils: utils,
+            ajax: ajax,
             Collection: Collection,
             Model: Model,
             View: View
@@ -761,9 +841,9 @@ define('main', [
 
     }
 );  var library = require('main');
-  if(typeof module !== 'undefined' && module.exports) {
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = library;
-  } else if(globalDefine) {
+  } else if (globalDefine) {
     (function (define) {
       define(function () { return library; });
     }(globalDefine));

@@ -93,6 +93,8 @@ define ( ['Base', 'Model'], function ( Base, Model ) {
                 this.fire("add", model);
             }
 
+            return model;
+
         },
 
         reset: function () {

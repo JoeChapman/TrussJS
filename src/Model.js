@@ -1,4 +1,4 @@
-define( ['Base'], function ( Base ) {
+define(['Base'], function ( Base ) {
 
     var constants = {
             ID: 1,

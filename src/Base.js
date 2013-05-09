@@ -1,4 +1,4 @@
-define( ['events', 'utils'], function ( events, utils ) {
+define( ['events', 'ajax', 'utils'], function ( events, ajax, utils ) {
 
   /**
    * @constructor
@@ -89,8 +89,8 @@ define( ['events', 'utils'], function ( events, utils ) {
   };
 
   // Augment the Base prototype with the
-  // properties of events;
-  Base.mixin(Base.prototype, events, utils);
+  // properties of events, ajax and utils;
+  Base.mixin(Base.prototype, events, ajax, utils);
 
 
   // Return Base as the module definition
