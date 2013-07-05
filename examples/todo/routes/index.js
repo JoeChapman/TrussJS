@@ -1,9 +1,10 @@
+var notes = require('../models/notes');
 
-/*
- * GET home page.
- */
+/// Get notes
+module.exports = {
 
-exports.index = function(req, res) {
+    index: function(req, res) {
+        res.render('index', { title: 'TODO'});
+    }
 
-    res.render('index', { title: 'Express' });
 };

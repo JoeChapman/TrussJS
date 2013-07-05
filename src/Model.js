@@ -1,4 +1,4 @@
-define(['Base'], function ( Base ) {
+define(['Base', 'ajax'], function ( Base, ajax ) {
 
     var constants = {
             ID: 1,
@@ -17,9 +17,9 @@ define(['Base'], function ( Base ) {
     return Base.construct({
 
         start: function (options) {
-            this.id = getNewId();
             this.resetId = resetId;
-            this.properties = {};
+            this.id = getNewId();
+            this.properties = Base.mixin({}, {id: this.id});
 
             if (options) {
                 this.set(options);
@@ -42,7 +42,10 @@ define(['Base'], function ( Base ) {
                     }
                 }
             }
+        },
 
+        remove: function () {
+            this.post({url: '/delete'});
         }
 
     });

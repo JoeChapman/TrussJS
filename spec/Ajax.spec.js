@@ -11,13 +11,12 @@ require(['ajax'], function (ajax) {
                 response = {readyState: 4, statusCode: 200};
 
             beforeEach(function () {
-                //ajax.setXHR();
-                spyOpen = spyOn(ajax.xhr, 'open');
+                spyOpen = spyOn(ajax.xhr, 'open').andCallThrough();
                 spySend = spyOn(ajax.xhr, 'send').andCallFake(function () {
                     ajax.xhr.onreadystatechange(response);
                 });
                 spySuccess = spyOn(ajax, 'success');
-                ajax.get(url);
+                ajax.update({url: url});
             });
 
             it('makes a GET request to url', function () {
@@ -48,7 +47,7 @@ require(['ajax'], function (ajax) {
                     ajax.xhr.onreadystatechange(response);
                 });
                 spyFailure = spyOn(ajax, 'failure');
-                ajax.get(url);
+                ajax.update({url: url});
             });
 
             it('makes a GET request to url', function () {
@@ -65,7 +64,39 @@ require(['ajax'], function (ajax) {
 
         });
 
-        describe('successful POST request', function () {
+        describe('successfully POST a JSON query', function () {
+
+            var spySuccess,
+                spyOpen,
+                spySend,
+                url = 'path/to/file',
+                JSON = '{"key": "value"}',
+                response = {readyState: 4, statusCode: 200};
+
+            beforeEach(function () {
+                spyOpen = spyOn(ajax.xhr, 'open').andCallThrough();
+                spySend = spyOn(ajax.xhr, 'send').andCallFake(function () {
+                    ajax.xhr.onreadystatechange(response);
+                });
+                spySuccess = spyOn(ajax, 'success');
+                ajax.post({url: url, data: JSON});
+            });
+
+            it('makes a POST request to url', function () {
+                expect(spyOpen).toHaveBeenCalledWith('POST', url, true);
+            });
+
+            it('calls send with the JSON', function () {
+                expect(spySend).toHaveBeenCalledWith(JSON);
+            });
+
+            it('calls success with response object', function () {
+                expect(spySuccess).toHaveBeenCalledWith(response);
+            });
+
+        });
+
+        describe('successfully POST a string query', function () {
 
             var spySuccess,
                 spyOpen,
@@ -75,12 +106,12 @@ require(['ajax'], function (ajax) {
                 response = {readyState: 4, statusCode: 200};
 
             beforeEach(function () {
-                spyOpen = spyOn(ajax.xhr, 'open');
+                spyOpen = spyOn(ajax.xhr, 'open').andCallThrough();
                 spySend = spyOn(ajax.xhr, 'send').andCallFake(function () {
                     ajax.xhr.onreadystatechange(response);
                 });
                 spySuccess = spyOn(ajax, 'success');
-                ajax.post(url, query);
+                ajax.post({url: url, data: query});
             });
 
             it('makes a POST request to url', function () {

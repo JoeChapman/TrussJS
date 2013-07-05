@@ -32,6 +32,7 @@
     }
   ],
   "devDependencies": {
+    "nodemon": "0.7.2",
     "grunt-cli": "0.1.6",
     "grunt": "~0.4.0",
     "grunt-contrib-jshint": "~0.1.0",
@@ -41,6 +42,7 @@
     "grunt-contrib-requirejs": "~0.3.4"
   },
   "scripts": {
+    "start": "nodemon ./examples/todo/app.js",
     "test": "grunt jasmine"
   }
 }

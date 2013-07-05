@@ -409,82 +409,6 @@ var requirejs, require, define;
 define("vendor/almond", function(){});
 
 define ('events',[], function ( ) {  return {    events: {},    on: function (event, callback) {      var context;      if ( "string" != typeof event ) {        throw new Error("on() needs an event name string");      }      if ( "function" != typeof callback ) {        throw new Error("on() needs a callback function");      }      context = [].slice.call( arguments, 2 )[0];      if ( !this.events[event] ) {        this.events[event] = [];      }      this.events[event].push({        callback: callback,        context: context      });    },    reset: function () {      this.events = {};    },    off: function (event) {      var ev, len, cb;      // Event must be a string      if ( "string" != typeof event ) {        throw new Error( "off() needs an event" );      }      cb = [].slice.call( arguments, 1 )[0];      // If the event has been registered      if ( this.events[event] ) {        ev = this.events[event];        len = ev.length;        // Loop over each event object that matches ours.        while ( len-- ) {          if ( "function" != typeof cb ) {            // If no callback was given, remove the event            // and all its callbacks            ev.splice(len, 1);          } else {            // If a callback was passed,            // remove the callback from the event            if ( ev[len].callback === cb ) {              ev[len].callback = null;              delete ev[len].callback;            }          }        }      }    },    fire: function ( event ) {      var ev, len, opt, data, ctx;      // event argument is mandatory      if ( "string" != typeof event ) {        throw new Error("fire() needs an event");      }      // Optional arguments      opt = [].slice.call( arguments, 1 );      data = opt[0];      ctx = opt[1];      // If this event has been registered      if ( this.events[event] ) {        len = this.events[event].length;        // Invoke the callback on each event object        while ( ev = this.events[event][--len] ) {          if ("function" == typeof ev.callback) {            // Invoke in either context with data if present            ev.callback.call( ( ctx || ev.context || this ), data );          }        }      }    }  };});
-define('ajax',[],function () {
-
-    var xhr;
-
-    (function () {
-
-        if (window.XMLHttpRequest) {
-            xhr = new window.XMLHttpRequest();
-        } else if (window.ActiveXObject) {
-            try {
-                xhr = new window.ActiveXObject("Msxml2.XMLHTTP");
-            }
-            catch (e) {
-                try {
-                    xhr = new window.ActiveXObject("Microsoft.XMLHTTP");
-                }
-                catch (e) {}
-            }
-        }
-
-        xhr.onreadystatechange = function (res) {
-            ajax.response(res);
-        };
-
-    }());
-
-    var ajax = {
-
-        xhr: xhr,
-
-        response: function(resp) {
-            try {
-                if (resp.readyState === 4) {
-                    if (resp.statusCode === 200) {
-                        this.success(resp);
-                    } else {
-                        this.failure(resp);
-                    }
-                }
-            } catch( e ) {
-                this.error(e);
-            }
-        },
-
-        request: function (data) {
-            if (!xhr) {
-                this.setXHR();
-            }
-            xhr.open(data.method, data.url, true);
-            xhr.send(data.query || null);
-        },
-
-        get: function (url) {
-            this.request({method: 'GET', url: url});
-        },
-
-        post: function (url, query) {
-            // if (this.isFunction(xhr.setRequestHeader)) {
-            //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            // }
-            this.request({method: 'POST', url: url, query: query});
-        },
-
-        success: function () {},
-
-        failure: function () {},
-
-        error: function (e) {}
-
-    };
-
-    return ajax;
-
-});
-
-
 define('utils',[], function ( ) {
 
   return {
@@ -523,12 +447,127 @@ define('utils',[], function ( ) {
     isFunction: function ( value ) {
       //delegate to realTypeOf
       return this.realTypeOf(value) === 'function';
+    },
+
+    mixin: function ( dest ) {
+
+      var src, prop, sources = [].slice.call(arguments, 1);
+
+      while (src = sources.shift()) {
+        // Iterate over all src properties
+        for (prop in src) {
+          if (src.hasOwnProperty(prop)) {
+            if ( this.isObject(src[prop])  ) {
+              dest[prop] = dest[prop] || src[prop];
+              this.mixin(dest[prop], src[prop]);
+            } else {
+              // Assign the value form the src to the destination
+              dest[prop] = src[prop];
+            }
+          }
+        }
+
+      }
+
+      return dest;
     }
 
   };
 
 });
-define('Base', ['events', 'ajax', 'utils'], function ( events, ajax, utils ) {
+define('ajax', ['utils'], function (utils) {
+
+    var ajax = {
+
+        xhr: (function () {
+
+            var xhr;
+
+            if (window.XMLHttpRequest) {
+                xhr = new window.XMLHttpRequest();
+            } else if (window.ActiveXObject) {
+                try {
+                    xhr = new window.ActiveXObject("Msxml2.XMLHTTP");
+                }
+                catch (e) {
+                    try {
+                        xhr = new window.ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                    catch (e) {}
+                }
+            }
+
+            xhr.onreadystatechange = function (res) {
+                ajax.response(res);
+            };
+
+            return xhr;
+
+        }()),
+
+        mimeType: 'text/plain',
+
+        response: function(res) {
+            try {
+                if (res.readyState === 4) {
+                    if (res.statusCode === 200) {
+                        this.success(res);
+                        this.fire('ajax:success', res.target.response);
+                    } else {
+                        this.failure(res);
+                    }
+                }
+            } catch( e ) {
+                this.error(e);
+            }
+        },
+
+        setHeaders: function (data) {
+            if (data && utils.isString(data)) {
+                try {
+                    utils.isObject(JSON.parse(data));
+                    this.mimeType = "application/json";
+                } catch (e) {}
+            }
+            this.xhr.setRequestHeader( "Content-Type", this.mimeType );
+        },
+
+        request: function (method, options) {
+            this.setOptions(options);
+            this.xhr.open(method, this.url, true);
+            this.setHeaders(this.data);
+            this.xhr.send(this.data || null);
+        },
+
+        setOptions: function (options) {
+            utils.mixin(this, options);
+        },
+
+        update: function (options) {
+            this.request('GET', options);
+        },
+
+        post: function (options) {
+            if (!options.data && this.properties) {
+                options.data = JSON.stringify(this.properties);
+            }
+            this.request('POST', options);
+        },
+
+        success: function () {},
+
+        failure: function () {},
+
+        error: function (e) {}
+
+    };
+
+    return ajax;
+
+});
+
+
+define('Base', ['events', 'utils', 'ajax'], function ( events, utils, ajax ) {
 
   /**
    * @constructor
@@ -560,9 +599,9 @@ define('Base', ['events', 'ajax', 'utils'], function ( events, ajax, utils ) {
    * @param {Object} src
    * @return {Object} augmented dest
    */
-  Base.mixin = function ( dest, src ) {
+  Base.mixin = function ( dest ) {
 
-    var prop, sources = [].slice.call(arguments, 1);
+    var src, prop, sources = [].slice.call(arguments, 1);
 
     while(src = sources.shift()) {
       // Iterate over all src properties
@@ -618,17 +657,15 @@ define('Base', ['events', 'ajax', 'utils'], function ( events, ajax, utils ) {
 
   };
 
-  // Augment the Base prototype with the
-  // properties of events, ajax and utils;
-  Base.mixin(Base.prototype, events, ajax, utils);
-
+  // Augment the Base prototype with events, and utils mixins;
+  Base.mixin(Base.prototype, events, utils, ajax);
 
   // Return Base as the module definition
   return Base;
 
 });
 define('mediator',[], function ( ) {    /**        * A little helper to remove duplication        * @param type {String} to|from        * @param obj {Object}        * @param eventName {String}        * @private        */    function add (type, obj, eventName) {        passes[ currentEvent ][ type ].push({            obj: obj,            eventName: eventName        });    }    function isEqual (a, b) {        if (a === b) {            return a !== 0 || 1 / a === 1 / b;        }        if (a === null || b === null) {            return a === b;        }        if (Object.prototype.toString.call(a) !== Object.prototype.toString.call(b)) {            return false;        }    }    // Polyfill for nativeForEach    function each (list, callback, context) {        var i;        // Native forEach        if (typeof Array.prototype.forEach == "function" && list.length) {            list.forEach( callback, context || this);        } else if ( list.length ) {            // Polyfill            Array.prototype.forEach = function( callback, context ) {                for (var i = 0, len = list.length; i < len; ++i) {                    callback.call(context, list[i], i, list);                }            };        } else {            // If the list is an [object Object] (i.e. Not an Array)            for ( i in list ) {                if ( list.hasOwnProperty( i ) ) {                    callback.call( context || this, list[i], i, list );                }            }        }    }    /**    * Bind one or more target events to one or more source events    * @private    */    function bind () {        each( passes[ currentEvent ], function (sources, type, passes) {            each( passes, function ( sources, type, pass ) {                each( pass.from, function ( from ) {                    // Remove any previous binding                    from.obj.off( from.eventName );                    // Bind the event to a callback                    from.obj.on( from.eventName, function( args ) {                        each( pass.to, function ( to ) {                            // The callback binds the |to| event                            to.obj.fire( to.eventName, args);                        }, this);                    }, this);                }, this);            }, this);        }, this);    }    var passes = {},        currentEvent = null;    // Return medaitor api as module definition    return {        /**        * Registers the source subject subscriber and its event(s)        * @param subscribee {Object}        * @param eventName {String}        * @return {this}        */        from: function (subscribee, eventName) {            if (!arguments.length) {                throw {                    name: "NoArgumentsException",                    message: "From cannot be called with no arguments"                };            }            currentEvent = eventName || 'all';            if ( !passes[ currentEvent ] ) {                passes[ currentEvent ] = {};            }            if ( !passes[ currentEvent ].from ) {                passes[ currentEvent ].from = [];            }            add( "from", subscribee, eventName );            if ( this.removing ) {                // Has to object been marked for removal??                each( passes, function ( pass, j ) {                    each( pass.to, function ( to, i) {                        if (pass.to[i].remove && pass.to[i].remove === true) {                            // Dedlete the target object and event,                            // null the currentEvent                            delete passes[j].to[i];                            currentEvent = null;                        }                    }, this);                }, this);                this.removing = false;            }            // Make it chainable            return this;        },        /**        * Adds a target subscriber by eventName to the mediator        * @param subscriber {Object}        * @param eventName {String}        * @return {this}        */        to: function ( subscriber, eventName ) {            if ( !currentEvent ) {                throw {                    name: "ToFunctionBadUsage",                    message: "Cannot call to before from."                };            }            if ( !passes[ currentEvent ].to ) {                passes[ currentEvent ].to = [];            }            add( "to", subscriber, eventName );            // No config object parameter            this.register();            // Make it chainable            return this;        },        /**        * Marks target and eventName for removal        * @param target {Object}        * @param eventName {String}        * @return {this}        */        remove: function (obj, eventName) {            if (!arguments.length) {                throw {                    name: "NoArgumentException",                    message: "Remove cannot be called without arguments"                };            }            this.removing = true;            each(passes, function ( pass ) {                each( pass.to, function ( to, i ) {                    if (typeof obj == "string") {                        eventName = obj;                        if ( to.eventName === eventName ) {                            [].splice.call(pass.to, i, 1);                        }                    } else {                        if ( ( isEqual(to.obj, obj) || obj == null ) && ( to.eventName === eventName || typeof eventName == "undefined" ) ) {                            to.remove = true;                        }                    }                });            });            return this;        },        /**        * Registers the source and target subscriber objects and their events for binding        * @param optional config Object        */        register: function () {            var config = arguments[0];            if ( config ) {                if ( config.source ) {                    each(config.source, function ( from ) {                        this.from( from.subscriber, from.event );                    }, this);                } else {                    throw {                        name: "ConfigSourceNotDefined",                        message: "Config object needs a source defined."                    };                }                if ( config.target ) {                    each( config.target, function (to) {                        this.to( to.subscriber, to.event );                    }, this);                } else {                    throw {                        name: "ConfigTargetNotDefined",                        message: "Config object needs a target defined."                    };                }            } else {                bind();            }        },        /**        * Notifies mediator that target and source subscriber and events should be removed.        * @param config {Object}        */        unregister: function ( config ) {            if ( !config ) {                throw {                    name: "NoArgumentException",                    message: "Unregister cannot be called without arguments"                };            }            if ( config ) {                this.removing = true;                if ( config.target ) {                    each( config.target, function ( to ) {                    this.remove( to.subscriber, to.event );                    }, this );                } else {                    throw {                        name: "ConfigTargetNotDefined",                        message: "Config object needs a target defined."                    };                }                if ( config.source ) {                    each(config.source, function (from) {                        this.from(from.subscriber, from.eventName);                    }, this );                } else {                    throw {                        name: "ConfigSourceNotDefined",                        message: "Config object needs a source defined."                    };                }            }        }    };});
-define('Model',['Base'], function ( Base ) {
+define('Model',['Base', 'ajax'], function ( Base, ajax ) {
 
     var constants = {
             ID: 1,
@@ -647,9 +684,9 @@ define('Model',['Base'], function ( Base ) {
     return Base.construct({
 
         start: function (options) {
-            this.id = getNewId();
             this.resetId = resetId;
-            this.properties = {};
+            this.id = getNewId();
+            this.properties = Base.mixin({}, {id: this.id});
 
             if (options) {
                 this.set(options);
@@ -672,14 +709,17 @@ define('Model',['Base'], function ( Base ) {
                     }
                 }
             }
+        },
 
+        remove: function () {
+            this.post({url: '/delete'});
         }
 
     });
 
 });
 
-define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
+define ('Collection', ['Base', 'Model', 'ajax'], function ( Base, Model, ajax ) {
 
     function getCount () {
         return this.getModels().length;
@@ -717,6 +757,7 @@ define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
                 index = models.indexOf(found[num]);
                 if (index !== -1) {
                     models.splice(index, 1);
+                    found[num].remove();
                     this.fire("removed", this.getModels());
                 }
             }
@@ -726,7 +767,7 @@ define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
     var currentModel;
 
     // Use Base.construct to build a constructor for the Collection
-    return Base.construct({
+    var collection =  Base.construct({
 
         start: function ( options ) {
 
@@ -778,6 +819,13 @@ define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
 
         },
 
+        hydrate: function (options) {
+            this.update(options);
+            this.on('ajax:success', function (res) {
+                this.add(JSON.parse(res));
+            }.bind(this));
+        },
+
         reset: function () {
             this.models = [];
             this.fire("reset");
@@ -813,9 +861,12 @@ define ('Collection', ['Base', 'Model'], function ( Base, Model ) {
 
     });
 
+
+    return collection;
+
 });
 
-define ('View',['Base'], function ( Base ) {    // Build the constructor    return Base.construct({        tagName: 'div',        start: function () {            this.tagName = this.options && this.options.tagName ? this.options.tagName : this.tagName;        },        setElement: function (element) {            this.element = element;        },        removeElement: function () {            if (arguments[0] && arguments[0].nodeType === 1) {                this.setElement(arguments[0]);            }            if (this.element.parentNode) {                this.element.parentNode.removeChild(this.element);            }            this.stopListening();            this.element = null;            delete this.element;        },        destroy: function () {            if (this.model && this.collection) {                this.collection.removeById(this.model.get("id"));            }            this.removeElement();        },        replaceElement: function (replacement) {            var replacee = this.element;            if (arguments[1] && arguments[1].nodeType === 1) {                replacee = arguments[1];            }            if (replacee && replacee.parentNode) {                this.oldElement = replacee.parentNode.replaceChild(replacement, replacee);            }        },        addListener: function (eventName, handler) {            var el = arguments[2] && arguments[2].nodeType === 1 ? arguments[2] : this.element;            if (el.addEventListener) {                var evt = eventName.type || eventName;                el.addEventListener(evt, function (e) {                    if (eventName.key && (eventName.key == e.keyCode)) {                        handler(e);                    } else if (!eventName.key) {                        handler(e);                    }                });            }        },        stopListening: function () {            this.element.removeEventListener('*');        },        make: function () {            // All arguments are optional            var args = [].slice.call(arguments),                name = args[0] || this.tagName,                contents = args[1],                attrs = args[2],                i,                attr,                tag = document.createElement(name);            if (args.length === 2 && this.isObject(contents)) {                contents = undefined;                attrs = args[1];            }            // Add the contents            if (typeof contents !== "undefined") {                if (this.isNumber(contents) || this.isString(contents)) {                    // If the contents is a Number or a String,                    // parse it to a textnode                    contents = document.createTextNode(contents);                }                if (this.isArray(contents)) {                    // If our contents is an array,                    // append each one to the tag                    while ( i = contents.shift() ) {                        tag.appendChild(i);                    }                } else {                    tag.appendChild(contents);                }            }            // Add the attributes            if ( attrs ) {                for ( attr in attrs ) {                    if (attrs.hasOwnProperty( attr )) {                        // Add each attribute to the tag                        tag[ attr ] = attrs[ attr ];                        if ( !( attr in tag.attributes ) ) {                            // If the attribute wasnt't successfully added,                            // try again with setAttribute                            tag.setAttribute( attr, attrs[ attr ] );                        }                    }                }            }            // Finally return the new tag            return tag;        }    });});
+define ('View',['Base'], function ( Base ) {    // Build the constructor    return Base.construct({        tagName: 'div',        start: function () {            this.tagName = this.options && this.options.tagName ? this.options.tagName : this.tagName;        },        setElement: function (element) {            this.element = element;        },        removeElement: function () {            if (arguments[0] && arguments[0].nodeType === 1) {                this.setElement(arguments[0]);            }            if (this.element.parentNode) {                this.element.parentNode.removeChild(this.element);            }            this.stopListening();            this.element = null;            delete this.element;        },        destroy: function () {            if (this.model || this.collection) {                if (this.collection) {                    this.collection.removeById(this.model.get("id"));                } else {                    this.model.remove();                }            }            this.removeElement();        },        replaceElement: function (replacement) {            var replacee = this.element;            if (arguments[1] && arguments[1].nodeType === 1) {                replacee = arguments[1];            }            if (replacee && replacee.parentNode) {                this.oldElement = replacee.parentNode.replaceChild(replacement, replacee);            }        },        addListener: function (eventName, handler) {            var el = arguments[2] && arguments[2].nodeType === 1 ? arguments[2] : this.element;            if (el.addEventListener) {                var evt = eventName.type || eventName;                el.addEventListener(evt, function (e) {                    if (eventName.key && (eventName.key == e.keyCode)) {                        handler(e);                    } else if (!eventName.key) {                        handler(e);                    }                });            }        },        stopListening: function () {            this.element.removeEventListener('*');        },        make: function () {            // All arguments are optional            var args = [].slice.call(arguments),                name = args[0] || this.tagName,                contents = args[1],                attrs = args[2],                i,                attr,                tag = document.createElement(name);            if (args.length === 2 && this.isObject(contents)) {                contents = undefined;                attrs = args[1];            }            // Add the contents            if (typeof contents !== "undefined") {                if (this.isNumber(contents) || this.isString(contents)) {                    // If the contents is a Number or a String,                    // parse it to a textnode                    contents = document.createTextNode(contents);                }                if (this.isArray(contents)) {                    // If our contents is an array,                    // append each one to the tag                    while ( i = contents.shift() ) {                        tag.appendChild(i);                    }                } else {                    tag.appendChild(contents);                }            }            // Add the attributes            if ( attrs ) {                for ( attr in attrs ) {                    if (attrs.hasOwnProperty( attr )) {                        // Add each attribute to the tag                        tag[ attr ] = attrs[ attr ];                        if ( !( attr in tag.attributes ) ) {                            // If the attribute wasnt't successfully added,                            // try again with setAttribute                            tag.setAttribute( attr, attrs[ attr ] );                        }                    }                }            }            // Finally return the new tag            return tag;        }    });});
 define('main', [
     'Base',
     'events',
@@ -841,9 +892,9 @@ define('main', [
 
     }
 );  var library = require('main');
-  if(typeof module !== 'undefined' && module.exports) {
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = library;
-  } else if(globalDefine) {
+  } else if (globalDefine) {
     (function (define) {
       define(function () { return library; });
     }(globalDefine));

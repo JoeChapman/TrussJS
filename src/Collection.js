@@ -1,4 +1,4 @@
-define ( ['Base', 'Model'], function ( Base, Model ) {
+define ( ['Base', 'Model', 'ajax'], function ( Base, Model, ajax ) {
 
     function getCount () {
         return this.getModels().length;
@@ -36,6 +36,7 @@ define ( ['Base', 'Model'], function ( Base, Model ) {
                 index = models.indexOf(found[num]);
                 if (index !== -1) {
                     models.splice(index, 1);
+                    found[num].remove();
                     this.fire("removed", this.getModels());
                 }
             }
@@ -45,7 +46,7 @@ define ( ['Base', 'Model'], function ( Base, Model ) {
     var currentModel;
 
     // Use Base.construct to build a constructor for the Collection
-    return Base.construct({
+    var collection =  Base.construct({
 
         start: function ( options ) {
 
@@ -97,6 +98,13 @@ define ( ['Base', 'Model'], function ( Base, Model ) {
 
         },
 
+        hydrate: function (options) {
+            this.update(options);
+            this.on('ajax:success', function (res) {
+                this.add(JSON.parse(res));
+            }.bind(this));
+        },
+
         reset: function () {
             this.models = [];
             this.fire("reset");
@@ -131,5 +139,8 @@ define ( ['Base', 'Model'], function ( Base, Model ) {
         }
 
     });
+
+
+    return collection;
 
 });

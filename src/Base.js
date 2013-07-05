@@ -1,4 +1,4 @@
-define( ['events', 'ajax', 'utils'], function ( events, ajax, utils ) {
+define( ['events', 'utils', 'ajax'], function ( events, utils, ajax ) {
 
   /**
    * @constructor
@@ -30,9 +30,9 @@ define( ['events', 'ajax', 'utils'], function ( events, ajax, utils ) {
    * @param {Object} src
    * @return {Object} augmented dest
    */
-  Base.mixin = function ( dest, src ) {
+  Base.mixin = function ( dest ) {
 
-    var prop, sources = [].slice.call(arguments, 1);
+    var src, prop, sources = [].slice.call(arguments, 1);
 
     while(src = sources.shift()) {
       // Iterate over all src properties
@@ -88,10 +88,8 @@ define( ['events', 'ajax', 'utils'], function ( events, ajax, utils ) {
 
   };
 
-  // Augment the Base prototype with the
-  // properties of events, ajax and utils;
-  Base.mixin(Base.prototype, events, ajax, utils);
-
+  // Augment the Base prototype with events, and utils mixins;
+  Base.mixin(Base.prototype, events, utils, ajax);
 
   // Return Base as the module definition
   return Base;
