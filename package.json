@@ -32,14 +32,14 @@
     }
   ],
   "devDependencies": {
-    "nodemon": "0.7.2",
-    "grunt-cli": "0.1.6",
-    "grunt": "~0.4.0",
-    "grunt-contrib-jshint": "~0.1.0",
-    "grunt-contrib-nodeunit": "~0.1.0",
+    "nodemon": "1.18.4",
+    "grunt-cli": "1.3.1",
+    "grunt": "~1.0.3",
+    "grunt-contrib-jshint": "~1.1.0",
+    "grunt-contrib-nodeunit": "~2.0.0",
     "grunt-contrib-jasmine": "~0.3.0rc5",
-    "grunt-template-jasmine-requirejs": "~0.1.0",
-    "grunt-contrib-requirejs": "~0.3.4"
+    "grunt-template-jasmine-requirejs": "~0.2.3",
+    "grunt-contrib-requirejs": "~1.0.0"
   },
   "scripts": {
     "start": "nodemon ./examples/todo/app.js",
