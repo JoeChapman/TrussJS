@@ -1,0 +1,10 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "examples/todo/package.json",
+        "package.json"
+      ]
+    }
+  }
+}
