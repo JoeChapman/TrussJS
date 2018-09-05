@@ -1,4 +1,4 @@
-<h1>TrussJS</h1> [![Build Status](https://travis-ci.org/JoeChapman/TrussJS.png)](https://travis-ci.org/JoeChapman/TrussJS)
+<h1>TrussJS</h1> [![Build Status](https://travis-ci.org/JoeChapman/TrussJS.png)](https://travis-ci.org/JoeChapman/TrussJS) [![Greenkeeper badge](https://badges.greenkeeper.io/JoeChapman/TrussJS.svg)](https://greenkeeper.io/)
 
 <p>A JavaScript application framework to promote decoupled event-driven systems and simple composite views.</p>
 
